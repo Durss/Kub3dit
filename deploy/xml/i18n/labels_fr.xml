@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<labels>
+		<label code="kube1"><![CDATA[Béton]]></label>
+		<label code="kube2"><![CDATA[Eau]]></label>
+		<label code="kube3"><![CDATA[Terre brune]]></label>
+		<label code="kube4"><![CDATA[Bois Bouleau]]></label>
+		<label code="kube5"><![CDATA[Feuilles Bouleau]]></label>
+		<label code="kube6"><![CDATA[Terre d'Automne]]></label>
+		<label code="kube7"><![CDATA[Bois d'Automne]]></label>
+		<label code="kube8"><![CDATA[Feuilles d'Automne]]></label>
+		<label code="kube9"><![CDATA[Terre sombre]]></label>
+		<label code="kube10"><![CDATA[Bois sombre]]></label>
+		<label code="kube11"><![CDATA[Feuilles Sombres]]></label>
+		<label code="kube12"><![CDATA[Herbes sombre]]></label>
+		<label code="kube13"><![CDATA[Terre Bleue]]></label>
+		<label code="kube14"><![CDATA[Coeur de Nuage]]></label>
+		<label code="kube15"><![CDATA[Nuage]]></label>
+		<label code="kube16"><![CDATA[Bois Clair]]></label>
+		<label code="kube17"><![CDATA[Feuilles Roses]]></label>
+		<label code="kube18"><![CDATA[Racines]]></label>
+		<label code="kube19"><![CDATA[Bois geant]]></label>
+		<label code="kube20"><![CDATA[Feuilles Géantes]]></label>
+		<label code="kube21"><![CDATA[Terre-Neige]]></label>
+		<label code="kube22"><![CDATA[Bois de sapin]]></label>
+		<label code="kube23"><![CDATA[Feuilles-Neige]]></label>
+		<label code="kube24"><![CDATA[Jungle]]></label>
+		<label code="kube25"><![CDATA[Lianes sombres]]></label>
+		<label code="kube26"><![CDATA[Lianes claires]]></label>
+		<label code="kube27"><![CDATA[Lianes pourries]]></label>
+		<label code="kube28"><![CDATA[Mur]]></label>
+		<label code="kube29"><![CDATA[Roc]]></label>
+		<label code="kube30"><![CDATA[Pilier]]></label>
+		<label code="kube31"><![CDATA[Prairie]]></label>
+		<label code="kube32"><![CDATA[Herbes Claires]]></label>
+		<label code="kube33"><![CDATA[Herbes]]></label>
+		<label code="kube34"><![CDATA[Marais]]></label>
+		<label code="kube35"><![CDATA[Bois marais]]></label>
+		<label code="kube36"><![CDATA[Feuilles marais]]></label>
+		<label code="kube37"><![CDATA[Boue]]></label>
+		<label code="kube38"><![CDATA[Roche froide]]></label>
+		<label code="kube39"><![CDATA[Roche volcanique]]></label>
+		<label code="kube40"><![CDATA[Cendres]]></label>
+		<label code="kube41"><![CDATA[Grais]]></label>
+		<label code="kube42"><![CDATA[Totem Antique]]></label>
+		<label code="kube43"><![CDATA[Pâturage]]></label>
+		<label code="kube44"><![CDATA[Fleur Blanche]]></label>
+		<label code="kube45"><![CDATA[Fleur rose]]></label>
+		<label code="kube46"><![CDATA[Stonedge]]></label>
+		<label code="kube47"><![CDATA[Savane]]></label>
+		<label code="kube48"><![CDATA[Arbuste Sec]]></label>
+		<label code="kube49"><![CDATA[Zèbre]]></label>
+		<label code="kube50"><![CDATA[Eléphant]]></label>
+		<label code="kube51"><![CDATA[Sable]]></label>
+		<label code="kube52"><![CDATA[Cactus]]></label>
+		<label code="kube53"><![CDATA[Gland]]></label>
+		<label code="kube54"><![CDATA[Lave]]></label>
+		<label code="kube55"><![CDATA[Sombre]]></label>
+		<label code="kube56"><![CDATA[Dolmen]]></label>
+		<label code="kube57"><![CDATA[Méka]]></label>
+		<label code="kube58"><![CDATA[Métal]]></label>
+		<label code="kube59"><![CDATA[Acier]]></label>
+		<label code="kube60"><![CDATA[Koala]]></label>
+		<label code="kube61"><![CDATA[Invisible]]></label>
+		<label code="kube62"><![CDATA[Améthyste]]></label>
+		<label code="kube63"><![CDATA[Emeraude]]></label>
+		<label code="kube64"><![CDATA[Rubis]]></label>
+		<label code="kube65"><![CDATA[Saphir]]></label>
+		<label code="kube66"><![CDATA[Brouillard]]></label>
+		<label code="kube67"><![CDATA[Ombre]]></label>
+		<label code="kube68"><![CDATA[Lumière]]></label>
+		<label code="kube69"><![CDATA[Or]]></label>
+		<label code="kube70"><![CDATA[Forum]]></label>
+		<label code="kube71"><![CDATA[Téléporteur]]></label>
+		<label code="kube72"><![CDATA[Ressort]]></label>
+		<label code="kube73"><![CDATA[Coffre]]></label>
+		<label code="kube74"><![CDATA[Rubix]]></label>
+		<label code="kube75"><![CDATA[MotionTwin]]></label>
+		<label code="kube76"><![CDATA[Caisse]]></label>
+		<label code="kube77"><![CDATA[Kube de Noël]]></label>
+		
+		<label code="editorHelp"><![CDATA[En attendant quelque chose de plus intuitif,<br />un coup de roulette permet de changer de niveau<br />et en appuyant sur la barre d'espace + drag<br />vous pouvez décaler la vue.]]></label>
+	</labels>
+	
+</root>

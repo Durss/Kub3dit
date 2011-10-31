@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<styleSheets>
+		<styleSheet><![CDATA[css/flashstyles.css?v={v_version}]]></styleSheet>
+	</styleSheets>
+	
+	<fonts>
+		<font><![CDATA[swf/fonts/fonts.swf?v={v_version}]]></font>
+	</fonts>
+	
+	<labels>
+		<file><![CDATA[xml/i18n/labels_{v_lang}.xml?v={v_version}]]></file>
+	</labels>
+	
+	<vars>
+		<var code="xxx"><![CDATA[]]></var>
+	</vars>
+	
+	<paths>
+		<path code="spritesheet"><![CDATA[kubes/spritesheet.png]]></path>
+		<path code="spritemap"><![CDATA[kubes/spritesheet.txt]]></path>
+		<path code="spriteadditionals"><![CDATA[kubes/additionals.txt]]></path>
+	</paths>
+	
+	<dependencies />
+	
+</root>
