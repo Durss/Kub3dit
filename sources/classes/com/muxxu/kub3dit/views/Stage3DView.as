@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import flash.utils.setTimeout;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
@@ -35,7 +36,7 @@ package com.muxxu.kub3dit.views {
 		private var _manager:ChunksManager;
 		private var _context3D:Context3D;
 		private var _accelerated:Boolean;
-		private var _background : Background;
+		private var _background:Background;
 		private var _ground:Ground;
 		private var _visibleChunks:int;
 		private var _mapSize:int;
@@ -86,7 +87,7 @@ package com.muxxu.kub3dit.views {
 			model;
 			if(!_ready) {
 				_ready = true;
-				initialize();
+				setTimeout(initialize, 100);
 			}
 		}
 

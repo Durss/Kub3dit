@@ -1,5 +1,6 @@
 package com.muxxu.kub3dit.engin3d.map {
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
+
 	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
 
@@ -78,7 +79,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			return _map;
 		}
 		
-		public function copyVoxel(chunkSize:int, startx:int, starty:int):ChunkData {
+		public function copyData(chunkSize:int, startx:int, starty:int):ChunkData {
 			var voxelData:ChunkData=new ChunkData(chunkSize, chunkSize, _mapSizeZ, this);
 			voxelData._x=startx;
 			voxelData._y=starty;

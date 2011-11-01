@@ -10,6 +10,7 @@ package com.muxxu.kub3dit.events {
 	public class LightModelEvent extends Event {
 		
 		public static const KUBE_SELECTION_CHANGE:String = "KUBE_SELECTION_CHANGE";
+		private var _data:*;
 		
 		
 		
@@ -19,7 +20,8 @@ package com.muxxu.kub3dit.events {
 		/**
 		 * Creates an instance of <code>LightModelEvent</code>.
 		 */
-		public function LightModelEvent(type:String, bubbles:Boolean = false, cancelable:Boolean = false) {
+		public function LightModelEvent(type:String, data:*, bubbles:Boolean = false, cancelable:Boolean = false) {
+			_data = data;
 			super(type, bubbles, cancelable);
 		}
 
@@ -28,6 +30,10 @@ package com.muxxu.kub3dit.events {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets the event's data
+		 */
+		public function get data():* { return _data; }
 
 
 
@@ -38,7 +44,7 @@ package com.muxxu.kub3dit.events {
 		 * Makes a clone of the event object.
 		 */
 		override public function clone():Event {
-			return new LightModelEvent(type, bubbles, cancelable);
+			return new LightModelEvent(type, data, bubbles, cancelable);
 		}
 
 

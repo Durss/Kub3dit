@@ -11,10 +11,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public var _sizeX:int;
 		public var _sizeY:int;
 		public var _sizeZ:int;
-		private var _map:Map;
 		public var _data:Array;
 		public var _bufferArray:Vector.<Number>;
 		public var _indexesArray:Vector.<uint>;
+		private var _map:Map;
 		
 		public function ChunkData(sizeX:int, sizeY:int, sizeZ:int, map:Map) {
 			_map = map;
@@ -43,13 +43,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 
 		
 		private function createBufferArray():Vector.<Number> {
-			var padding:int					= Textures.PADDING;//Padding between each texture
+			var padding:int					= Textures.PADDING;
 			var bmd:BitmapData				= Textures.getInstance().bitmapData;
 			var cols:int					= bmd.width/(16+padding);
 			var textureStepRatioX:Number	= 1 / (bmd.width/(16+padding));
 			var textureStepRatioY:Number	= 1 / (bmd.height/(16+padding));
-			var textureStretchX:Number		= 1 / (bmd.width) * .15;
-			var textureStretchY:Number		= 1 / (bmd.height) * .15;
+			var textureStretchX:Number		= 1 / (bmd.width) * .3;
+			var textureStretchY:Number		= 1 / (bmd.height) * .3;
 			var paddingSizeX:Number			= 1 / (bmd.width) * (padding);
 			var paddingSizeY:Number			= 1 / (bmd.height) * (padding);
 			var count:int = 0;
@@ -59,8 +59,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var zloc:int;
 			var index:int = 0;
 			var i_index:int = 0;
-			var wasCubeOver:Boolean;
-			var dropShadow:Boolean;
+//			var wasCubeOver:Boolean;
+//			var dropShadow:Boolean;
 			var transparent:Array = Textures.getInstance().transparencies;
 			var translucide:Array = Textures.getInstance().translucide;
 			var cubesFrames:Array = Textures.getInstance().cubesFrames;
@@ -68,8 +68,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			for(zloc = 0; zloc < _sizeZ; zloc++) {
 				for(yloc = 0; yloc < _sizeY; ++yloc) {
 					for (xloc = 0; xloc < _sizeX; ++xloc) {
-					dropShadow = false;
-					wasCubeOver = false;
+//					dropShadow = false;
+//					wasCubeOver = false;
 //					for(zloc = _sizeZ-1; zloc > -1; --zloc) {
 					
 						var tile:int = _data[zloc][yloc][xloc];
@@ -96,8 +96,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							var overCube:int	= _map.getTile(xloc + _x, yloc + _y, zloc + 1);
 							
 							var alpha:Number = translucide[tile]===true? .5 : 1;
-							if(!dropShadow && wasCubeOver && overCube == 0) dropShadow = true;
-							var brightness:Number = dropShadow? .85: 1;
+//							if(!dropShadow && wasCubeOver && overCube == 0) dropShadow = true;
+//							var brightness:Number = dropShadow? .85: 1;
+							var brightness:Number = 1;
 //							brightness += (_x+_y)%16 == 0? .1 : 0;
 						
 							
@@ -395,7 +396,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = brightness;
 							}
 						
-							wasCubeOver = true;
+//							wasCubeOver = true;
 						}
 					}
 				}
