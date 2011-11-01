@@ -119,22 +119,61 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		
 		/**
 		 * Updates a specific cube.
-		 * Automatically detects which chunk needs to be updated and re-creates it.
+		 * Automatically detects which chunk needs to be updated.
 		 */
 		public function update(x:int, y:int, z:int, value:int):void {
-			//TODO manage update out of bounds that crashes everything
+			if(x < 0 || x > _map.mapSizeX-1
+			|| y < 0 || y > _map.mapSizeY-1
+			|| z < 0 || z > _map.mapSizeZ-1) return;
+			
 			_map.updateTile(x, y, z, value);
 			var px:int = Math.floor(x / _chunkSize)*_chunkSize;
 			var py:int = Math.floor(y / _chunkSize)*_chunkSize;
 			
-//			if(px < _offsetX || px >= _chunksW + _offsetX
-//			|| py < _offsetY || py >= _chunksH + _offsetY) return;
-			
 			var chunk:Chunk = _posToChunk[px+"-"+py] as Chunk;
 			if(chunk!=null && !chunk.updating) {
-				//TODO check if the updated cube is on the border of the chunk and update the adjacent one
 				chunk.update(px, py);
 				_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
+				//TODO not yet ok!
+				//Update left
+				if(x % _chunkSize == 0 && x > 0) {
+					px -= _chunkSize;
+					chunk = _posToChunk[px+"-"+py] as Chunk;
+					if(chunk != null) {
+						chunk.update(px, py);
+						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
+					}
+				}
+				
+				//Update right
+				if(x % _chunkSize == _chunkSize - 1 && x <_map.mapSizeX-1) {
+					px += _chunkSize;
+					chunk = _posToChunk[px+"-"+py] as Chunk;
+					if(chunk != null) {
+						chunk.update(px, py);
+						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
+					}
+				}
+				
+				//Update top
+				if(y % _chunkSize == 0 && y > 0) {
+					py -= _chunkSize;
+					chunk = _posToChunk[px+"-"+py] as Chunk;
+					if(chunk != null) {
+						chunk.update(px, py);
+						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
+					}
+				}
+				
+				//Update bottom
+				if(y % _chunkSize == _chunkSize - 1 && y <_map.mapSizeY-1) {
+					py += _chunkSize;
+					chunk = _posToChunk[px+"-"+py] as Chunk;
+					if(chunk != null) {
+						chunk.update(px, py);
+						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
+					}
+				}
 			}
 		}
 

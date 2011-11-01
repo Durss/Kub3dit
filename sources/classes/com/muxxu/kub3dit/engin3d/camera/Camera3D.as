@@ -63,20 +63,21 @@ com.muxxu.kub3dit.engin3d.camera{
 			_dx = Math.min(0, Math.max(_dx,-_mapWidth));
 			_dy = Math.max(0, Math.min(_dy,_mapHeight));
 //			if(_dz < 1.5) _dz = 1.5;
-			_dz = Math.max(Math.min(_dz,31), 1);
+			_dz = Math.max(Math.min(_dz,31), 0);
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
+			var coeff:int = e.ctrlKey? 5 : 1;
 			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z) {
-				_forward = 1;
+				_forward = 1 * coeff;
 			}
 			if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
-				_forward = -1;
+				_forward = -1 * coeff;
 			}
 			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
-				_strafe = -1;
+				_strafe = -1 * coeff;
 			} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q) {
-				_strafe = 1;
+				_strafe = 1 * coeff;
 			}
 		}
 		

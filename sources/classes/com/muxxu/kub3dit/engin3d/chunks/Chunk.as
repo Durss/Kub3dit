@@ -112,7 +112,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Creates the chunk's vertex buffer
 		 */
 		public function createBuffers():void {
-			_data = _map.copyVoxel(_chunkSize, _xloc, _yloc);
+			_data = _map.copyData(_chunkSize, _xloc, _yloc);
 			_data.createArrays();
 			if(_data._bufferArray.length > 0) {
 				_buffer = _context3D.createVertexBuffer(_data._bufferArray.length / 7, 7);

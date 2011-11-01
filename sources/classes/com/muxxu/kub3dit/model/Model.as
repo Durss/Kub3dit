@@ -59,7 +59,7 @@ package com.muxxu.kub3dit.model {
 		 */
 		public function changeKubeId(id:String):void {
 			_currentKubeId = id;
-			ViewLocator.getInstance().dispatchToViews(new LightModelEvent(LightModelEvent.KUBE_SELECTION_CHANGE));
+			ViewLocator.getInstance().dispatchToViews(new LightModelEvent(LightModelEvent.KUBE_SELECTION_CHANGE, _currentKubeId));
 		}
 
 
