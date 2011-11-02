@@ -13,7 +13,8 @@
 	</labels>
 	
 	<vars>
-		<var code="xxx"><![CDATA[]]></var>
+		<var code="mapSize"><![CDATA[1600]]></var>
+		<var code="mapSizeHeigth"><![CDATA[31]]></var>
 	</vars>
 	
 	<paths>

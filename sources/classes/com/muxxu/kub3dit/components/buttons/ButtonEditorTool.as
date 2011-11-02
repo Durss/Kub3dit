@@ -1,4 +1,9 @@
 package com.muxxu.kub3dit.components.buttons {
+	import flash.filters.DropShadowFilter;
+	import flash.utils.clearTimeout;
+	import flash.utils.setTimeout;
+	import com.muxxu.kub3dit.vo.ToolTipAlign;
+	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.events.ButtonEditorToolEvent;
@@ -34,6 +39,8 @@ package com.muxxu.kub3dit.components.buttons {
 		private var _selected:Boolean;
 		private var _defaultSkin:DisplayObject;
 		private var _selectedSkin:ButtonWarnSkin;
+		private var _tooltip:String;
+		private var _timeout:uint;
 		
 		
 		
@@ -47,7 +54,8 @@ package com.muxxu.kub3dit.components.buttons {
 		 * @param icon			button's icon
 		 * @param customizable	defines if the tool can be customized
 		 */
-		public function ButtonEditorTool(icon:DisplayObject, customizable:Boolean) {
+		public function ButtonEditorTool(icon:DisplayObject, customizable:Boolean, tooltip:String = "") {
+			_tooltip = tooltip;
 			_customizable = customizable;
 			_icon = icon;
 			initialize();
@@ -108,6 +116,8 @@ package com.muxxu.kub3dit.components.buttons {
 			if(_customizable) {
 				_optionsBt = addChild(new GraphicButtonKube(new OptionsIcon(), false)) as GraphicButtonKube;
 				_optionsBt.contentMargin = new Margin(0, 0, 0, 0);
+				_optionsBt.filters = [new DropShadowFilter(2,0,0,.2,2,0,1,2)];
+				_optionsBt.visible = false;
 			}
 			_button = addChild(new GraphicButtonKube(_icon)) as GraphicButtonKube;
 			_defaultSkin = _button.background;
@@ -116,7 +126,7 @@ package com.muxxu.kub3dit.components.buttons {
 			_button.iconAlign = IconAlign.CENTER;
 			_button.width = _button.height = 20;
 			
-			if(_customizable) {
+			if(_customizable || _tooltip.length > 0) {
 				_button.addEventListener(NurunButtonEvent.OVER, overHandler);
 				addEventListener(MouseEvent.ROLL_OUT, outHandler);
 			}
@@ -142,6 +152,13 @@ package com.muxxu.kub3dit.components.buttons {
 			_button.background = _selected? _selectedSkin : _defaultSkin;
 		}
 		
+		/**
+		 * Opens the tooltip
+		 */
+		private function openToolTip():void {
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _tooltip, ToolTipAlign.LEFT));
+		}
+		
 		
 		
 		
@@ -151,8 +168,16 @@ package com.muxxu.kub3dit.components.buttons {
 		 * Called whent the main button is rolled over
 		 */
 		private function overHandler(event:NurunButtonEvent):void {
-			TweenLite.to(_optionsBt, .2, {x:_button.width});
+			if(_customizable) {
+				_optionsBt.visible = true;
+				TweenLite.to(_optionsBt, .2, {x:_button.width});
+			}
+			if(_tooltip.length > 0) {
+				clearTimeout(_timeout);
+				_timeout = setTimeout(openToolTip, 300);
+			}
 		}
+
 		
 		/**
 		 * Called when the component is rolled out
@@ -160,7 +185,13 @@ package com.muxxu.kub3dit.components.buttons {
 		private function outHandler(event:MouseEvent):void {
 			if(isNaN(event.localX)) return;//weird thing fired sometimes :/...
 			
-			TweenLite.to(_optionsBt, .2, {x:_button.width - _optionsBt.width});
+			if(_tooltip.length > 0) {
+				clearTimeout(_timeout);
+			}
+			
+			if(_customizable) {
+				TweenLite.to(_optionsBt, .2, {x:_button.width - _optionsBt.width, visible:false});
+			}
 		}
 		
 		/**

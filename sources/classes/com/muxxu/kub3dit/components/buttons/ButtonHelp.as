@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.buttons {
+	import com.muxxu.kub3dit.vo.ToolTipAlign;
 	import com.nurun.components.button.IconAlign;
 	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.graphics.HelpButtonGraphic;
@@ -50,7 +51,7 @@ package com.muxxu.kub3dit.components.buttons {
 		 * ******* */
 
 		private function overCustomHandler(event:NurunButtonEvent):void {
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _ttLabel, true));
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, _ttLabel, ToolTipAlign.BOTTOM_RIGHT));
 		}
 		
 	}

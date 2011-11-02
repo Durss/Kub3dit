@@ -1,5 +1,7 @@
 package com.muxxu.kub3dit.views {
-	import flash.utils.setTimeout;
+	import com.nurun.structure.environnement.configuration.Config;
+	import flash.display.Stage;
+	import com.muxxu.kub3dit.vo.KeyboardConfigs;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
@@ -10,6 +12,7 @@ package com.muxxu.kub3dit.views {
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.utils.math.MathUtils;
+	import com.nurun.utils.pos.PosUtils;
 
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
@@ -23,6 +26,7 @@ package com.muxxu.kub3dit.views {
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
+	import flash.utils.setTimeout;
 
 	/**
 	 * Displays the 3D things
@@ -102,6 +106,8 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function initialize():void {
 			_log = addChild(new CssTextField("debug")) as CssTextField;
+			_log.background = true;
+			_log.visible = false;
 			new Camera3D(stage);
 			
 			_stage3D = stage.stage3Ds[0];
@@ -131,7 +137,7 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function createVoxelChunks():void {
 			_chunkSize = 8;//Number of cubes to compose a chunks of
-			_mapSize = 32 * 8;//Numer of cubes to compose the map of in width and height
+			_mapSize = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
 			_visibleCubes = _accelerated? 160 : 32;//Number of visible cubes before fog
 			_visibleChunks = _visibleCubes / _chunkSize;//Number of visible chunks around us
 			
@@ -150,11 +156,19 @@ package com.muxxu.kub3dit.views {
 		}
 
 		private function keyUpHandler(event:KeyboardEvent):void {
-			if(event.keyCode == Keyboard.NUMPAD_ADD || event.keyCode == Keyboard.NUMPAD_SUBTRACT) {
-				_visibleChunks += event.keyCode == Keyboard.NUMPAD_ADD? 1 : -1;
+			if(!(event.target is Stage)) return;
+			
+			if(event.keyCode == Keyboard.NUMPAD_ADD || event.keyCode == Keyboard.NUMPAD_SUBTRACT
+			|| event.keyCode == KeyboardConfigs.FOG_FAR || event.keyCode == KeyboardConfigs.FOG_NEAR) {
+				_visibleChunks += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
 				_visibleChunks = MathUtils.restrict(_visibleChunks, 2, _mapSize/_chunkSize);
 				_visibleCubes = _visibleChunks * _chunkSize;
 				_manager.setVisibleChunks(_visibleChunks,_visibleChunks);
+			}
+			
+			if(event.keyCode == Keyboard.ESCAPE && event.ctrlKey) {
+				_log.text = _context3D.driverInfo;
+				_log.visible = !_log.visible;
 			}
 		}
 		
@@ -201,7 +215,7 @@ package com.muxxu.kub3dit.views {
 			_context3D.present();
 			
 //			_log.text = _manager.offsetX+" :: "+_manager.offsetY+"\n"+Camera3D.locX+" :: "+Camera3D.locY;
-//			_log.x = stage.stageWidth - _log.width;
+			PosUtils.centerInStage(_log);
 		}
 
 		/**

@@ -25,6 +25,7 @@ package com.muxxu.kub3dit.views {
 		private var _tools:ToolsPanel;
 		private var _config:ConfigToolPanel;
 		private var _currentPanel:IToolPanel;
+		private var _eraseMode:Boolean;
 		
 		
 		
@@ -122,6 +123,7 @@ package com.muxxu.kub3dit.views {
 		private function selectToolHandler(event:ToolsPanelEvent):void {
 			_config.close();
 			_currentPanel = _config.setPanelType(event.panelType);
+			_currentPanel.eraseMode = _eraseMode;
 			_grid.currentPanel = _currentPanel;
 		}
 		
@@ -129,6 +131,7 @@ package com.muxxu.kub3dit.views {
 		 * Called when the erase mode changes
 		 */
 		private function eraseModeChangeHandler(event:ToolsPanelEvent):void {
+			_eraseMode = _tools.eraseMode;
 			_currentPanel.eraseMode = _tools.eraseMode;
 		}
 		
