@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit {
+	import com.muxxu.kub3dit.views.SplashScreenView;
 	import com.muxxu.kub3dit.views.ToolTipView;
 	import com.muxxu.kub3dit.views.KubeSelectorView;
 	import net.hires.debug.Stats;
@@ -29,6 +30,7 @@ package com.muxxu.kub3dit {
 	public class Application extends MovieClip {
 		
 		private var _model:Model;
+		private var _splashScreen:SplashScreenView;
 		
 		
 		
@@ -65,6 +67,17 @@ package com.muxxu.kub3dit {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_splashScreen = addChild(new SplashScreenView()) as SplashScreenView;
+			_splashScreen.addEventListener(Event.COMPLETE, startApplication);
+		}
+		
+		/**
+		 * Starts the application after the splashscreen
+		 */
+		private function startApplication(event:Event):void {
+			removeChild(_splashScreen);
+			_splashScreen.addEventListener(Event.COMPLETE, startApplication);
+			
 			_model = new Model();
 			FrontControler.getInstance().initialize(_model);
 			ViewLocator.getInstance().initialise(_model);

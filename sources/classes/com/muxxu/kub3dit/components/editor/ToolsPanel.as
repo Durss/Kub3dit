@@ -1,14 +1,14 @@
 package com.muxxu.kub3dit.components.editor {
-	import com.muxxu.kub3dit.components.editor.toolpanels.SpherePanel;
-	import com.muxxu.kub3dit.components.editor.toolpanels.CubePanel;
-	import com.nurun.utils.vector.VectorUtils;
+	import flash.ui.Keyboard;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
 	import com.muxxu.kub3dit.components.editor.toolpanels.CirclePanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.CubePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.DiskPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.FilledRectanglePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.PencilPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.RectanglePanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.SpherePanel;
 	import com.muxxu.kub3dit.events.ButtonEditorToolEvent;
 	import com.muxxu.kub3dit.events.ToolsPanelEvent;
 	import com.muxxu.kub3dit.graphics.RubberIcon;
@@ -20,13 +20,16 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.graphics.Tool6Icon;
 	import com.muxxu.kub3dit.graphics.Tool7Icon;
 	import com.muxxu.kub3dit.graphics.Tool8Icon;
+	import com.muxxu.kub3dit.vo.KeyboardConfigs;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.components.form.events.FormComponentGroupEvent;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.utils.vector.VectorUtils;
 
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.utils.Dictionary;
 	
 	[Event(name="openPanel", type="com.muxxu.kub3dit.events.ToolsPanelEvent")]
@@ -102,15 +105,15 @@ package com.muxxu.kub3dit.components.editor {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_rubber	= addChild(new ButtonEditorTool( new RubberIcon(), false )) as ButtonEditorTool;
-			_pencil	= addChild(new ButtonEditorTool( new Tool1Icon(), true )) as ButtonEditorTool;
-			_bucket	= addChild(new ButtonEditorTool( new Tool2Icon(), false )) as ButtonEditorTool;
-			_circle	= addChild(new ButtonEditorTool( new Tool3Icon(), true )) as ButtonEditorTool;
-			_disk	= addChild(new ButtonEditorTool( new Tool4Icon(), true )) as ButtonEditorTool;
-			_rect	= addChild(new ButtonEditorTool( new Tool5Icon(), true )) as ButtonEditorTool;
-			_rectf	= addChild(new ButtonEditorTool( new Tool6Icon(), true )) as ButtonEditorTool;
-			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true )) as ButtonEditorTool;
-			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true )) as ButtonEditorTool;
+			_rubber	= addChild(new ButtonEditorTool( new RubberIcon(), false, Label.getLabel("helpToolsRubber"))) as ButtonEditorTool;
+			_pencil	= addChild(new ButtonEditorTool( new Tool1Icon(), true, Label.getLabel("helpTools1") )) as ButtonEditorTool;
+			_bucket	= addChild(new ButtonEditorTool( new Tool2Icon(), false, Label.getLabel("helpTools2") )) as ButtonEditorTool;
+			_circle	= addChild(new ButtonEditorTool( new Tool3Icon(), true, Label.getLabel("helpTools3") )) as ButtonEditorTool;
+			_disk	= addChild(new ButtonEditorTool( new Tool4Icon(), true, Label.getLabel("helpTools4") )) as ButtonEditorTool;
+			_rect	= addChild(new ButtonEditorTool( new Tool5Icon(), true, Label.getLabel("helpTools5") )) as ButtonEditorTool;
+			_rectf	= addChild(new ButtonEditorTool( new Tool6Icon(), true, Label.getLabel("helpTools6") )) as ButtonEditorTool;
+			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true, Label.getLabel("helpTools7") )) as ButtonEditorTool;
+			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
 			
 			_group = new FormComponentGroup();
@@ -147,7 +150,21 @@ package com.muxxu.kub3dit.components.editor {
 			var clazz:Class = _buttonToClassType[_group.selectedItem];
 			dispatchEvent(new ToolsPanelEvent(ToolsPanelEvent.SELECT_TOOL, clazz));
 			
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			
 			computePositions();
+		}
+		
+		/**
+		 * Called when a key is released.
+		 */
+		private function keyUpHandler(event:KeyboardEvent):void {
+			if(event.keyCode == KeyboardConfigs.TOGGLE_ERASE) {
+				_rubber.selected = !_rubber.selected;
+			}
+			if(event.keyCode >= Keyboard.NUMBER_1 && event.keyCode <= Keyboard.NUMBER_8) {
+				_tools[ event.keyCode-Keyboard.NUMBER_1 ].selected = true;
+			}
 		}
 		
 		/**

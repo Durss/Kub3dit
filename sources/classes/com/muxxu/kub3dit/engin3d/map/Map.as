@@ -40,12 +40,14 @@ package com.muxxu.kub3dit.engin3d.map {
 		}
 
 		private function generateFlatMap(mapSizeX:int, mapSizeY:int, mapSizeZ:int):void {
-			_map = new ByteArray();
-			
 			_mapSizeX=mapSizeX;
 			_mapSizeY=mapSizeY;
 			_mapSizeZ=mapSizeZ;
 			
+			_map = new ByteArray();
+			_map.length = _mapSizeX * _mapSizeY * _mapSizeZ;
+			
+			return;
 			var i:int, len:int;//, radius:int;
 			len = _mapSizeX * _mapSizeY * _mapSizeZ;
 			for(i = 0; i < len; ++i) {
@@ -73,6 +75,7 @@ package com.muxxu.kub3dit.engin3d.map {
 //			_map.writeByte(71);
 //			_map.writeByte(71);
 //			_map.writeByte(71);
+//			trace(getSize(_map))
 		}
 		
 		public function get data():ByteArray {

@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.chunks {
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.map.Map;
@@ -99,7 +100,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_mapSize = mapSize;
 				
 				//Setup map
-				_map = new Map(mapSize, mapSize, 31);
+				_map = new Map(mapSize, mapSize, Config.getNumVariable("mapSizeHeigth"));
 				
 				_efTarget = new Shape();
 				

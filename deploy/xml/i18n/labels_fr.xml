@@ -79,7 +79,16 @@
 		<label code="kube76"><![CDATA[Caisse]]></label>
 		<label code="kube77"><![CDATA[Kube de Noël]]></label>
 		
-		<label code="helpTools"><![CDATA[]]></label>
+		<label code="helpTools"><![CDATA[Appuyez sur la barre d'espace<br />pour pouvoir déplacer la grille.]]></label>
+		<label code="helpToolsRubber"><![CDATA[Bascule l'outil courant en mode gomme (E)]]></label>
+		<label code="helpTools1"><![CDATA[Pinceau (1)]]></label>
+		<label code="helpTools2"><![CDATA[Pot de peinture (2)]]></label>
+		<label code="helpTools3"><![CDATA[Cercle (3)]]></label>
+		<label code="helpTools4"><![CDATA[Disque (4)]]></label>
+		<label code="helpTools5"><![CDATA[Cadre (5)]]></label>
+		<label code="helpTools6"><![CDATA[Cadre (6)]]></label>
+		<label code="helpTools7"><![CDATA[Cube (7)]]></label>
+		<label code="helpTools8"><![CDATA[Sphère (8)]]></label>
 		
 		<label code="toolConfig-pencilShape-input"><![CDATA[Taille]]></label>
 		<label code="toolConfig-pencilShape-square"><![CDATA[Carré]]></label>
