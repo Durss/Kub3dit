@@ -138,7 +138,7 @@ package com.muxxu.kub3dit.views {
 		private function createVoxelChunks():void {
 			_chunkSize = 8;//Number of cubes to compose a chunks of
 			_mapSize = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
-			_visibleCubes = _accelerated? 160 : 32;//Number of visible cubes before fog
+			_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
 			_visibleChunks = _visibleCubes / _chunkSize;//Number of visible chunks around us
 			
 			_visibleChunks = Math.min(_mapSize, _visibleChunks);
@@ -147,8 +147,9 @@ package com.muxxu.kub3dit.views {
 			Camera3D.setMapSize(_mapSize, _mapSize);
 			Camera3D.setPosition(new Vector3D(0,0,2));
 			Camera3D.setPosition(new Vector3D(-_mapSize*.5,_mapSize*.5, 2));
-			Camera3D.rotationX = -45;
-			//Do this AFTER camera init to be sure the chunks loading priority
+			Camera3D.rotationX = 0;
+			
+			//Do the following AFTER camera init to be sure the chunks loading priority
 			//based on the z-sorting will be done correctly
 			renderFrame(null);
 			_manager.setVisibleChunks(_visibleChunks,_visibleChunks);
@@ -188,7 +189,7 @@ package com.muxxu.kub3dit.views {
 		private function renderFrame(e:Event):void {
 			var W:int = stage.stageWidth;
 			var H:int = stage.stageHeight;
-			_context3D.configureBackBuffer(W, H, 4, true);
+			_context3D.configureBackBuffer(W, H, 0, true);
 			_context3D.clear();
 			
 			//compute transformation matrix

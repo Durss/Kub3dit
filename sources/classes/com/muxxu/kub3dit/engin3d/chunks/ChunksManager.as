@@ -132,15 +132,16 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var py:int = Math.floor(y / _chunkSize)*_chunkSize;
 			
 			var chunk:Chunk = _posToChunk[px+"-"+py] as Chunk;
-			if(chunk!=null && !chunk.updating) {
-				chunk.update(px, py);
-				_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
-				//TODO not yet ok!
+			if(chunk!=null) {
+				if(!chunk.updating) {
+					chunk.update(px, py);
+					_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
+				}
 				//Update left
 				if(x % _chunkSize == 0 && x > 0) {
 					px -= _chunkSize;
 					chunk = _posToChunk[px+"-"+py] as Chunk;
-					if(chunk != null) {
+					if(chunk != null && !chunk.updating) {
 						chunk.update(px, py);
 						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
 					}
@@ -150,7 +151,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				if(x % _chunkSize == _chunkSize - 1 && x <_map.mapSizeX-1) {
 					px += _chunkSize;
 					chunk = _posToChunk[px+"-"+py] as Chunk;
-					if(chunk != null) {
+					if(chunk != null && !chunk.updating) {
 						chunk.update(px, py);
 						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
 					}
@@ -160,7 +161,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				if(y % _chunkSize == 0 && y > 0) {
 					py -= _chunkSize;
 					chunk = _posToChunk[px+"-"+py] as Chunk;
-					if(chunk != null) {
+					if(chunk != null && !chunk.updating) {
 						chunk.update(px, py);
 						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
 					}
@@ -170,7 +171,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				if(y % _chunkSize == _chunkSize - 1 && y <_map.mapSizeY-1) {
 					py += _chunkSize;
 					chunk = _posToChunk[px+"-"+py] as Chunk;
-					if(chunk != null) {
+					if(chunk != null && !chunk.updating) {
 						chunk.update(px, py);
 						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(px, py, 0)).z});
 					}
