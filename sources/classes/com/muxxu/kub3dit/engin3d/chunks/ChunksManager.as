@@ -50,8 +50,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _sceneWidth:int;
 		private var _sceneHeight:int;
 		private var _shaderProgram:Program3D;
-		private var _mapSize:int;
+		private var _mapSizeW:int;
 		private var _posToChunk:Array;
+		private var _mapSizeH:int;
 		
 		
 		
@@ -89,7 +90,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		/**
 		 * Initializes the chunks manager
 		 */
-		public function initialize(context3D:Context3D, chunkSize:int, mapSize:int):void {
+		public function initialize(context3D:Context3D, chunkSize:int, mapSizeW:int, mapSizeH:int):void {
 			// okay this function should set up and dispose any buffers
 			// this is only ever called once at the start of the program
 			if(!_intialized) {
@@ -97,10 +98,11 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_intialized = true;
 				_chunkSize = chunkSize;
 				_context3D = context3D;
-				_mapSize = mapSize;
+				_mapSizeW = mapSizeW;
+				_mapSizeH = mapSizeH;
 				
 				//Setup map
-				_map = new Map(mapSize, mapSize, Config.getNumVariable("mapSizeHeight"));
+				_map = new Map(_mapSizeW, _mapSizeH, Config.getNumVariable("mapSizeHeight"));
 				
 				_efTarget = new Shape();
 				
@@ -245,8 +247,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_offsetX = Math.floor((-Camera3D.locX-(_chunkSize*_chunksW*.5))/_chunkSize)+viewXShift;
 			_offsetY = Math.floor((Camera3D.locY-(_chunkSize*_chunksH*.5))/_chunkSize)+viewYShift;
 			//max limit
-			_offsetX = Math.min(Math.floor(_mapSize/_chunkSize - _chunksW), _offsetX);
-			_offsetY = Math.min(Math.floor(_mapSize/_chunkSize - _chunksH), _offsetY);
+			_offsetX = Math.min(Math.floor(_mapSizeW/_chunkSize - _chunksW), _offsetX);
+			_offsetY = Math.min(Math.floor(_mapSizeH/_chunkSize - _chunksH), _offsetY);
 			//min limit
 			_offsetX = Math.max(0, _offsetX);
 			_offsetY = Math.max(0, _offsetY);

@@ -43,11 +43,12 @@ package com.muxxu.kub3dit.views {
 		private var _background:Background;
 		private var _ground:Ground;
 		private var _visibleChunks:int;
-		private var _mapSize:int;
+		private var _mapSizeW:int;
 		private var _chunkSize:int;
 		private var _ready:Boolean;
 		private var _visibleCubes:int;
 		private var _log:CssTextField;
+		private var _mapSizeH:Number;
 		
 		
 		
@@ -137,22 +138,25 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function createVoxelChunks():void {
 			_chunkSize = 8;//Number of cubes to compose a chunks of
-			_mapSize = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
+			_mapSizeW = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
+			_mapSizeH = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
 			_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
 			_visibleChunks = _visibleCubes / _chunkSize;//Number of visible chunks around us
 			
-			_visibleChunks = Math.min(_mapSize, _visibleChunks);
-			_manager.initialize(_context3D, _chunkSize, _mapSize);
+			_mapSizeW = 32;
+			_mapSizeH = 16;
+			
+			_manager.initialize(_context3D, _chunkSize, _mapSizeW, _mapSizeH);
 			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
-			Camera3D.setMapSize(_mapSize, _mapSize);
+			Camera3D.setMapSize(_mapSizeW, _mapSizeH);
 			Camera3D.setPosition(new Vector3D(0,0,2));
-			Camera3D.setPosition(new Vector3D(-_mapSize*.5,_mapSize*.5, 2));
+			Camera3D.setPosition(new Vector3D(-_mapSizeW*.5,_mapSizeH*.5, 2));
 			Camera3D.rotationX = 0;
 			
 			//Do the following AFTER camera init to be sure the chunks loading priority
 			//based on the z-sorting will be done correctly
 			renderFrame(null);
-			_manager.setVisibleChunks(_visibleChunks,_visibleChunks);
+			_manager.setVisibleChunks(Math.min(_visibleChunks, _mapSizeW/_chunkSize), Math.min(_visibleChunks, _mapSizeH/_chunkSize));
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 		}
 
@@ -162,8 +166,9 @@ package com.muxxu.kub3dit.views {
 			if(event.keyCode == Keyboard.NUMPAD_ADD || event.keyCode == Keyboard.NUMPAD_SUBTRACT
 			|| event.keyCode == KeyboardConfigs.FOG_FAR || event.keyCode == KeyboardConfigs.FOG_NEAR) {
 				_visibleChunks += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
-				_visibleChunks = MathUtils.restrict(_visibleChunks, 2, _mapSize/_chunkSize);
-				_visibleCubes = _visibleChunks * _chunkSize;
+				_visibleCubes += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? _chunkSize : -_chunkSize;
+				_visibleCubes = Math.max(_visibleCubes, _chunkSize);
+				_visibleChunks = MathUtils.restrict(_visibleChunks, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
 				_manager.setVisibleChunks(_visibleChunks,_visibleChunks);
 			}
 			
@@ -205,8 +210,8 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var farplane:int = _visibleCubes*.5 - _chunkSize;//Number of cubes to start the fog at
-			var fogLength:int = _visibleChunks < 4? 4 : 8;//Number of cubes to do the fog on
+			var fogLength:int = Math.min(Math.floor(_visibleChunks*.5), 16);//Number of cubes to do the fog on
+			var farplane:int = _visibleCubes*.5;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			

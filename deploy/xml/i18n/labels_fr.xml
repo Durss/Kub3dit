@@ -86,11 +86,9 @@
 		<label code="helpTools1"><![CDATA[Pinceau (1)]]></label>
 		<label code="helpTools2"><![CDATA[Pot de peinture (2)]]></label>
 		<label code="helpTools3"><![CDATA[Cercle (3)]]></label>
-		<label code="helpTools4"><![CDATA[Disque (4)]]></label>
-		<label code="helpTools5"><![CDATA[Cadre (5)]]></label>
-		<label code="helpTools6"><![CDATA[Cadre (6)]]></label>
-		<label code="helpTools7"><![CDATA[Cube (7)]]></label>
-		<label code="helpTools8"><![CDATA[Sphère (8)]]></label>
+		<label code="helpTools5"><![CDATA[Cadre (4)]]></label>
+		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
+		<label code="helpTools8"><![CDATA[Sphère (6)]]></label>
 		<label code="helpSyncCam"><![CDATA[Vous déplacer dans l'environnement 3D<br />changera automatiquement le niveau<br />d'affichage de la grille]]></label>
 		<label code="helpMoveCam"><![CDATA[Déplace la caméra au niveau d'affichage<br />courant de la grille.]]></label>
 		

@@ -60,8 +60,8 @@ com.muxxu.kub3dit.engin3d.camera{
 			_dx -= moveX * .025;
 			_dy += moveY * .025;
 			_dz += moveZ * .025;
-			_dx = Math.min(0, Math.max(_dx,-_mapWidth));
-			_dy = Math.max(0, Math.min(_dy,_mapHeight));
+			_dx = Math.min(1, Math.max(_dx,-_mapWidth));
+			_dy = Math.max(-1, Math.min(_dy,_mapHeight));
 //			if(_dz < 1.5) _dz = 1.5;
 			_dz = Math.max(Math.min(_dz,30), 0);
 		}
@@ -139,8 +139,8 @@ com.muxxu.kub3dit.engin3d.camera{
 		}
 
 		public static function setMapSize(width:Number, height:Number):void {
-			_mapHeight = height;
 			_mapWidth = width;
+			_mapHeight = height;
 		}
 
 		public static function moveZTo(level:Number):void {
