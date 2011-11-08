@@ -2,8 +2,8 @@
 .error { font-family:Verdana; font-size:12; color:#CC0000; }
 
 .link { color:#CC0000; text-decoration:underline; }
-.tooltipContent { font-family:Verdana; font-size:12; color:#ffffff; }
-.tooltipContentWarn { font-family:Verdana; font-weight:bold; font-size:12; color:#aa0000; }
+.tooltipContent { font-family:Verdana; font-size:10; color:#ffffff; }
+.tooltipContentWarn { font-family:Verdana; font-weight:bold; font-size:10; color:#aa0000; }
 
 .errorWindowTitle { font-family:Verdana; font-weight:bold; font-size:12; color:#ffffff; }
 .errorWindowDescription { font-family:Verdana; font-size:10; color:#000000; }
@@ -31,7 +31,12 @@
 .comboboxButtonItemSelected_disabled { font-family:Verdana; font-size:20; font-weight:bold; color:#8E2424; flash-alpha:.4; }
 
 .checkBox { font-family:Verdana; font-size:12; color:#ffffff; }
-.checkBox_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }
+.checkBox_selected { font-family:Verdana; font-size:12; color:#ffffff; }
+/*.checkBox_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }*/
 
 .radioButton { font-family:Verdana; font-size:12; color:#ffffff; }
 .radioButton_selected { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; }
+
+.levelSliderButton { font-family:Verdana; font-size:10; color:#ffffff; }
+.levelSliderCamButton { font-family:Verdana; font-size:10; color:#ffffff; }
+.levelSliderCheckbox { font-family:Verdana; font-size:10; color:#ffffff; }
