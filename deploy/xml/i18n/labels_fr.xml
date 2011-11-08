@@ -79,7 +79,9 @@
 		<label code="kube76"><![CDATA[Caisse]]></label>
 		<label code="kube77"><![CDATA[Kube de Noël]]></label>
 		
-		<label code="helpTools"><![CDATA[Appuyez sur la barre d'espace<br />pour pouvoir déplacer la grille.]]></label>
+		<label code="kubesList"><![CDATA[Palette de kube]]></label>
+		
+		<label code="helpTools"><![CDATA[Gardez la barre d'espace appuyée<br />pour pouvoir déplacer la grille.]]></label>
 		<label code="helpToolsRubber"><![CDATA[Bascule l'outil courant en mode gomme (E)]]></label>
 		<label code="helpTools1"><![CDATA[Pinceau (1)]]></label>
 		<label code="helpTools2"><![CDATA[Pot de peinture (2)]]></label>

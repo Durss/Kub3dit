@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import flash.filters.DropShadowFilter;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
 	import com.muxxu.kub3dit.events.ToolsPanelEvent;
 	import com.muxxu.kub3dit.components.editor.ConfigToolPanel;
@@ -26,6 +27,7 @@ package com.muxxu.kub3dit.views {
 		private var _config:ConfigToolPanel;
 		private var _currentPanel:IToolPanel;
 		private var _eraseMode:Boolean;
+		private var _kubeSelector:KubeSelectorView;
 		
 		
 		
@@ -53,7 +55,9 @@ package com.muxxu.kub3dit.views {
 			if(!_ready) {
 				_ready = true;
 				initialize();
+				_kubeSelector.update(event);
 				_grid.currentKube = model.currentKubeId;
+				computePositions();
 			}
 		}
 		
@@ -81,6 +85,7 @@ package com.muxxu.kub3dit.views {
 			_grid = addChild(new Grid()) as Grid;
 			_config = addChild(new ConfigToolPanel()) as ConfigToolPanel;
 			_tools = addChild(new ToolsPanel()) as ToolsPanel;
+			_kubeSelector = addChild(new KubeSelectorView()) as KubeSelectorView;
 			
 			stage.addEventListener(Event.RESIZE, computePositions);
 			_tools.addEventListener(ToolsPanelEvent.OPEN_PANEL, openConfigPanelHandler);
@@ -89,19 +94,24 @@ package com.muxxu.kub3dit.views {
 			
 			_tools.init();//kind of dirty... this is used to be sure to listen for the event before they are fired.
 			
-			computePositions();
+			_background.filters = [new DropShadowFilter(2, 135, 0, .2, 2, 2, 1, 2)];
 		}
 		
 		/**
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_background.width = Math.round(_tools.width + 15 + _grid.width);
-			_background.height = Math.max(_tools.height, _grid.height, 10) + 10;
 			_grid.x = Math.round(_tools.width + 10);
 			_grid.y = 5;
 			_tools.x = 5;
 			_tools.y = 5;
+			
+			_kubeSelector.width = Math.round(_grid.x + _grid.width - 5);
+			_kubeSelector.x = 5;
+			_kubeSelector.y = Math.max(_tools.height, _grid.height) + 15;
+			
+			_background.width = Math.round(_grid.x + _grid.width + 5);
+			_background.height = Math.round(_kubeSelector.y + _kubeSelector.height) + 10;
 			
 			_config.width = _grid.width;
 			_config.x = _grid.x;

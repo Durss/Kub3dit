@@ -8,6 +8,8 @@
 .errorWindowTitle { font-family:Verdana; font-weight:bold; font-size:12; color:#ffffff; }
 .errorWindowDescription { font-family:Verdana; font-size:10; color:#000000; }
 
+.kubesListTitle { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#ffffff; flash-background:true; flash-backgroundcolor:#265367;}
+
 .inputToolsConfLabel { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#ffffff; }
 .input { font-family:Verdana; font-size:12; font-weight:bold; font-style:normal; color:#265367; }
 .inputDefault { font-family:Verdana; font-size:12; font-weight:normal; font-style:italic; color:#265367; }

@@ -127,7 +127,7 @@ package com.muxxu.kub3dit.components.editor {
 			_moveCam.addEventListener(NurunButtonEvent.OVER, rollOverButtonHandler);
 			_syncCb.addEventListener(NurunButtonEvent.OVER, rollOverButtonHandler);
 			
-			level = Math.round(Camera3D.locZ);
+			level = 0;//Math.round(Camera3D.locZ);
 		}
 		
 		/**

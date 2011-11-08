@@ -99,7 +99,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 //							if(!dropShadow && wasCubeOver && overCube == 0) dropShadow = true;
 //							var brightness:Number = dropShadow? .85: 1;
 							var brightness:Number = 1;
-//							brightness += (_x+_y)%16 == 0? .1 : 0;
+//							brightness += (_x+_y)%16 == 0? 1 : 0;
 						
 							
 							//BACK

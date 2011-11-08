@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.views {
+	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.components.text.CssTextField;
 	import com.muxxu.kub3dit.components.KubeSelectorButton;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
@@ -25,6 +27,8 @@ package com.muxxu.kub3dit.views {
 		private var _kubes:Vector.<KubeSelectorButton>;
 		private var _holder:Sprite;
 		private var _group:FormComponentGroup;
+		private var _width:Number;
+		private var _title:CssTextField;
 		
 		
 		
@@ -48,11 +52,19 @@ package com.muxxu.kub3dit.views {
 		 * Called on model's update
 		 */
 		override public function update(event:IModelEvent):void {
+			trace("KubeSelectorView.update(event)");
 			var model:Model = event.model as Model;
 			if(!_ready)  {
 				_ready = true;
 				createList(model.currentKubeId);
 			}
+		}
+		/**
+		 * Sets the width of the component without simply scaling it.
+		 */
+		override public function set width(value:Number):void {
+			_width = value;
+			computePositions();
 		}
 
 
@@ -75,6 +87,10 @@ package com.muxxu.kub3dit.views {
 			_group = new FormComponentGroup();
 			
 			_holder = addChild(new Sprite()) as Sprite;
+			_title = addChild(new CssTextField("kubesListTitle")) as CssTextField;
+			
+			_width = 200;
+			_title.text = Label.getLabel("kubesList");
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
@@ -84,21 +100,17 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function addedToStageHandler(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-			stage.addEventListener(Event.RESIZE, computePositions);
-			computePositions();
+//			stage.addEventListener(Event.RESIZE, computePositions);
+//			computePositions();
 		}
 		
 		/**
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			PosUtils.hDistribute(_kubes, stage.stageWidth, 2, 2);
-			PosUtils.alignToBottomOf(_holder, stage, 5);
-			
-			graphics.clear();
-			graphics.beginFill(0, .5);
-			graphics.drawRect(0, _holder.y - 5, stage.stageWidth, _holder.height + 10);
-			graphics.endFill();
+			PosUtils.hDistribute(_kubes, _width, 2, 2);
+			_title.width = _width;
+			_holder.y = Math.round(_title.height + 2);
 		}
 		
 		/**
@@ -112,7 +124,7 @@ package com.muxxu.kub3dit.views {
 			for (var i:String in frames) {
 				top = bitmaps[i][0] == null? empty : bitmaps[i][0];
 				side = bitmaps[i][1] == null? empty : bitmaps[i][1];
-				bt = new KubeSelectorButton( drawIsoKube(top, side), i );
+				bt = new KubeSelectorButton( drawIsoKube(top, side, true, .75), i );
 				_kubes.push(bt);
 				_holder.addChild(bt);
 				_group.add(bt);

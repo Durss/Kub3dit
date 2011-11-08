@@ -1,13 +1,13 @@
 package com.muxxu.kub3dit {
-	import com.muxxu.kub3dit.views.SplashScreenView;
-	import com.muxxu.kub3dit.views.ToolTipView;
-	import com.muxxu.kub3dit.views.KubeSelectorView;
 	import net.hires.debug.Stats;
+
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
 	import com.muxxu.kub3dit.views.EditorView;
 	import com.muxxu.kub3dit.views.RadarView;
+	import com.muxxu.kub3dit.views.SplashScreenView;
 	import com.muxxu.kub3dit.views.Stage3DView;
+	import com.muxxu.kub3dit.views.ToolTipView;
 	import com.nurun.structure.mvc.views.ViewLocator;
 
 	import flash.display.MovieClip;
@@ -83,7 +83,7 @@ package com.muxxu.kub3dit {
 			ViewLocator.getInstance().initialise(_model);
 			
 			addChild(new Stage3DView());
-			addChild(new KubeSelectorView());
+//			addChild(new KubeSelectorView());
 			addChild(new RadarView());
 			addChild(new EditorView());
 			addChild(new ToolTipView());
