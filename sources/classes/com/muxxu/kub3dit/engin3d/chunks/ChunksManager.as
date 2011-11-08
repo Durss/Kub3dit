@@ -100,7 +100,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_mapSize = mapSize;
 				
 				//Setup map
-				_map = new Map(mapSize, mapSize, Config.getNumVariable("mapSizeHeigth"));
+				_map = new Map(mapSize, mapSize, Config.getNumVariable("mapSizeHeight"));
 				
 				_efTarget = new Shape();
 				

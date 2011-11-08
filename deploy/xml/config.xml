@@ -14,13 +14,14 @@
 	
 	<vars>
 		<var code="mapSize"><![CDATA[1600]]></var>
-		<var code="mapSizeHeigth"><![CDATA[31]]></var>
+		<var code="mapSizeHeight"><![CDATA[31]]></var>
 	</vars>
 	
 	<paths>
 		<path code="spritesheet"><![CDATA[kubes/spritesheet.png]]></path>
 		<path code="spritemap"><![CDATA[kubes/spritesheet.txt]]></path>
 		<path code="spriteadditionals"><![CDATA[kubes/additionals.txt]]></path>
+		<path code="levelColors"><![CDATA[kubes/levelColors.png]]></path>
 	</paths>
 	
 	<dependencies />

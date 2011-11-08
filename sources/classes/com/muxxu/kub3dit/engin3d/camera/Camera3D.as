@@ -18,7 +18,7 @@ com.muxxu.kub3dit.engin3d.camera{
 		public static var rotationY:Number = 0;
 		private static var _dx:Number = 0;
 		private static var _dy:Number = 0;
-		private static var _dz:Number = 50;
+		private static var _dz:Number = 1;
 		private static var _mapWidth:Number;
 		private static var _mapHeight:Number;
 		
@@ -63,7 +63,7 @@ com.muxxu.kub3dit.engin3d.camera{
 			_dx = Math.min(0, Math.max(_dx,-_mapWidth));
 			_dy = Math.max(0, Math.min(_dy,_mapHeight));
 //			if(_dz < 1.5) _dz = 1.5;
-			_dz = Math.max(Math.min(_dz,31), 0);
+			_dz = Math.max(Math.min(_dz,30), 0);
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
@@ -88,7 +88,7 @@ com.muxxu.kub3dit.engin3d.camera{
 		
 		private function mouseWheel(e:MouseEvent):void {
 			if(e.target is Stage) {
-				_dz += (e.delta > 0)? 1 : -1;
+				_dz += (e.delta > 0)? -1 : 1;
 			}
 		}
 		
@@ -141,6 +141,11 @@ com.muxxu.kub3dit.engin3d.camera{
 		public static function setMapSize(width:Number, height:Number):void {
 			_mapHeight = height;
 			_mapWidth = width;
+		}
+
+		public static function moveZTo(level:Number):void {
+			_dz = level;
+			rotationY = 0;
 		}
 		
 	}

@@ -19,13 +19,16 @@ package com.muxxu.kub3dit.commands {
 	 * @date 30 oct. 2011;
 	 */
 	public class InitTexturesCmd extends AbstractCommand implements Command {
+		
 		private var _spool:SequentialCommand;
 		private var _spriteSheetCmd:LoadBitmapFileCmd;
 		private var _spriteMapCmd:LoadFileCmd;
 		private var _spriteAddsCmd:LoadFileCmd;
 		private var _bmd:BitmapData;
-		private var _map:*;
-		private var _adds:*;
+		private var _map:String;
+		private var _adds:String;
+		private var _levelColorsCmd:LoadBitmapFileCmd;
+		private var _levelColors:BitmapData;
 		
 		
 		
@@ -59,14 +62,17 @@ package com.muxxu.kub3dit.commands {
 			_spriteSheetCmd = new LoadBitmapFileCmd(Config.getPath("spritesheet"));
 			_spriteMapCmd = new LoadFileCmd(Config.getPath("spritemap"));
 			_spriteAddsCmd = new LoadFileCmd(Config.getPath("spriteadditionals"));
+			_levelColorsCmd = new LoadBitmapFileCmd(Config.getPath("levelColors"));
 			
 			_spriteSheetCmd.addEventListener(CommandEvent.COMPLETE, cmdCompleteHandler);
 			_spriteMapCmd.addEventListener(CommandEvent.COMPLETE, cmdCompleteHandler);
 			_spriteAddsCmd.addEventListener(CommandEvent.COMPLETE, cmdCompleteHandler);
+			_levelColorsCmd.addEventListener(CommandEvent.COMPLETE, cmdCompleteHandler);
 			
 			_spool.addCommand(_spriteSheetCmd);
 			_spool.addCommand(_spriteMapCmd);
 			_spool.addCommand(_spriteAddsCmd);
+			_spool.addCommand(_levelColorsCmd);
 			_spool.execute();
 		}
 
@@ -81,7 +87,7 @@ package com.muxxu.kub3dit.commands {
 		 * Initalizes the textures
 		 */
 		private function spoolCompleteHandler(event:CommandEvent):void {
-			Textures.getInstance().initialize(_map, _adds, _bmd);
+			Textures.getInstance().initialize(_map, _adds, _bmd,_levelColors);
 			dispatchEvent(event);
 		}
 		
@@ -104,6 +110,9 @@ package com.muxxu.kub3dit.commands {
 			}
 			if(event.target == _spriteAddsCmd) {
 				_adds = _spriteAddsCmd.loader.data;
+			}
+			if(event.target == _levelColorsCmd) {
+				_levelColors = _levelColorsCmd.bitmap.bitmapData.clone();
 			}
 		}
 	}

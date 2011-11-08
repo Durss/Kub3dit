@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import flash.events.MouseEvent;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.graphics.LogoGraphic;
@@ -63,6 +64,7 @@ package com.muxxu.kub3dit.views {
 		 * Called when the display object is removed from display list.
 		 */
 		private function removedFromStageHandler(event:Event):void {
+			stage.removeEventListener(MouseEvent.CLICK, clickHandler);
 			stage.removeEventListener(Event.RESIZE, computePositions);
 		}
 		
@@ -72,7 +74,15 @@ package com.muxxu.kub3dit.views {
 		private function addedToStageHandler(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
+			stage.addEventListener(MouseEvent.CLICK, clickHandler);
 			computePositions();
+		}
+		
+		/**
+		 * Called when th view is clicked to skip it.
+		 */
+		private function clickHandler(event:MouseEvent):void {
+			onAnimComplete(0);
 		}
 		
 		/**
@@ -85,9 +95,9 @@ package com.muxxu.kub3dit.views {
 		/**
 		 * Called when animation completes
 		 */
-		private function onAnimComplete():void {
+		private function onAnimComplete(delay:Number = .5):void {
 			_logo.stop();
-			TweenLite.to(_logo, .5, {autoAlpha:0, onComplete:onComplete, delay:.5});
+			TweenLite.to(_logo, delay==0? .2 : .5, {autoAlpha:0, onComplete:onComplete, delay:delay});
 		}
 		
 		/**

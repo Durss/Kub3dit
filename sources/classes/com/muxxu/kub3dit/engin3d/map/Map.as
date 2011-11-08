@@ -39,6 +39,19 @@ package com.muxxu.kub3dit.engin3d.map {
 			return 0;
 		}
 
+		public function getRadarTile(xloc:int, yloc:int):int {
+			if (yloc >= 0 && yloc < _mapSizeY && xloc >= 0 && xloc < _mapSizeX) {
+				var z:int = _mapSizeZ-1, tile:int;
+				do {
+					_map.position = xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY;
+					tile = _map.readByte();
+					z--;
+				}while(z>0 && tile == 0);
+				return tile;
+			}
+			return 0;
+		}
+
 		private function generateFlatMap(mapSizeX:int, mapSizeY:int, mapSizeZ:int):void {
 			_mapSizeX=mapSizeX;
 			_mapSizeY=mapSizeY;

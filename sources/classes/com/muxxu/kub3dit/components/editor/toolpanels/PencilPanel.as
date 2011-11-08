@@ -144,7 +144,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 						py = Math.floor(i/size);
 						c = (px+py)%2 == 0? 0xffffff : 0;
 						_landmark.graphics.beginFill(c, .2);
-						_landmark.graphics.drawRect(px + 1, py + 1, 1, 1);
+						_landmark.graphics.drawRect(px + size%2, py + size%2, 1, 1);
 					}else{
 						px = Math.ceil(ox - size * .5) + (i % size);
 						py = Math.ceil(oy - size * .5) + Math.floor(i/size);

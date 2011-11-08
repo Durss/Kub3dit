@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.components.form.AxisSelector;
+	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.nurun.components.text.CssTextField;
@@ -23,6 +25,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _inputThicknessLabel:CssTextField;
 		private var _inputThickness:InputKube;
 		private var _landmark:Shape;
+		private var _axisSelector:AxisSelector;
+		private var _fillCb:CheckBoxKube;
 		
 		
 		
@@ -96,6 +100,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputHeight = addChild(new InputKube("", false, true, 1, 400)) as InputKube;
 			_inputThicknessLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
 			_inputThickness = addChild(new InputKube("", false, true, 1, 400)) as InputKube;
+			_axisSelector = addChild(new AxisSelector(false)) as AxisSelector;
+			_fillCb = addChild(new CheckBoxKube(Label.getLabel("toolConfig-diskShape-fill"))) as CheckBoxKube;
 			
 			_inputWidth.text = "10";
 			_inputHeight.text = "10";
@@ -108,6 +114,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputWidth.addEventListener(Event.CHANGE, updateLandMark);
 			_inputHeight.addEventListener(Event.CHANGE, updateLandMark);
 			_inputThickness.addEventListener(Event.CHANGE, updateLandMark);
+			_axisSelector.addEventListener(Event.CHANGE, updateLandMark);
+			_fillCb.addEventListener(Event.CHANGE, updateLandMark);
+			_fillCb.addEventListener(Event.CHANGE, changeFillHandler);
 			
 			computePositions();
 			updateLandMark();
@@ -121,17 +130,21 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			
 			_inputWidth.x = maxLabelW;
 			_inputHeight.x = maxLabelW;
-			_inputThickness.x = maxLabelW;
 			
 			_inputWidthLabel.y = Math.round((_inputWidth.height - _inputWidthLabel.height) * .5);
 			_inputHeightLabel.y = Math.round((_inputHeight.height - _inputHeightLabel.height) * .5);
-			_inputThicknessLabel.y = Math.round((_inputThickness.height - _inputThicknessLabel.height) * .5);
 			
 			_inputHeight.y += Math.round(_inputWidth.height + 5);
 			_inputHeightLabel.y += Math.round(_inputWidth.height + 5);
 			
-			_inputThickness.y += Math.round(_inputHeight.y + _inputHeight.height + 5);
-			_inputThicknessLabel.y += Math.round(_inputHeight.y + _inputHeight.height + 5);
+			_axisSelector.y = Math.round(_inputHeight.y + _inputHeight.height + 5);
+			
+			_fillCb.y = 3;
+			_fillCb.x = Math.round(Math.max(_inputWidth.x + _inputWidth.width, _inputHeight.x + _inputWidth.height, _axisSelector.width)) + 10;
+			_inputThicknessLabel.x = _fillCb.x;
+			_inputThickness.y = Math.round(_fillCb.y + _fillCb.height + 5);
+			_inputThickness.x = Math.round(_inputThicknessLabel.x + _inputThicknessLabel.width + 4);
+			_inputThicknessLabel.y = Math.round( _inputThickness.y + (_inputThickness.height - _inputThicknessLabel.height) * .5 );
 		}
 		
 		/**
@@ -144,8 +157,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * Method that will be used to draw with the tool
 		 */
-		private function drawingMethod(ox:int, oy:int, pz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
-			var i:int, len:int, w:int, h:int, t:int, px:Number, py:Number, c:uint;
+		private function drawingMethod(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
+			var i:int, len:int, w:int, h:int, t:int, px:Number, py:Number, pz:Number, c:uint;
 			w = parseInt(_inputWidth.text);
 			h = parseInt(_inputHeight.text);
 			t = parseInt(_inputThickness.text);
@@ -153,21 +166,54 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			if(toLandMark) {
 				_landmark.graphics.clear();
 			}
-			for(i = 0; i < len; ++i) {
-				if(i%w < t || i%w >= w-t || Math.floor(i/w) < t || Math.floor(i/w) >= h-t) {
+			var axis:String = _axisSelector.value;
+			var fill:Boolean = _fillCb.selected;
+			if(axis == "y" || !toLandMark) {
+				for(i = 0; i < len; ++i) {
+					if(fill || i%w < t || i%w >= w-t || Math.floor(i/w) < t || Math.floor(i/w) >= h-t) {
+						if(toLandMark) {
+							px =i % w;
+							py = Math.floor(i/w);
+							c = (px+py)%2 == 0? 0xffffff : 0;
+							_landmark.graphics.beginFill(c, .2);
+							_landmark.graphics.drawRect(px, py, 1, 1);
+						}else{
+							if(axis == "y") {
+								px = Math.ceil(ox - w * .5) + (i % w);
+								py = Math.ceil(oy - h * .5) + Math.floor(i/w);
+								pz = oz;
+							}else if(axis == "x") {
+								px = ox;
+								py = Math.ceil(oy - w * .5) + (i % w);
+								pz = oz + Math.floor(i/w);
+							}else if(axis == "z") {
+								px = Math.ceil(ox - w * .5) + (i % w);
+								py = oy;
+								pz = oz + Math.floor(i/w);
+							}
+							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+						}
+					}
+				}
+			}else{
+				len = w;
+				var isZ:Boolean = axis == "z";
+				for(i = 0; i < len; ++i) {
 					if(toLandMark) {
-						px =i % w;
-						py = Math.floor(i/w);
-						c = (px+py)%2 == 0? 0xffffff : 0;
+						c = i%2 == 0? 0xffffff : 0;
 						_landmark.graphics.beginFill(c, .2);
-						_landmark.graphics.drawRect(px, py, 1, 1);
-					}else{
-						px = Math.ceil(ox - w * .5) + (i % w);
-						py = Math.ceil(oy - h * .5) + Math.floor(i/w);
-						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+						_landmark.graphics.drawRect(isZ? i : 1, isZ? 1 : i, 1, 1);
 					}
 				}
 			}
+		}
+		
+		/**
+		 * Called when fill is changed
+		 */
+		private function changeFillHandler(event:Event):void {
+			_inputThickness.enabled = !_fillCb.selected;
+			_inputThicknessLabel.alpha = _fillCb.selected? .4 : 1;
 		}
 		
 	}

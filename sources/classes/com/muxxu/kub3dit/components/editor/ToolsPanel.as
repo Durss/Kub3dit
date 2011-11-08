@@ -1,11 +1,8 @@
 package com.muxxu.kub3dit.components.editor {
-	import flash.ui.Keyboard;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
 	import com.muxxu.kub3dit.components.editor.toolpanels.CirclePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.CubePanel;
-	import com.muxxu.kub3dit.components.editor.toolpanels.DiskPanel;
-	import com.muxxu.kub3dit.components.editor.toolpanels.FilledRectanglePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.PencilPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.RectanglePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.SpherePanel;
@@ -15,9 +12,7 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.graphics.Tool1Icon;
 	import com.muxxu.kub3dit.graphics.Tool2Icon;
 	import com.muxxu.kub3dit.graphics.Tool3Icon;
-	import com.muxxu.kub3dit.graphics.Tool4Icon;
 	import com.muxxu.kub3dit.graphics.Tool5Icon;
-	import com.muxxu.kub3dit.graphics.Tool6Icon;
 	import com.muxxu.kub3dit.graphics.Tool7Icon;
 	import com.muxxu.kub3dit.graphics.Tool8Icon;
 	import com.muxxu.kub3dit.vo.KeyboardConfigs;
@@ -30,6 +25,7 @@ package com.muxxu.kub3dit.components.editor {
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 	import flash.utils.Dictionary;
 	
 	[Event(name="openPanel", type="com.muxxu.kub3dit.events.ToolsPanelEvent")]
@@ -48,9 +44,9 @@ package com.muxxu.kub3dit.components.editor {
 		private var _pencil:ButtonEditorTool;
 		private var _bucket:ButtonEditorTool;
 		private var _circle:ButtonEditorTool;
-		private var _disk:ButtonEditorTool;
+//		private var _disk:ButtonEditorTool;
 		private var _rect:ButtonEditorTool;
-		private var _rectf:ButtonEditorTool;
+//		private var _rectf:ButtonEditorTool;
 		private var _helpBt:ButtonHelp;
 		private var _group:FormComponentGroup;
 		private var _tools:Vector.<ButtonEditorTool>;
@@ -109,9 +105,9 @@ package com.muxxu.kub3dit.components.editor {
 			_pencil	= addChild(new ButtonEditorTool( new Tool1Icon(), true, Label.getLabel("helpTools1") )) as ButtonEditorTool;
 			_bucket	= addChild(new ButtonEditorTool( new Tool2Icon(), false, Label.getLabel("helpTools2") )) as ButtonEditorTool;
 			_circle	= addChild(new ButtonEditorTool( new Tool3Icon(), true, Label.getLabel("helpTools3") )) as ButtonEditorTool;
-			_disk	= addChild(new ButtonEditorTool( new Tool4Icon(), true, Label.getLabel("helpTools4") )) as ButtonEditorTool;
+//			_disk	= addChild(new ButtonEditorTool( new Tool4Icon(), true, Label.getLabel("helpTools4") )) as ButtonEditorTool;
 			_rect	= addChild(new ButtonEditorTool( new Tool5Icon(), true, Label.getLabel("helpTools5") )) as ButtonEditorTool;
-			_rectf	= addChild(new ButtonEditorTool( new Tool6Icon(), true, Label.getLabel("helpTools6") )) as ButtonEditorTool;
+//			_rectf	= addChild(new ButtonEditorTool( new Tool6Icon(), true, Label.getLabel("helpTools6") )) as ButtonEditorTool;
 			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true, Label.getLabel("helpTools7") )) as ButtonEditorTool;
 			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
@@ -121,18 +117,18 @@ package com.muxxu.kub3dit.components.editor {
 			_tools.push(_pencil);
 			_tools.push(_bucket);
 			_tools.push(_circle);
-			_tools.push(_disk);
+//			_tools.push(_disk);
 			_tools.push(_rect);
-			_tools.push(_rectf);
+//			_tools.push(_rectf);
 			_tools.push(_cube);
 			_tools.push(_sphere);
 			
 			_buttonToClassType = new Dictionary();
 			_buttonToClassType[_pencil] = PencilPanel;
 			_buttonToClassType[_circle] = CirclePanel;
-			_buttonToClassType[_disk] = DiskPanel;
+//			_buttonToClassType[_disk] = DiskPanel;
 			_buttonToClassType[_rect] = RectanglePanel;
-			_buttonToClassType[_rectf] = FilledRectanglePanel;
+//			_buttonToClassType[_rectf] = FilledRectanglePanel;
 			_buttonToClassType[_cube] = CubePanel;
 			_buttonToClassType[_sphere] = SpherePanel;
 			

@@ -89,12 +89,17 @@
 		<label code="helpTools6"><![CDATA[Cadre (6)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (7)]]></label>
 		<label code="helpTools8"><![CDATA[Sphère (8)]]></label>
+		<label code="helpSyncCam"><![CDATA[Vous déplacer dans l'environnement 3D<br />changera automatiquement le niveau<br />d'affichage de la grille]]></label>
+		<label code="helpMoveCam"><![CDATA[Déplace la caméra au niveau d'affichage<br />courant de la grille.]]></label>
+		
+		<label code="axisSelector"><![CDATA[Axe :]]></label>
 		
 		<label code="toolConfig-pencilShape-input"><![CDATA[Taille]]></label>
 		<label code="toolConfig-pencilShape-square"><![CDATA[Carré]]></label>
 		<label code="toolConfig-pencilShape-circle"><![CDATA[Rond]]></label>
 		
 		<label code="toolConfig-diskShape-inputRadius"><![CDATA[Rayon]]></label>
+		<label code="toolConfig-diskShape-fill"><![CDATA[Remplir]]></label>
 		
 		<label code="toolConfig-circleShape-inputRadius"><![CDATA[Rayon]]></label>
 		<label code="toolConfig-circleShape-inputThick"><![CDATA[Epaisseur]]></label>
@@ -112,6 +117,9 @@
 		<label code="toolConfig-sphereShape-inputRadius"><![CDATA[Rayon]]></label>
 		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Epaisseur]]></label>
 		<label code="toolConfig-sphereShape-fill"><![CDATA[Remplir]]></label>
+		
+		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
+		<label code="moveCamToLevel"><![CDATA[Déplacer la caméra]]></label>
 	</labels>
 	
 </root>

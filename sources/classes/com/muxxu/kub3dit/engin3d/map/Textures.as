@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.map {
+	import flash.utils.ByteArray;
 	import com.nurun.utils.string.StringUtils;
 
 	import flash.display.BitmapData;
@@ -23,6 +24,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _transparent:Array;
 		private var _translucide:Array;
 		private var _bitmapDatas:Array;
+		private var _levelColors:Array;
 		
 		
 		
@@ -77,6 +79,11 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Gets the bitmapDatas
 		 */
 		public function get bitmapDatas():Array { return _bitmapDatas; }
+		
+		/**
+		 * Gets the level colors
+		 */
+		public function get levelColors():Array { return _levelColors; }
 
 
 
@@ -90,11 +97,12 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * @param bitmapData	bitmapData containing the textures
 		 * @param additionals	contains the additional informations (transparencies, translucides, etc..)
 		 */
-		public function initialize(spritesMap:String, additionals:String, bitmapData:BitmapData):void {
-			_cubesFrames = [];
-			_translucide = [];
-			_transparent = [];
-			_bitmapDatas = [];
+		public function initialize(spritesMap:String, additionals:String, bitmapData:BitmapData, colors:BitmapData):void {
+			_cubesFrames	= [];
+			_translucide	= [];
+			_transparent	= [];
+			_bitmapDatas	= [];
+			_levelColors	= [];
 			
 			//Read sprite sheet map to define kube textures by their ID.
 			_bmd = bitmapData;
@@ -206,6 +214,20 @@ package com.muxxu.kub3dit.engin3d.map {
 					bottom.copyPixels(_bmd, rect, pt);
 					_bitmapDatas[k][2] = bottom;
 				}
+			}
+			
+			
+			//initializes the level colors
+			w = colors.width;
+			len = w * colors.height;
+			var pixels:ByteArray = colors.getPixels(colors.rect);
+			for(i = 0; i < len; ++i) {
+				id = int(i/w) + 1;
+				if(i%w == 0) {
+					_levelColors[id] = [];
+				}
+				pixels.position = i*4;
+				_levelColors[id][i%w] = pixels.readUnsignedInt();
 			}
 		}
 

@@ -6,11 +6,11 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.graphics.GridPattern;
 	import com.muxxu.kub3dit.graphics.LookAtgraphic;
 	import com.muxxu.kub3dit.views.Stage3DView;
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.math.MathUtils;
 
 	import flash.display.BitmapData;
-	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -44,13 +44,17 @@ package com.muxxu.kub3dit.components.editor {
 		private var _subLevelsDraw:Boolean;
 		private var _cellSize:int;
 		private var _bmdLevels:Vector.<BitmapData>;
-		private var _levelsTarget:Shape;
 		private var _dragMode:Boolean;
 		private var _offsetDrag:Point;
 		private var _offset:Point;
 		private var _offsetOffDrag:Point;
 		private var _panel:IToolPanel;
 		private var _landMark:Sprite;
+		private var _levelSlider:LevelsSlider;
+		private var _gridHolder:Sprite;
+		private var _colors:Array;
+		private var _bmdGrid:BitmapData;
+		private var _levelsTarget:BitmapData;
 		
 		
 		
@@ -77,7 +81,7 @@ package com.muxxu.kub3dit.components.editor {
 		
 		override public function get width():Number { return _size * _cellSize; }
 		
-		override public function get height():Number { return _size * _cellSize; }
+		override public function get height():Number { return _levelSlider.y + _levelSlider.height; }
 		
 		/**
 		 * Sets the current panel used to configure the drawing draw
@@ -114,20 +118,30 @@ package com.muxxu.kub3dit.components.editor {
 			
 			_3dView = ViewLocator.getInstance().locateViewByType(Stage3DView) as Stage3DView;
 			_bitmaps = Textures.getInstance().bitmapDatas;
+			_colors = Textures.getInstance().levelColors;
 			
-			_levelsTarget = new Shape();
-			_landMark = addChild(new Sprite()) as Sprite;
-			_lookAt = addChild(new LookAtgraphic()) as LookAtgraphic;
+			_gridHolder = addChild(new Sprite()) as Sprite;
+			_landMark = _gridHolder.addChild(new Sprite()) as Sprite;
+			_lookAt = _gridHolder.addChild(new LookAtgraphic()) as LookAtgraphic;
+			_levelSlider = addChild(new LevelsSlider()) as LevelsSlider;
+			
+			_bmdGrid = new BitmapData(_size*_cellSize, _size*_cellSize, true, 0);
+			_levelsTarget = _bmdGrid.clone();
+			
+			_levelSlider.y = _size * _cellSize + 5;
+			_levelSlider.width = _size * _cellSize;
+			_z = _levelSlider.level;
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
-			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyHandler);
+			_levelSlider.addEventListener(Event.CHANGE, changeLevelHandler);
+			_gridHolder.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_SELECTION_CHANGE, kubeSelectionChangeHandler);
 			
-			scrollRect = new Rectangle(0,0,_size*_cellSize,_size*_cellSize);
+			_gridHolder.scrollRect = new Rectangle(0,0,_size*_cellSize,_size*_cellSize);
 		}
 		
 		/**
@@ -159,10 +173,10 @@ package com.muxxu.kub3dit.components.editor {
 			oy = MathUtils.restrict(oy, 0, _3dView.manager.map.mapSizeY - _size);
 			
 			//Draw the water
-			graphics.clear();
-			graphics.beginFill(0x80c7db);
-			graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
-			graphics.endFill();
+			_gridHolder.graphics.clear();
+			_gridHolder.graphics.beginFill(0x80c7db);
+			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
+			_gridHolder.graphics.endFill();
 			
 			//Sub levels drawing management
 			var camPos:Point = new Point(Camera3D.locX, Camera3D.locY);
@@ -197,39 +211,42 @@ package com.muxxu.kub3dit.components.editor {
 				var mousePos:Point = new Point(Math.floor(mouseX/_cellSize), Math.floor(mouseY/_cellSize));
 				
 				if(mouseX >= 0 && mouseY >= 0 &&
-				mouseX < _size*_cellSize && mouseY < _size*_cellSize && 
-				!mousePos.equals(_lastPos)) {
+				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && 
+//				!mousePos.equals(_lastPos)) {
 					_lastPos = mousePos;
 					_panel.drawer(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _3dView.manager);
 				}
 			}
 			
 			//Draw sub levels
+			var m:Matrix = new Matrix();
+			m.scale(_cellSize, _cellSize);
 			len = _bmdLevels.length;
 			for(i = 0; i < len; ++i) {
-				graphics.beginBitmapFill(_bmdLevels[i]);
-				graphics.drawRect(0, 0, _size*_cellSize, _size*_cellSize);
-				graphics.endFill();
+				_gridHolder.graphics.beginBitmapFill(_bmdLevels[i], m);
+				_gridHolder.graphics.drawRect(0, 0, _size*_cellSize, _size*_cellSize);
+				_gridHolder.graphics.endFill();
 			}
 			
 			//Draw the grid
-			var m:Matrix = new Matrix();
-			m.scale(_cellSize/16, _cellSize/16);
 			len = _size*_size;
+			_bmdGrid.fillRect(_bmdGrid.rect, 0);
 			for(i = 0; i < len; ++i) {
 				py = Math.floor(i/_size);
 				px = i - py*_size;
 				tile = _3dView.manager.map.getTile(ox+px, oy+py, _z);
 				if(tile > 0) {
-					graphics.beginBitmapFill(_bitmaps[tile][0], m);
-					graphics.drawRect(px * _cellSize, py * _cellSize, _cellSize, _cellSize);
-					graphics.endFill();
+					_bmdGrid.setPixel32(px, py, _colors[tile][_z]);
 				}
 			}
 			
-			graphics.beginBitmapFill(_pattern);
-			graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
-			graphics.endFill();
+			_gridHolder.graphics.beginBitmapFill(_bmdGrid, m);
+			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
+			_gridHolder.graphics.endFill();
+			
+			_gridHolder.graphics.beginBitmapFill(_pattern);
+			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
+			_gridHolder.graphics.endFill();
 			
 			updateCursor();
 		}
@@ -240,7 +257,7 @@ package com.muxxu.kub3dit.components.editor {
 		private function drawSubLevels():void {
 			var m:Matrix = new Matrix();
 			m.scale(_cellSize/16, _cellSize/16);
-			var i:int, len:int, j:int, lenJ:int, ox:int, oy:int, px:int, py:int, tile:int, bmd:BitmapData, drawnCells:Object;
+			var i:int, len:int, j:int, lenJ:int, ox:int, oy:int, px:int, py:int, tile:int, drawnCells:Object;
 			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x;
 			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
 			ox = MathUtils.restrict(ox, 0, _3dView.manager.map.mapSizeX - _size);
@@ -251,9 +268,9 @@ package com.muxxu.kub3dit.components.editor {
 			
 			len = Math.min(3, _z);
 			lenJ = _size * _size;
+			var alphaStep:Number = .5 / len;
 			for(i = 0; i < len; ++i) {
-				_levelsTarget.graphics.clear();
-				_levelsTarget.graphics.beginFill(0, .4 - i*.12);
+				_levelsTarget.fillRect(_levelsTarget.rect, 0);
 				for(j = 0; j < lenJ; ++j) {
 					py = Math.floor(j/_size);
 					px = j - py*_size;
@@ -261,12 +278,10 @@ package com.muxxu.kub3dit.components.editor {
 					tile = _3dView.manager.map.getTile(ox+px, oy+py, _z-i-1);
 					if(tile > 0) {
 						drawnCells[px+"-"+py] = true;
-						_levelsTarget.graphics.drawRect(px * _cellSize, py * _cellSize, _cellSize, _cellSize);
+						_levelsTarget.setPixel32(px, py, (((.6 - i*alphaStep)*0xff) << 24) + (_colors[tile][0] & 0xffffff));
 					}
 				}
-				bmd = new BitmapData(_size*_cellSize, _size*_cellSize, true, 0);
-				bmd.draw(_levelsTarget);
-				_bmdLevels.push(bmd);
+				_bmdLevels.push(_levelsTarget.clone());
 			}
 		}
 		
@@ -307,9 +322,10 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function mouseWheelHandler(event:MouseEvent):void {
 			_z += event.delta > 0? -1 : 1;
-			_z = MathUtils.restrict(_z, 0, 30);
+			_z = MathUtils.restrict(_z, 0, Config.getNumVariable("mapSizeHeight")-1);
 			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
 			_lastPos.x = _lastPos.y = -1;
+			_levelSlider.level = _z;
 		}
 		
 		/**
@@ -327,6 +343,15 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
 			_pressed = false;
+		}
+		
+		/**
+		 * Called when changing level from slider
+		 */
+		private function changeLevelHandler(event:Event):void {
+			_z = _levelSlider.level;
+			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
+			_lastPos.x = _lastPos.y = -1;
 		}
 		
 	}
