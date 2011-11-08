@@ -150,8 +150,10 @@ package com.muxxu.kub3dit.components.editor {
 			if(event.keyCode == KeyboardConfigs.TOGGLE_ERASE) {
 				_rubber.selected = !_rubber.selected;
 			}
-			if(event.keyCode >= Keyboard.NUMBER_1 && event.keyCode <= Keyboard.NUMBER_8) {
-				_tools[ event.keyCode-Keyboard.NUMBER_1 ].selected = true;
+			if(event.keyCode >= Keyboard.NUMBER_1 && event.keyCode <= Keyboard.NUMBER_9) {
+				if(_tools.length > event.keyCode-Keyboard.NUMBER_1) {
+					_tools[ event.keyCode-Keyboard.NUMBER_1 ].selected = true;
+				}
 			}
 		}
 		

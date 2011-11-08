@@ -155,16 +155,17 @@ package com.muxxu.kub3dit.components.editor {
 		 * Called on ENTER_FRAME event to render the grid
 		 */
 		private function enterFrameHandler(event:Event = null):void {
+			//FIXME totally fucked up if the map is smaller than the grid's size.
+			//TODO manage out of bounds cam drag. When we're at a corner we don't see the cam. If the corner is displayed at the center of the grid there won't be problems anymore. 
 			if(_3dView == null || _3dView.manager == null || _3dView.manager.map == null) return;
 			var i:int, len:int, ox:int, oy:int, px:int, py:int, tile:int;
-			var scrollX:int, scrollY:int;
 			//Drag management
 			if(_dragMode && _pressed) {
 				_offset.x = Math.round((_offsetDrag.x - mouseX)/_cellSize) + _offsetOffDrag.x;
 				_offset.y = Math.round((_offsetDrag.y - mouseY)/_cellSize) + _offsetOffDrag.y;
 			}
-			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x + scrollX;
-			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y + scrollY;
+			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x;
+			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
 			if(ox < 0) _offset.x -= ox;
 			if(oy < 0) _offset.y -= oy;
 			if(ox > _3dView.manager.map.mapSizeX - _size) _offset.x -= ox - (_3dView.manager.map.mapSizeX - _size);
@@ -202,8 +203,8 @@ package com.muxxu.kub3dit.components.editor {
 			}
 			
 			//Look at target orientation
-			_lookAt.x = _size * .5 * _cellSize - (_offset.x + scrollX) * _cellSize;
-			_lookAt.y = _size * .5 * _cellSize - (_offset.y + scrollY) * _cellSize;
+			_lookAt.x = _size * .5 * _cellSize - _offset.x * _cellSize;
+			_lookAt.y = _size * .5 * _cellSize - _offset.y * _cellSize;
 			_lookAt.rotation = Camera3D.rotationX;
 			
 			//Drawing management
