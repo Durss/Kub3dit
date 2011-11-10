@@ -9,6 +9,7 @@ package com.muxxu.kub3dit.engin3d.events {
 	 */
 	public class MapEvent extends Event {
 		
+		public static const LOAD:String = "mapLoad";
 		public static const PROGRESS:String = "mapProgress";
 		public static const COMPLETE:String = "mapComplete";
 		

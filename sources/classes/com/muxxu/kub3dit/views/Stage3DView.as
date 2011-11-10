@@ -1,19 +1,21 @@
 package com.muxxu.kub3dit.views {
-	import com.nurun.structure.environnement.configuration.Config;
-	import flash.display.Stage;
-	import com.muxxu.kub3dit.vo.KeyboardConfigs;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.ground.Ground;
+	import com.muxxu.kub3dit.engin3d.map.Map;
+	import com.muxxu.kub3dit.exceptions.Kub3ditException;
+	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
 	import com.muxxu.kub3dit.model.Model;
+	import com.muxxu.kub3dit.vo.KeyboardConfigs;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.utils.math.MathUtils;
 	import com.nurun.utils.pos.PosUtils;
 
+	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DBlendFactor;
@@ -21,12 +23,12 @@ package com.muxxu.kub3dit.views {
 	import flash.display3D.Context3DProgramType;
 	import flash.display3D.Context3DRenderMode;
 	import flash.display3D.Context3DTriangleFace;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Matrix3D;
 	import flash.geom.Vector3D;
 	import flash.ui.Keyboard;
-	import flash.utils.setTimeout;
 
 	/**
 	 * Displays the 3D things
@@ -49,6 +51,7 @@ package com.muxxu.kub3dit.views {
 		private var _visibleCubes:int;
 		private var _log:CssTextField;
 		private var _mapSizeH:Number;
+		private var _map:Map;
 		
 		
 		
@@ -89,10 +92,11 @@ package com.muxxu.kub3dit.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
-			model;
-			if(!_ready) {
+			
+			if(!_ready && model.map != null) {
 				_ready = true;
-				setTimeout(initialize, 100);
+				_map = model.map;
+				initialize();
 			}
 		}
 
@@ -113,14 +117,22 @@ package com.muxxu.kub3dit.views {
 			
 			_stage3D = stage.stage3Ds[0];
 			_stage3D.addEventListener(Event.CONTEXT3D_CREATE, context3DReadyHandler);
+			_stage3D.addEventListener(ErrorEvent.ERROR, context3DErrorHandler);
 			_stage3D.requestContext3D(Context3DRenderMode.AUTO);
+		}
+		
+		/**
+		 * Called if Context3D isn't available
+		 */
+		private function context3DErrorHandler(event:ErrorEvent):void {
+			throw new Kub3ditException("Flash badly embeded! Please add wmode=\"direct\" to make it work correctly!", Kub3ditExceptionSeverity.FATAL);
 		}
 		
 		/**
 		 * Called when context 3D is ready
 		 */
 		private function context3DReadyHandler(event:Event):void {
-			_manager = new ChunksManager();
+			_manager = new ChunksManager(_map);
 			_context3D = _stage3D.context3D;
 			_context3D.enableErrorChecking = false;
 			_context3D.setCulling(Context3DTriangleFace.BACK);
@@ -129,7 +141,8 @@ package com.muxxu.kub3dit.views {
 			_accelerated = _context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 			
 			_background = new Background(_context3D);
-			_ground = new Ground(_context3D);
+			_ground = new Ground(_context3D, _accelerated);
+			
 			createVoxelChunks();
 		}
 		
@@ -137,16 +150,13 @@ package com.muxxu.kub3dit.views {
 		 * Creates the voxel chunks
 		 */
 		private function createVoxelChunks():void {
-			_chunkSize = 8;//Number of cubes to compose a chunks of
-			_mapSizeW = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
-			_mapSizeH = Config.getNumVariable("mapSize");//Numer of cubes to compose the map of in width and height
+			_chunkSize = 8;//Number of cubes to compose a chunk of
+			_mapSizeW = _map.mapSizeX;//Numer of cubes to compose the map of in width
+			_mapSizeH = _map.mapSizeY;//Numer of cubes to compose the map of in height
 			_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
-			_visibleChunks = _visibleCubes / _chunkSize;//Number of visible chunks around us
+			_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);//Number of visible chunks around us
 			
-			_mapSizeW = 32;
-			_mapSizeH = 16;
-			
-			_manager.initialize(_context3D, _chunkSize, _mapSizeW, _mapSizeH);
+			_manager.initialize(_context3D, _chunkSize, _accelerated);
 			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
 			Camera3D.setMapSize(_mapSizeW, _mapSizeH);
 			Camera3D.setPosition(new Vector3D(0,0,2));
@@ -165,10 +175,10 @@ package com.muxxu.kub3dit.views {
 			
 			if(event.keyCode == Keyboard.NUMPAD_ADD || event.keyCode == Keyboard.NUMPAD_SUBTRACT
 			|| event.keyCode == KeyboardConfigs.FOG_FAR || event.keyCode == KeyboardConfigs.FOG_NEAR) {
-				_visibleChunks += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
+//				_visibleChunks += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
 				_visibleCubes += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? _chunkSize : -_chunkSize;
 				_visibleCubes = Math.max(_visibleCubes, _chunkSize);
-				_visibleChunks = MathUtils.restrict(_visibleChunks, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
+				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
 				_manager.setVisibleChunks(_visibleChunks,_visibleChunks);
 			}
 			
@@ -210,7 +220,7 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(Math.floor(_visibleChunks*.5), 16);//Number of cubes to do the fog on
+			var fogLength:int = Math.min(Math.floor(_visibleChunks*.5), 8);//Number of cubes to do the fog on
 			var farplane:int = _visibleCubes*.5;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);

@@ -1,12 +1,13 @@
 package com.muxxu.kub3dit.engin3d.chunks {
-	import com.nurun.structure.environnement.configuration.Config;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
+	import com.muxxu.kub3dit.engin3d.events.MapEvent;
 	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeVertexShader;
 	import com.muxxu.kub3dit.engin3d.utils.uploadTextureWithMipmaps;
+
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display3D.Context3D;
@@ -53,6 +54,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _mapSizeW:int;
 		private var _posToChunk:Array;
 		private var _mapSizeH:int;
+		private var _accelerated:Boolean;
 		
 		
 		
@@ -63,15 +65,15 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		/**
 		 * Creates an instance of <code>ChunksManager</code>.
 		 */
-		public function ChunksManager() { }
+		public function ChunksManager(map:Map) {
+			_map = map;
+		}
 
 		
 		
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		public function get map():Map { return _map; }
-		
 		public function get chunksW():int { return _chunksW; }
 		
 		public function get chunksH():int { return _chunksH; }
@@ -90,7 +92,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		/**
 		 * Initializes the chunks manager
 		 */
-		public function initialize(context3D:Context3D, chunkSize:int, mapSizeW:int, mapSizeH:int):void {
+		public function initialize(context3D:Context3D, chunkSize:int, accelerated:Boolean):void {
+			_accelerated = accelerated;
 			// okay this function should set up and dispose any buffers
 			// this is only ever called once at the start of the program
 			if(!_intialized) {
@@ -98,11 +101,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_intialized = true;
 				_chunkSize = chunkSize;
 				_context3D = context3D;
-				_mapSizeW = mapSizeW;
-				_mapSizeH = mapSizeH;
-				
-				//Setup map
-				_map = new Map(_mapSizeW, _mapSizeH, Config.getNumVariable("mapSizeHeight"));
+				_mapSizeW = _map.mapSizeX;
+				_mapSizeH = _map.mapSizeY;
 				
 				_efTarget = new Shape();
 				
@@ -112,9 +112,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				uploadTextureWithMipmaps(_textureCubes, bitmapData);
 				
 				var vs:CubeVertexShader = new CubeVertexShader();
-				var fs:CubeFragmentShader = new CubeFragmentShader(_context3D);
+				var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated);
 				_shaderProgram = _context3D.createProgram();
 				_shaderProgram.upload(vs.agalcode, fs.agalcode);
+				_map.addEventListener(MapEvent.LOAD, loadMapHandler);
 			} else {
 				throw new Error("ChunksManager is already initialized!");
 			}
@@ -291,6 +292,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Defines the number of visible chunks
 		 */
 		public function setVisibleChunks(width:int=10, height:int=10):void {
+			trace('width: ' + (width));
+			trace('height: ' + (height));
 			_chunksW = width;
 			_chunksH = height;
 			_toUpdate = [];
@@ -303,6 +306,25 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		/* ******* *
 		 * PRIVATE *
 		 * ******* */
+		/**
+		 * Called when a new map is loaded
+		 */
+		private function loadMapHandler(event:MapEvent):void {
+			var i:int, len:int;
+			var j:int, lenJ:int, chunk:Chunk;
+			len = _chunks.length;
+			for(i = 0; i < len; ++i) {
+				lenJ = _chunks[i].length;
+				for(j = 0; j < lenJ; ++j) {
+					chunk = Chunk(_chunks[i][j]);
+					if(!chunk.updating) {
+						//TODO not sure it works well... the originX/Y thing
+						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(chunk.originX, chunk.originY, 0)).z});
+					}
+				}
+			}
+		}
+		
 		/**
 		 * Create a group of chunk's buffer
 		 */

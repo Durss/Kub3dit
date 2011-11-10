@@ -1,5 +1,8 @@
 package com.muxxu.kub3dit.views {
 
+	import com.muxxu.kub3dit.controler.FrontControler;
+	import flash.events.MouseEvent;
+	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.model.Model;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
@@ -7,9 +10,10 @@ package com.muxxu.kub3dit.views {
 	/**
 	 * 
 	 * @author Francois
-	 * @date 30 oct. 2011;
+	 * @date 10 nov. 2011;
 	 */
-	public class RadarView extends AbstractView {
+	public class MainMenuView extends AbstractView {
+		private var _saveBt:ButtonKube;
 		private var _ready:Boolean;
 		
 		
@@ -19,9 +23,9 @@ package com.muxxu.kub3dit.views {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>RadarView</code>.
+		 * Creates an instance of <code>MainMenuView</code>.
 		 */
-		public function RadarView() {
+		public function MainMenuView() {
 			
 		}
 
@@ -57,7 +61,8 @@ package com.muxxu.kub3dit.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			
+			_saveBt = addChild(new ButtonKube("Save")) as ButtonKube;
+			_saveBt.addEventListener(MouseEvent.CLICK, clickHandler);
 			computePositions();
 		}
 		
@@ -65,7 +70,11 @@ package com.muxxu.kub3dit.views {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			
+			x = 80;
+		}
+
+		private function clickHandler(event:MouseEvent):void {
+			FrontControler.getInstance().saveMap();
 		}
 		
 	}

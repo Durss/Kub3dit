@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import flash.utils.Dictionary;
 	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 
@@ -21,11 +22,12 @@ package com.muxxu.kub3dit.components.editor {
 	public class ConfigToolPanel extends Sprite {
 		private var _back:Shape;
 		private var _panel:IToolPanel;
-		private var _width:*;
+		private var _width:Number;
 		private var _closeBt:GraphicButtonKube;
 		private var _holder:Sprite;
 		private var _mask:Shape;
 		private var _opened:Boolean;
+		private var _panelTypeToPanel:Dictionary;
 		
 		
 		
@@ -61,15 +63,21 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		public function setPanelType(value:Class):IToolPanel {
 			if(_panel != null) {
-				_panel.dispose();
+//				_panel.dispose();
 				if(_holder.contains(_panel as DisplayObject)) _holder.removeChild(_panel as DisplayObject);
 			}
 			
-			_panel = new value() as IToolPanel;
+			if(_panelTypeToPanel[value] == undefined) {
+				_panel = new value() as IToolPanel;
+			}else{
+				_panel = _panelTypeToPanel[value];
+			}
 			if(_panel == null) {
 				throw new IllegalOperationError("Class reference isn't IToolPanel typed!");
 				return null;
 			}
+			
+			_panelTypeToPanel[value] = _panel;
 			
 			return _panel;
 		}
@@ -105,6 +113,8 @@ package com.muxxu.kub3dit.components.editor {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_panelTypeToPanel = new Dictionary();
+			
 			_holder = addChild(new Sprite()) as Sprite;
 			_back = _holder.addChild(new Shape()) as Shape;
 			_closeBt = _holder.addChild(new GraphicButtonKube( new CloseIcon() )) as GraphicButtonKube;
