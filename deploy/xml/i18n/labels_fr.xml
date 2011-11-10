@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<label code="splashCreate"><![CDATA[Nouveau]]></label>
+		<label code="splashLoad"><![CDATA[Charger]]></label>
+		<label code="submitMapSize"><![CDATA[Valider]]></label>
+		<label code="cancelMapSize"><![CDATA[Annuler]]></label>
+		<label code="inputMapSize"><![CDATA[Zones :]]></label>
+		<label code="titleMapSize"><![CDATA[Entrez ici les dimensions souhaitées<br />pour la carte en nombre de zones.]]></label>
+		
 		<label code="kube1"><![CDATA[Béton]]></label>
 		<label code="kube2"><![CDATA[Eau]]></label>
 		<label code="kube3"><![CDATA[Terre brune]]></label>

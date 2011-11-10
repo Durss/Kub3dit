@@ -52,10 +52,11 @@ package com.muxxu.kub3dit.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
-			if(!_ready) {
+			if(!_ready && model.map != null) {
 				_ready = true;
 				initialize();
 				_kubeSelector.update(event);
+				_grid.setMap(model.map);
 				_grid.currentKube = model.currentKubeId;
 				computePositions();
 			}

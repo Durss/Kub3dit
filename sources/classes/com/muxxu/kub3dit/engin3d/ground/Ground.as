@@ -37,6 +37,7 @@ package com.muxxu.kub3dit.engin3d.ground {
 		private var _width:int;
 		private var _height:int;
 		private var _timer:int;
+		private var _accelerated:Boolean;
 		
 		
 		
@@ -47,7 +48,8 @@ package com.muxxu.kub3dit.engin3d.ground {
 		/**
 		 * Creates an instance of <code>Background</code>.
 		 */
-		public function Ground(context3D:Context3D) {
+		public function Ground(context3D:Context3D, accelerated:Boolean) {
+			_accelerated = accelerated;
 			_context3D = context3D;
 			initialize();
 		}
@@ -164,7 +166,7 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_timer = 0;
 			//Init shader
 			var vs:CubeVertexShader = new CubeVertexShader();
-			var fs:CubeFragmentShader = new CubeFragmentShader(_context3D);
+			var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated);
 			_shaderProgram = _context3D.createProgram();
 			_shaderProgram.upload(vs.agalcode, fs.agalcode);
 

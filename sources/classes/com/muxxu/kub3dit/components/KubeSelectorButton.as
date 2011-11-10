@@ -121,7 +121,7 @@ package com.muxxu.kub3dit.components {
 		 */
 		private function overHandler(event:NurunButtonEvent):void {
 			TweenLite.to(this, .2, {colorMatrixFilter:{brightness:1.5}});
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("kube"+_id), ToolTipAlign.LEFT, true));
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("kube"+_id), ToolTipAlign.LEFT));
 		}
 		
 		/**

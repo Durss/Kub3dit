@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
@@ -55,6 +56,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _colors:Array;
 		private var _bmdGrid:BitmapData;
 		private var _levelsTarget:BitmapData;
+		private var _map:Map;
 		
 		
 		
@@ -93,6 +95,12 @@ package com.muxxu.kub3dit.components.editor {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Sets the map's reference
+		 */
+		public function setMap(map:Map):void {
+			_map = map;
+		}
 
 
 		
@@ -157,7 +165,7 @@ package com.muxxu.kub3dit.components.editor {
 		private function enterFrameHandler(event:Event = null):void {
 			//FIXME totally fucked up if the map is smaller than the grid's size.
 			//TODO manage out of bounds cam drag. When we're at a corner we don't see the cam. If the corner is displayed at the center of the grid there won't be problems anymore. 
-			if(_3dView == null || _3dView.manager == null || _3dView.manager.map == null) return;
+			if(_3dView == null || _3dView.manager == null || _map == null) return;
 			var i:int, len:int, ox:int, oy:int, px:int, py:int, tile:int;
 			//Drag management
 			if(_dragMode && _pressed) {
@@ -168,10 +176,10 @@ package com.muxxu.kub3dit.components.editor {
 			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
 			if(ox < 0) _offset.x -= ox;
 			if(oy < 0) _offset.y -= oy;
-			if(ox > _3dView.manager.map.mapSizeX - _size) _offset.x -= ox - (_3dView.manager.map.mapSizeX - _size);
-			if(oy > _3dView.manager.map.mapSizeY - _size) _offset.y -= oy - (_3dView.manager.map.mapSizeY - _size);
-			ox = MathUtils.restrict(ox, 0, _3dView.manager.map.mapSizeX - _size);
-			oy = MathUtils.restrict(oy, 0, _3dView.manager.map.mapSizeY - _size);
+			if(ox > _map.mapSizeX - _size) _offset.x -= ox - (_map.mapSizeX - _size);
+			if(oy > _map.mapSizeY - _size) _offset.y -= oy - (_map.mapSizeY - _size);
+			ox = MathUtils.restrict(ox, 0, _map.mapSizeX - _size);
+			oy = MathUtils.restrict(oy, 0, _map.mapSizeY - _size);
 			
 			//Draw the water
 			_gridHolder.graphics.clear();
@@ -235,7 +243,7 @@ package com.muxxu.kub3dit.components.editor {
 			for(i = 0; i < len; ++i) {
 				py = Math.floor(i/_size);
 				px = i - py*_size;
-				tile = _3dView.manager.map.getTile(ox+px, oy+py, _z);
+				tile = _map.getTile(ox+px, oy+py, _z);
 				if(tile > 0) {
 					_bmdGrid.setPixel32(px, py, _colors[tile][_z]);
 				}
@@ -261,8 +269,8 @@ package com.muxxu.kub3dit.components.editor {
 			var i:int, len:int, j:int, lenJ:int, ox:int, oy:int, px:int, py:int, tile:int, drawnCells:Object;
 			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x;
 			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
-			ox = MathUtils.restrict(ox, 0, _3dView.manager.map.mapSizeX - _size);
-			oy = MathUtils.restrict(oy, 0, _3dView.manager.map.mapSizeY - _size);
+			ox = MathUtils.restrict(ox, 0, _map.mapSizeX - _size);
+			oy = MathUtils.restrict(oy, 0, _map.mapSizeY - _size);
 			
 			_bmdLevels = new Vector.<BitmapData>();
 			drawnCells = {};
@@ -276,7 +284,7 @@ package com.muxxu.kub3dit.components.editor {
 					py = Math.floor(j/_size);
 					px = j - py*_size;
 					if(drawnCells[px+"-"+py] != undefined) continue;
-					tile = _3dView.manager.map.getTile(ox+px, oy+py, _z-i-1);
+					tile = _map.getTile(ox+px, oy+py, _z-i-1);
 					if(tile > 0) {
 						drawnCells[px+"-"+py] = true;
 						_levelsTarget.setPixel32(px, py, (((.6 - i*alphaStep)*0xff) << 24) + (_colors[tile][0] & 0xffffff));

@@ -92,11 +92,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_landmark = new Shape();
 			
 			_inputRadiusLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
-			_inputRadius = addChild(new InputKube("", false, true, 1, 400)) as InputKube;
+			_inputRadius = addChild(new InputKube("", false, true, 1, 50)) as InputKube;
 			
 			_fillCb = addChild(new CheckBoxKube(Label.getLabel("toolConfig-sphereShape-fill"))) as CheckBoxKube;
 			_inputThickLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
-			_inputThick = addChild(new InputKube("", false, true, 1, 400)) as InputKube;
+			_inputThick = addChild(new InputKube("", false, true, 1, 50)) as InputKube;
 			
 			_inputRadius.text = "5";
 			_inputThick.text = "1";
@@ -168,7 +168,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					}else{
 						break;
 					}
-				}else{
+				}else {
 					d = Math.sqrt((ox - px)*(ox - px) + (oy - py)*(oy - py) + (oz - pz)*(oz - pz));
 					if(d < r && ( fill || (!fill && d>=r-t) )) {
 						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
