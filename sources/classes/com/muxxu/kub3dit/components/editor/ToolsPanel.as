@@ -102,14 +102,12 @@ package com.muxxu.kub3dit.components.editor {
 		private function initialize():void {
 			_rubber	= addChild(new ButtonEditorTool( new RubberIcon(), false, Label.getLabel("helpToolsRubber"))) as ButtonEditorTool;
 			_pencil	= addChild(new ButtonEditorTool( new Tool1Icon(), true, Label.getLabel("helpTools1") )) as ButtonEditorTool;
-			_bucket	= addChild(new ButtonEditorTool( new Tool2Icon(), false, Label.getLabel("helpTools2") )) as ButtonEditorTool;
+			_bucket	= addChild(new ButtonEditorTool( new Tool2Icon(), true, Label.getLabel("helpTools2") )) as ButtonEditorTool;
 			_circle	= addChild(new ButtonEditorTool( new Tool3Icon(), true, Label.getLabel("helpTools3") )) as ButtonEditorTool;
 			_rect	= addChild(new ButtonEditorTool( new Tool5Icon(), true, Label.getLabel("helpTools5") )) as ButtonEditorTool;
 			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true, Label.getLabel("helpTools7") )) as ButtonEditorTool;
 			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
-			
-			_bucket.enabled = false;
 			
 			_group = new FormComponentGroup();
 			_tools = new Vector.<ButtonEditorTool>();
