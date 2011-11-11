@@ -129,8 +129,8 @@
 		
 		<script type="text/javascript">
 			// <![CDATA[
-			var version = "1";
-			var so = new SWFObject('swf/application.swf?v=1', 'content', '100%', '100%', '11', '#47A9D1');
+			var version = "2";
+			var so = new SWFObject('swf/application.swf?v='+version, 'content', '100%', '100%', '11', '#47A9D1');
 			so.useExpressInstall('swf/expressinstall.swf');
 			so.addParam('allowFullScreen', 'true');
 			so.addParam('menu', 'false');

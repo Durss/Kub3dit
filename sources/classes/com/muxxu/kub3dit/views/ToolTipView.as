@@ -65,6 +65,8 @@ package com.muxxu.kub3dit.views {
 			_content = new TTTextContent(false);
 			_message = new ToolTipMessage(_content, null);
 			
+			mouseEnabled = mouseChildren = false;
+			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
 		

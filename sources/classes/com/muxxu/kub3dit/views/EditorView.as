@@ -1,17 +1,20 @@
 package com.muxxu.kub3dit.views {
-	import flash.filters.DropShadowFilter;
-	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
-	import com.muxxu.kub3dit.events.ToolsPanelEvent;
+	import gs.TweenLite;
+	import gs.easing.Sine;
+
 	import com.muxxu.kub3dit.components.editor.ConfigToolPanel;
 	import com.muxxu.kub3dit.components.editor.Grid;
 	import com.muxxu.kub3dit.components.editor.ToolsPanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
+	import com.muxxu.kub3dit.events.ToolsPanelEvent;
 	import com.muxxu.kub3dit.graphics.EditorBackgroundGraphic;
 	import com.muxxu.kub3dit.model.Model;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
-	import com.nurun.utils.pos.PosUtils;
 
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
 
 	/**
 	 * 
@@ -28,6 +31,7 @@ package com.muxxu.kub3dit.views {
 		private var _currentPanel:IToolPanel;
 		private var _eraseMode:Boolean;
 		private var _kubeSelector:KubeSelectorView;
+		private var _over:Boolean;
 		
 		
 		
@@ -96,6 +100,8 @@ package com.muxxu.kub3dit.views {
 			_tools.init();//kind of dirty... this is used to be sure to listen for the event before they are fired.
 			
 			_background.filters = [new DropShadowFilter(2, 135, 0, .2, 2, 2, 1, 2)];
+			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
+			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
 		}
 		
 		/**
@@ -118,7 +124,11 @@ package com.muxxu.kub3dit.views {
 			_config.x = _grid.x;
 			_config.y = _grid.y;
 			
-			PosUtils.alignToRightOf(this, stage);
+			if(_over){
+				x = stage.stageWidth-width;
+			}else{
+				x = stage.stageWidth - 30;
+			}
 		}
 		
 		/**
@@ -144,6 +154,14 @@ package com.muxxu.kub3dit.views {
 		private function eraseModeChangeHandler(event:ToolsPanelEvent):void {
 			_eraseMode = _tools.eraseMode;
 			_currentPanel.eraseMode = _tools.eraseMode;
+		}
+		
+		/**
+		 * Called when the view is rolled over/out
+		 */
+		private function rollHandler(event:MouseEvent):void {
+			_over = event.type == MouseEvent.ROLL_OVER;
+			TweenLite.to(this, .4, {x:_over? stage.stageWidth-width : stage.stageWidth - 30, ease:Sine.easeInOut});
 		}
 		
 	}

@@ -1,16 +1,13 @@
 package com.muxxu.kub3dit {
-	import org.libspark.ui.SWFWheel;
-	import com.muxxu.kub3dit.views.MainMenuView;
-	import net.hires.debug.Stats;
-
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
 	import com.muxxu.kub3dit.views.EditorView;
-	import com.muxxu.kub3dit.views.RadarView;
 	import com.muxxu.kub3dit.views.SplashScreenView;
 	import com.muxxu.kub3dit.views.Stage3DView;
 	import com.muxxu.kub3dit.views.ToolTipView;
 	import com.nurun.structure.mvc.views.ViewLocator;
+
+	import org.libspark.ui.SWFWheel;
 
 	import flash.display.MovieClip;
 	import flash.display.StageAlign;
@@ -73,12 +70,11 @@ package com.muxxu.kub3dit {
 			ViewLocator.getInstance().initialise(_model);
 
 			addChild(new Stage3DView());
-			addChild(new RadarView());
 			addChild(new EditorView());
-			addChild(new MainMenuView());
+//			addChild(new MainMenuView());
 			addChild(new SplashScreenView());
 			addChild(new ToolTipView());
-			addChild(new Stats());
+//			addChild(new Stats());
 			
 			_model.start();
 		}
