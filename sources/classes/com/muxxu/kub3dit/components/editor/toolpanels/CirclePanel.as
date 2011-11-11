@@ -10,6 +10,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -26,6 +27,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _landmark:Shape;
 		private var _fillCb:CheckBoxKube;
 		private var _axisSelector:AxisSelector;
+		private var _drawToLandmark:Boolean;
 		
 		
 		
@@ -45,13 +47,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * @inheritDoc
-		 */
-		public function get drawer():Function {
-			return drawingMethod;
-		}
-		
 		/**
 		 * @inheritDoc
 		 */
@@ -78,6 +73,68 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			while(numChildren > 0) {
 				if(getChildAt(0) is Disposable) Disposable(getChildAt(0)).dispose();
 				removeChildAt(0);
+			}
+		}
+		
+		/**
+		 * Method that will be used to draw with the tool
+		 */
+		public function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+			var i:int, len:int, radius:int, diameter:int, radiusMin:int, px:int, py:int, pz:int, d:Number, c:uint;
+			radius = parseInt(_inputRadius.text);
+			diameter = radius * 2;
+			radiusMin = _fillCb.selected? 0 : radius - parseInt(_inputThickness.text);
+			
+			if(_drawToLandmark) {
+				_landmark.graphics.clear();
+			}
+			var axis:String = _axisSelector.value;
+			if(axis == "y" || !_drawToLandmark) {
+				len = diameter*diameter;
+				for(i = 0; i < len; ++i) {
+					if(axis == "y") {
+						px = (ox - radius) + (i % diameter)+1;
+						py = (oy - radius) + Math.floor(i/diameter)+1;
+						pz = oz;
+						d = Math.round(Math.sqrt( Math.pow(px - ox, 2) + Math.pow(py - oy, 2) ));
+						
+					}else if(axis == "x") {
+						px = ox;
+						py = (oy - radius) + (i % diameter);
+						pz = oz + Math.floor(i/diameter);
+						d = Math.round(Math.sqrt( Math.pow(py - oy, 2) + Math.pow(pz - (oz + radius-1), 2) ));
+						
+					}else if(axis == "z") {
+						px = (ox - radius) + (i % diameter);
+						py = oy;
+						pz = oz + Math.floor(i/diameter);
+						d = Math.round(Math.sqrt( Math.pow(px - ox, 2) + Math.pow(pz - (oz + radius-1), 2) ));
+					}
+					
+					if(d < radius && d >=radiusMin) {
+						if(_drawToLandmark) {
+							px = i % diameter;
+							py = i/diameter;
+							c = (px+py)%2 == 0? 0xffffff : 0;
+							_landmark.graphics.beginFill(c, .2);
+							_landmark.graphics.drawRect(px, py, 1, 1);
+						}else{
+							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+						}
+					}
+				}
+			
+			//Faster landmark generation for X and Z axis
+			}else{
+				len = diameter;
+				var isZ:Boolean = axis == "z";
+				for(i = 0; i < len-1; ++i) {
+					if(_drawToLandmark) {
+						c = i%2 == 0? 0xffffff : 0;
+						_landmark.graphics.beginFill(c, .2);
+						_landmark.graphics.drawRect(isZ? i : 0, isZ? 0 : i, 1, 1);
+					}
+				}
 			}
 		}
 
@@ -138,68 +195,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Updates the landmark
 		 */
 		private function updateLandMark(event:Event = null):void {
-			drawingMethod(0, 0, 0, 0, null, true);
-		}
-		
-		/**
-		 * Method that will be used to draw with the tool
-		 */
-		private function drawingMethod(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
-			var i:int, len:int, radius:int, radiusMin:int, px:int, py:int, pz:int, d:Number, c:uint;
-			radius = parseInt(_inputRadius.text);
-			radiusMin = _fillCb.selected? 0 : radius - parseInt(_inputThickness.text);
-			
-			if(toLandMark) {
-				_landmark.graphics.clear();
-			}
-			var axis:String = _axisSelector.value;
-			if(axis == "y" || !toLandMark) {
-				len = radius*radius*4;
-				for(i = 0; i < len; ++i) {
-					if(axis == "y") {
-						px = (ox - radius) + (i % (radius*2));
-						py = (oy - radius) + Math.floor(i/(radius*2));
-						pz = oz;
-						d = Math.round(Math.sqrt( Math.pow(px - ox, 2) + Math.pow(py - oy, 2) ));
-						
-					}else if(axis == "x") {
-						px = ox;
-						py = (oy - radius) + (i % (radius*2));
-						pz = oz + Math.floor(i/(radius*2));
-						d = Math.round(Math.sqrt( Math.pow(py - oy, 2) + Math.pow(pz - (oz + radius-1), 2) ));
-						
-					}else if(axis == "z") {
-						px = (ox - radius) + (i % (radius*2));
-						py = oy;
-						pz = oz + Math.floor(i/(radius*2));
-						d = Math.round(Math.sqrt( Math.pow(px - ox, 2) + Math.pow(pz - (oz + radius-1), 2) ));
-					}
-					
-					if(d < radius && d >= Math.ceil(radiusMin)) {
-						if(toLandMark) {
-							px = i % (radius*2);
-							py = Math.floor(i/(radius*2));
-							c = (px+py)%2 == 0? 0xffffff : 0;
-							_landmark.graphics.beginFill(c, .2);
-							_landmark.graphics.drawRect(px, py, 1, 1);
-						}else{
-							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
-						}
-					}
-				}
-			
-			//Faster landmark generation in X and Z axis
-			}else{
-				len = radius*2;
-				var isZ:Boolean = axis == "z";
-				for(i = 1; i < len; ++i) {
-					if(toLandMark) {
-						c = i%2 == 0? 0xffffff : 0;
-						_landmark.graphics.beginFill(c, .2);
-						_landmark.graphics.drawRect(isZ? i : 1, isZ? 1 : i, 1, 1);
-					}
-				}
-			}
+			_drawToLandmark = true;
+			draw(0, 0, 0, 0, null, 0, null);
+			_drawToLandmark = false;
 		}
 		
 		/**

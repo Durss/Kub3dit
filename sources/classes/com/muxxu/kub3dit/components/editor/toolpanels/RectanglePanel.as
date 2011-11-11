@@ -10,6 +10,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -27,6 +28,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _landmark:Shape;
 		private var _axisSelector:AxisSelector;
 		private var _fillCb:CheckBoxKube;
+		private var _drawToLandmark:Boolean;
 		
 		
 		
@@ -46,13 +48,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * @inheritDoc
-		 */
-		public function get drawer():Function {
-			return drawingMethod;
-		}
-		
 		/**
 		 * @inheritDoc
 		 */
@@ -79,6 +74,60 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			while(numChildren > 0) {
 				if(getChildAt(0) is Disposable) Disposable(getChildAt(0)).dispose();
 				removeChildAt(0);
+			}
+		}
+		
+		/**
+		 * Method that will be used to draw with the tool
+		 */
+		public function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+			var i:int, len:int, w:int, h:int, t:int, px:Number, py:Number, pz:Number, c:uint;
+			w = parseInt(_inputWidth.text);
+			h = parseInt(_inputHeight.text);
+			t = parseInt(_inputThickness.text);
+			len = w*h;
+			if(_drawToLandmark) {
+				_landmark.graphics.clear();
+			}
+			var axis:String = _axisSelector.value;
+			var fill:Boolean = _fillCb.selected;
+			if(axis == "y" || !_drawToLandmark) {
+				for(i = 0; i < len; ++i) {
+					if(fill || i%w < t || i%w >= w-t || Math.floor(i/w) < t || Math.floor(i/w) >= h-t) {
+						if(_drawToLandmark) {
+							px = i % w;
+							py = Math.floor(i/w);
+							c = (px+py)%2 == 0? 0xffffff : 0;
+							_landmark.graphics.beginFill(c, .2);
+							_landmark.graphics.drawRect(px, py, 1, 1);
+						}else{
+							if(axis == "y") {
+								px = Math.ceil(ox - w * .5) + (i % w);
+								py = Math.ceil(oy - h * .5) + Math.floor(i/w);
+								pz = oz;
+							}else if(axis == "x") {
+								px = ox;
+								py = Math.ceil(oy - w * .5) + (i % w);
+								pz = oz + Math.floor(i/w);
+							}else if(axis == "z") {
+								px = Math.ceil(ox - w * .5) + (i % w);
+								py = oy;
+								pz = oz + Math.floor(i/w);
+							}
+							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+						}
+					}
+				}
+			}else{
+				len = w;
+				var isZ:Boolean = axis == "z";
+				for(i = 0; i < len; ++i) {
+					if(_drawToLandmark) {
+						c = i%2 == 0? 0xffffff : 0;
+						_landmark.graphics.beginFill(c, .2);
+						_landmark.graphics.drawRect(isZ? i : 0, isZ? 0 : i, 1, 1);
+					}
+				}
 			}
 		}
 
@@ -151,61 +200,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Updates the landmark
 		 */
 		private function updateLandMark(event:Event = null):void {
-			drawingMethod(0, 0, 0, 0, null, true);
-		}
-		
-		/**
-		 * Method that will be used to draw with the tool
-		 */
-		private function drawingMethod(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
-			var i:int, len:int, w:int, h:int, t:int, px:Number, py:Number, pz:Number, c:uint;
-			w = parseInt(_inputWidth.text);
-			h = parseInt(_inputHeight.text);
-			t = parseInt(_inputThickness.text);
-			len = w*h;
-			if(toLandMark) {
-				_landmark.graphics.clear();
-			}
-			var axis:String = _axisSelector.value;
-			var fill:Boolean = _fillCb.selected;
-			if(axis == "y" || !toLandMark) {
-				for(i = 0; i < len; ++i) {
-					if(fill || i%w < t || i%w >= w-t || Math.floor(i/w) < t || Math.floor(i/w) >= h-t) {
-						if(toLandMark) {
-							px =i % w;
-							py = Math.floor(i/w);
-							c = (px+py)%2 == 0? 0xffffff : 0;
-							_landmark.graphics.beginFill(c, .2);
-							_landmark.graphics.drawRect(px, py, 1, 1);
-						}else{
-							if(axis == "y") {
-								px = Math.ceil(ox - w * .5) + (i % w);
-								py = Math.ceil(oy - h * .5) + Math.floor(i/w);
-								pz = oz;
-							}else if(axis == "x") {
-								px = ox;
-								py = Math.ceil(oy - w * .5) + (i % w);
-								pz = oz + Math.floor(i/w);
-							}else if(axis == "z") {
-								px = Math.ceil(ox - w * .5) + (i % w);
-								py = oy;
-								pz = oz + Math.floor(i/w);
-							}
-							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
-						}
-					}
-				}
-			}else{
-				len = w;
-				var isZ:Boolean = axis == "z";
-				for(i = 0; i < len; ++i) {
-					if(toLandMark) {
-						c = i%2 == 0? 0xffffff : 0;
-						_landmark.graphics.beginFill(c, .2);
-						_landmark.graphics.drawRect(isZ? i : 1, isZ? 1 : i, 1, 1);
-					}
-				}
-			}
+			_drawToLandmark = true;
+			draw(0, 0, 0, 0, null, 0, null);
+			_drawToLandmark = false;
 		}
 		
 		/**

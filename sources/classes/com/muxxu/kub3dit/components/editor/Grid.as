@@ -1,7 +1,7 @@
 package com.muxxu.kub3dit.components.editor {
-	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.muxxu.kub3dit.graphics.GridPattern;
@@ -12,6 +12,7 @@ package com.muxxu.kub3dit.components.editor {
 	import com.nurun.utils.math.MathUtils;
 
 	import flash.display.BitmapData;
+	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
@@ -42,7 +43,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _z:int;
 		private var _oldCamPos:Point;
 		private var _lastStartTime:int;
-		private var _subLevelsDraw:Boolean;
+		private var _subLevelsDrawn:Boolean;
 		private var _cellSize:int;
 		private var _bmdLevels:Vector.<BitmapData>;
 		private var _dragMode:Boolean;
@@ -163,8 +164,6 @@ package com.muxxu.kub3dit.components.editor {
 		 * Called on ENTER_FRAME event to render the grid
 		 */
 		private function enterFrameHandler(event:Event = null):void {
-			//FIXME totally fucked up if the map is smaller than the grid's size.
-			//TODO manage out of bounds cam drag. When we're at a corner we don't see the cam. If the corner is displayed at the center of the grid there won't be problems anymore. 
 			if(_3dView == null || _3dView.manager == null || _map == null) return;
 			var i:int, len:int, ox:int, oy:int, px:int, py:int, tile:int;
 			//Drag management
@@ -174,12 +173,14 @@ package com.muxxu.kub3dit.components.editor {
 			}
 			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x;
 			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
-			if(ox < 0) _offset.x -= ox;
-			if(oy < 0) _offset.y -= oy;
-			if(ox > _map.mapSizeX - _size) _offset.x -= ox - (_map.mapSizeX - _size);
-			if(oy > _map.mapSizeY - _size) _offset.y -= oy - (_map.mapSizeY - _size);
-			ox = MathUtils.restrict(ox, 0, _map.mapSizeX - _size);
-			oy = MathUtils.restrict(oy, 0, _map.mapSizeY - _size);
+			//Limit drag
+			if(ox < -_size*.5) _offset.x -= ox+_size*.5;
+			if(oy < -_size*.5) _offset.y -= oy+_size*.5;
+			if(ox > _map.mapSizeX - _size*.5) _offset.x -= ox - (_map.mapSizeX - _size*.5);
+			if(oy > _map.mapSizeY - _size*.5) _offset.y -= oy - (_map.mapSizeY - _size*.5);
+			//limit global offsetà
+			ox = MathUtils.restrict(ox, -_size * .5, _map.mapSizeX - _size*.5);
+			oy = MathUtils.restrict(oy, -_size * .5, _map.mapSizeY - _size*.5);
 			
 			//Draw the water
 			_gridHolder.graphics.clear();
@@ -189,41 +190,40 @@ package com.muxxu.kub3dit.components.editor {
 			
 			//Sub levels drawing management
 			var camPos:Point = new Point(Camera3D.locX, Camera3D.locY);
-			if(!camPos.equals(_oldCamPos)) {
-				_subLevelsDraw = false;
+			if(!camPos.equals(_oldCamPos) || _dragMode) {
+				_subLevelsDrawn = false;
 				_oldCamPos = camPos;
 				_lastStartTime = getTimer();
 				_bmdLevels = new Vector.<BitmapData>();
 			}
 			
 			//If we didn't moved from Xms and if the sublevels aren't drawn, then draw them
-			if(!_subLevelsDraw && getTimer() - _lastStartTime > 100) {
-				_subLevelsDraw = true;
-				drawSubLevels();
+			if(!_subLevelsDrawn && getTimer() - _lastStartTime > 50) {
+				_subLevelsDrawn = true;
+				drawSubLevels(ox, oy);
 			}
 			
 			if(_panel != null) {
 				if(_landMark.numChildren > 0) _landMark.removeChildAt(0);
-				_landMark.addChild(_panel.landmark);
-				_panel.landmark.scaleX = _panel.landmark.scaleY = _cellSize;
-				_panel.landmark.x = Math.floor( (Math.floor(mouseX/_cellSize)*_cellSize - _panel.landmark.width * .5) / _cellSize) * _cellSize;
-				_panel.landmark.y = Math.floor( (Math.floor(mouseY/_cellSize)*_cellSize - _panel.landmark.height * .5) / _cellSize) * _cellSize;
+				var landmark:Shape = _panel.landmark;
+				_landMark.addChild(landmark);
+				landmark.scaleX = landmark.scaleY = _cellSize;
+				landmark.x = Math.floor( (mouseX) / _cellSize) * _cellSize - Math.floor((landmark.width * .5) / _cellSize)*_cellSize;
+				landmark.y = Math.floor( (mouseY) / _cellSize) * _cellSize - Math.floor((landmark.height * .5) / _cellSize)*_cellSize;
 			}
 			
 			//Look at target orientation
-			_lookAt.x = _size * .5 * _cellSize - _offset.x * _cellSize;
-			_lookAt.y = _size * .5 * _cellSize - _offset.y * _cellSize;
+			_lookAt.x = _size * .5 * _cellSize - _offset.x * _cellSize + _cellSize*.5;
+			_lookAt.y = _size * .5 * _cellSize - _offset.y * _cellSize + _cellSize*.5;
 			_lookAt.rotation = Camera3D.rotationX;
 			
 			//Drawing management
 			if(_pressed && !_dragMode) {
 				var mousePos:Point = new Point(Math.floor(mouseX/_cellSize), Math.floor(mouseY/_cellSize));
-				
 				if(mouseX >= 0 && mouseY >= 0 &&
-				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && 
-//				!mousePos.equals(_lastPos)) {
+				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && !mousePos.equals(_lastPos)) {
 					_lastPos = mousePos;
-					_panel.drawer(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _3dView.manager);
+					_panel.draw(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _3dView.manager, _size, new Point(ox, oy));
 				}
 			}
 			
@@ -239,7 +239,16 @@ package com.muxxu.kub3dit.components.editor {
 			
 			//Draw the grid
 			len = _size*_size;
-			_bmdGrid.fillRect(_bmdGrid.rect, 0);
+			//draw disable zone
+			_bmdGrid.fillRect(_bmdGrid.rect, 0x55000000);
+			//draw enabled zone depending on the offsets
+			var rect:Rectangle = new Rectangle();
+			rect.x = ox <0? -ox : 0;
+			rect.y = oy <0? -oy : 0;
+			rect.width = Math.min(_size,  Math.min(_map.mapSizeX, _map.mapSizeX-ox));
+			rect.height = Math.min(_size, Math.min(_map.mapSizeY, _map.mapSizeY-oy));
+			_bmdGrid.fillRect(rect, 0);
+			//draw radar
 			for(i = 0; i < len; ++i) {
 				py = Math.floor(i/_size);
 				px = i - py*_size;
@@ -263,14 +272,10 @@ package com.muxxu.kub3dit.components.editor {
 		/**
 		 * Draw the sublevels
 		 */
-		private function drawSubLevels():void {
+		private function drawSubLevels(ox:int, oy:int):void {
 			var m:Matrix = new Matrix();
 			m.scale(_cellSize/16, _cellSize/16);
-			var i:int, len:int, j:int, lenJ:int, ox:int, oy:int, px:int, py:int, tile:int, drawnCells:Object;
-			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x;
-			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
-			ox = MathUtils.restrict(ox, 0, _map.mapSizeX - _size);
-			oy = MathUtils.restrict(oy, 0, _map.mapSizeY - _size);
+			var i:int, len:int, j:int, lenJ:int, px:int, py:int, tile:int, drawnCells:Object;
 			
 			_bmdLevels = new Vector.<BitmapData>();
 			drawnCells = {};

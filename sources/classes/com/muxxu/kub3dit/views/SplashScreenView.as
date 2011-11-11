@@ -1,5 +1,9 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.vo.ToolTipAlign;
+	import com.muxxu.kub3dit.events.ToolTipEvent;
+	import com.nurun.utils.math.MathUtils;
 	import gs.TweenLite;
+	import gs.easing.Elastic;
 
 	import com.muxxu.kub3dit.components.buttons.ButtonSplashScreen;
 	import com.muxxu.kub3dit.components.form.MapSizeInput;
@@ -40,6 +44,9 @@ package com.muxxu.kub3dit.views {
 		private var _shadow:DropShadowFilter;
 		private var _mapSize:MapSizeInput;
 		private var _ready:Boolean;
+		private var _creationMode:Boolean;
+		private var _defaultBt:ButtonSplashScreen;
+		private var _defaultSize:int;
 		
 		
 		
@@ -93,9 +100,13 @@ package com.muxxu.kub3dit.views {
 			_logo.addFrameScript(_logo.totalFrames - 1, onAnimComplete);
 			_backButtons = addChild(new MainCloudGraphic()) as MainCloudGraphic;
 			_buttonsHolder = addChild(new Sprite()) as Sprite;
+			_defaultBt = _buttonsHolder.addChild(new ButtonSplashScreen("")) as ButtonSplashScreen;
 			_createBt = _buttonsHolder.addChild(new ButtonSplashScreen(Label.getLabel("splashCreate"))) as ButtonSplashScreen;
 			_loadBt = _buttonsHolder.addChild(new ButtonSplashScreen(Label.getLabel("splashLoad"))) as ButtonSplashScreen;
 			_mapSize = addChild(new MapSizeInput()) as MapSizeInput;
+			
+			_defaultSize = 4;
+			changeDefaultHandler();
 			
 			_buttonsHolder.alpha = 0;
 			_buttonsHolder.visible = false;
@@ -103,18 +114,26 @@ package com.muxxu.kub3dit.views {
 			_backButtons.visible = false;
 			_mapSize.alpha = 0;
 			_mapSize.visible = false;
+			_loadBt.width = _createBt.width = _defaultBt.width = Math.max(_loadBt.width, _createBt.width, _defaultBt.width)+100;
 			
 			createClouds();
 			
 			_createBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
+			_defaultBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_loadBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_mapSize.addEventListener(Event.COMPLETE, mapSizeSubmitHandler);
 			_mapSize.addEventListener(Event.CANCEL, cancelMapSizeHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
 			stage.addEventListener(MouseEvent.CLICK, clickHandler);
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			_defaultBt.addEventListener(MouseEvent.MOUSE_WHEEL, changeDefaultHandler);
+			_defaultBt.addEventListener(MouseEvent.ROLL_OVER, overDefaultHandler);
 			
 			computePositions();
+			
+			_backButtons.width = _buttonsHolder.width * 1.5;
+			_backButtons.height = _buttonsHolder.height * 1.5;
+			computePositions();//dirty but needed!
 		}
 		
 		/**
@@ -147,20 +166,16 @@ package com.muxxu.kub3dit.views {
 			_background.width = stage.stageWidth;
 			_background.height = stage.stageHeight;
 			
-			_loadBt.y = Math.round(_createBt.height + 20);
-			
-			_backButtons.width = _buttonsHolder.width * 1.5;
-			_backButtons.height = _buttonsHolder.height * 1.5;
+			_createBt.y = Math.round(_defaultBt.y + _defaultBt.height - 15);
+			_loadBt.y = Math.round(_createBt.y + _createBt.height - 15);
 			
 			PosUtils.centerInStage(_logo);
 			PosUtils.centerInStage(_buttonsHolder);
-			PosUtils.centerIn(_backButtons, _buttonsHolder);
-			PosUtils.centerIn(_mapSize, _backButtons);
+			PosUtils.centerInStage(_mapSize);
+			PosUtils.centerInStage(_backButtons);
 			
-			_backButtons.x += _buttonsHolder.x - 10;
-			_backButtons.y += _buttonsHolder.y + 20;
-			_mapSize.x += _backButtons.x + 10;
-			_mapSize.y += _backButtons.y - 15;
+			_backButtons.x -= 10;
+			_backButtons.y += 15;
 		}
 		
 		/**
@@ -190,9 +205,16 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function clickButtonHandler(event:MouseEvent):void {
 			if(event.currentTarget == _createBt) {
+				_creationMode = true;
 				TweenLite.to(_mapSize, .25, {autoAlpha: 1});
 				TweenLite.to(_buttonsHolder, .25, {autoAlpha: 0});
-			}else{
+				TweenLite.to(_backButtons, 2, {width:_mapSize.width * 1.5, height:_mapSize.height * 1.5, ease:Elastic.easeOut, easeParams:[1,.4], onUpdate:computePositions});
+				computePositions();
+				
+			}else if(event.currentTarget == _defaultBt) {
+				FrontControler.getInstance().createMap(_defaultSize, _defaultSize, Config.getNumVariable("mapSizeHeight"));
+				
+			}else if(event.currentTarget == _loadBt) {
 				FrontControler.getInstance().loadMap();
 			}
 		}
@@ -202,7 +224,7 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function mapSizeSubmitHandler(event:Event):void {
 			mouseEnabled = mouseChildren = false;
-			FrontControler.getInstance().createMap(_mapSize.sizeX, _mapSize.sizeX, Config.getNumVariable("mapSizeHeight"));
+			FrontControler.getInstance().createMap(_mapSize.sizeX, _mapSize.sizeY, Config.getNumVariable("mapSizeHeight"));
 		}
 		
 		/**
@@ -211,6 +233,30 @@ package com.muxxu.kub3dit.views {
 		private function cancelMapSizeHandler(event:Event):void {
 			TweenLite.to(_mapSize, .25, {autoAlpha: 0});
 			TweenLite.to(_buttonsHolder, .25, {autoAlpha: 1});
+			_creationMode = false;
+			TweenLite.to(_backButtons, 2, {width:_buttonsHolder.width * 1.5, height:_buttonsHolder.height * 1.5, ease:Elastic.easeOut, easeParams:[1,.4], onUpdate:computePositions});
+			computePositions();
+		}
+		
+		/**
+		 * Called when changing the default map's size
+		 */
+		private function changeDefaultHandler(event:MouseEvent = null):void {
+			if(event != null) {
+				_defaultSize += MathUtils.sign(event.delta);
+			}
+			
+			_defaultSize = MathUtils.restrict(_defaultSize, 1, 20);
+			
+			_defaultBt.label = Label.getLabel("splashDefault").replace(/\$\{X\}/gi, _defaultSize).replace(/\$\{Y\}/gi, _defaultSize);
+			_defaultBt.validate();
+		}
+		
+		/**
+		 * Called when default button is rolled over
+		 */
+		private function overDefaultHandler(event:MouseEvent):void {
+			_defaultBt.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("defaultHelp"), ToolTipAlign.TOP, 20, "tooltipContentBig"));
 		}
 		
 		

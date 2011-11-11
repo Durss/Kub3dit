@@ -9,6 +9,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -27,6 +28,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _inputThickLabel:CssTextField;
 		private var _inputThick:InputKube;
 		private var _landmark:Shape;
+		private var _drawToLandmark:Boolean;
 		
 		
 		
@@ -46,12 +48,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * @inheritDoc
-		 */
-		public function get drawer():Function {
-			return drawingMethod;
-		}
 		/**
 		 * @inheritDoc
 		 */
@@ -79,6 +75,47 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			while(numChildren > 0) {
 				if(getChildAt(0) is Disposable) Disposable(getChildAt(0)).dispose();
 				removeChildAt(0);
+			}
+		}
+		
+		/**
+		 * Method that will be used to draw with the tool
+		 */
+		public function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+			var i:int, len:int, w:int, h:int, d:int, t:int, px:Number, py:Number, pz:Number, c:uint, isBorder:Boolean;
+			w = parseInt(_inputWidth.text);
+			h = parseInt(_inputHeight.text);
+			d = parseInt(_inputDepth.text);
+			t = parseInt(_inputThick.text);
+			len = w * h * d;
+			if(_drawToLandmark) {
+				_landmark.graphics.clear();
+			}
+			var fill:Boolean = _fillCb.selected;
+			for(i = 0; i < len; ++i) {
+				px = Math.ceil(ox - w * .5) + (i % w);
+				py = Math.ceil(oz) + Math.floor(i/w)%h;
+				pz = Math.ceil(oy - d * .5) + Math.floor(i/(w*h));
+				
+				if(_drawToLandmark) {
+					isBorder = (i % w < t || i % w >= w - t || Math.floor(i / w) < t || Math.floor(i / w) >= d - t);
+					if(i < w*d && (fill || (!fill && isBorder))) {
+						px = i % w;
+						py = Math.floor(i/w);
+						c = (px+py)%2 == 0? 0xffffff : 0;
+						_landmark.graphics.beginFill(c, .2);
+						_landmark.graphics.drawRect(px, py, 1, 1);
+					}
+				}else{
+					if(fill) {
+						chunksManagerRef.update(px, pz, py, _eraseMode? 0 : kubeID);
+					}else if(i%w < t || i%w >= w-t
+							|| Math.floor(i/w)%h < t || Math.floor(i/w)%h >= h-t
+							|| Math.floor(i/(w*h)) < t || Math.floor(i/(w*h)) >= d-t){
+							
+							chunksManagerRef.update(px, pz, py, _eraseMode? 0 : kubeID);
+					}
+				}
 			}
 		}
 
@@ -159,48 +196,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Updates the landmark
 		 */
 		private function updateLandMark(event:Event = null):void {
-			drawingMethod(0, 0, 0, 0, null, true);
-		}
-		
-		/**
-		 * Method that will be used to draw with the tool
-		 */
-		private function drawingMethod(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
-			var i:int, len:int, w:int, h:int, d:int, t:int, px:Number, py:Number, pz:Number, c:uint, isBorder:Boolean;
-			w = parseInt(_inputWidth.text);
-			h = parseInt(_inputHeight.text);
-			d = parseInt(_inputDepth.text);
-			t = parseInt(_inputThick.text);
-			len = w * h * d;
-			if(toLandMark) {
-				_landmark.graphics.clear();
-			}
-			var fill:Boolean = _fillCb.selected;
-			for(i = 0; i < len; ++i) {
-				px = Math.ceil(ox - w * .5) + (i % w);
-				py = Math.ceil(oz) + Math.floor(i/w)%h;
-				pz = Math.ceil(oy - d * .5) + Math.floor(i/(w*h));
-				
-				if(toLandMark) {
-					isBorder = (i % w < t || i % w >= w - t || Math.floor(i / w) < t || Math.floor(i / w) >= d - t);
-					if(i < w*d && (fill || (!fill && isBorder))) {
-						px = i % w;
-						py = Math.floor(i/w);
-						c = (px+py)%2 == 0? 0xffffff : 0;
-						_landmark.graphics.beginFill(c, .2);
-						_landmark.graphics.drawRect(px + w%2, py + d%2, 1, 1);
-					}
-				}else{
-					if(fill) {
-						chunksManagerRef.update(px, pz, py, _eraseMode? 0 : kubeID);
-					}else if(i%w < t || i%w >= w-t
-							|| Math.floor(i/w)%h < t || Math.floor(i/w)%h >= h-t
-							|| Math.floor(i/(w*h)) < t || Math.floor(i/(w*h)) >= d-t){
-							
-							chunksManagerRef.update(px, pz, py, _eraseMode? 0 : kubeID);
-					}
-				}
-			}
+			_drawToLandmark = true;
+			draw(0, 0, 0, 0, null, 0, null);
+			_drawToLandmark = false;
 		}
 		
 		/**

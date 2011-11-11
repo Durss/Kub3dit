@@ -10,6 +10,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -25,6 +26,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _inputLabel:CssTextField;
 		private var _eraseMode:Boolean;
 		private var _landmark:Shape;
+		private var _drawToLandmark:Boolean;
 		
 		
 		
@@ -44,12 +46,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * @inheritDoc
-		 */
-		public function get drawer():Function {
-			return drawingMethod;
-		}
 		
 		/**
 		 * @inheritDoc
@@ -77,6 +73,53 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			while(numChildren > 0) {
 				if(getChildAt(0) is Disposable) Disposable(getChildAt(0)).dispose();
 				removeChildAt(0);
+			}
+		}
+		
+		/**
+		 * Method that will be used to draw with the tool
+		 */
+		public function draw(ox:int, oy:int, pz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+			var i:int, len:int, size:int, px:int, py:int, d:Number, c:uint;
+			size = parseInt(_inputSize.text);
+			if(_drawToLandmark) {
+				_landmark.graphics.clear();
+			}
+			if(_squareRB.selected) {
+				len = size*size;
+				for(i = 0; i < len; ++i) {
+					if(_drawToLandmark) {
+						px = i % size;
+						py = Math.floor(i/size);
+						c = (px+py)%2 == 0? 0xffffff : 0;
+						_landmark.graphics.beginFill(c, .2);
+						_landmark.graphics.drawRect(px, py, 1, 1);
+					}else{
+						px = Math.ceil(ox - size * .5) + (i % size);
+						py = Math.ceil(oy - size * .5) + Math.floor(i/size);
+						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+					}
+				}
+			}else{
+				//rounds the size to an odd number to be sure to get something that really looks like a circle
+				if(size%2 == 0) size ++;
+				len = size*size;
+				for(i = 0; i < len; ++i) {
+					px = Math.ceil(ox - size * .5) + (i % size);
+					py = Math.ceil(oy - size * .5) + Math.floor(i/size);
+					d = Math.sqrt( Math.pow(px - ox, 2) + Math.pow(py - oy, 2) );
+					if(d <= size * .5) {
+						if(_drawToLandmark) {
+							px = i % size;
+							py = i/size;
+							c = (px+py)%2 == 0? 0xffffff : 0;
+							_landmark.graphics.beginFill(c, .2);
+							_landmark.graphics.drawRect(px, py, 1, 1);
+						}else{
+							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+						}
+					}
+				}
 			}
 		}
 
@@ -124,54 +167,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Updates the landmark
 		 */
 		private function updateLandMark(event:Event = null):void {
-			drawingMethod(0, 0, 0, 0, null, true);
-		}
-		
-		/**
-		 * Method that will be used to draw with the tool
-		 */
-		private function drawingMethod(ox:int, oy:int, pz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
-			var i:int, len:int, size:int, px:int, py:int, d:Number, c:uint;
-			size = parseInt(_inputSize.text);
-			if(toLandMark) {
-				_landmark.graphics.clear();
-			}
-			if(_squareRB.selected) {
-				len = size*size;
-				for(i = 0; i < len; ++i) {
-					if(toLandMark) {
-						px = i % size;
-						py = Math.floor(i/size);
-						c = (px+py)%2 == 0? 0xffffff : 0;
-						_landmark.graphics.beginFill(c, .2);
-						_landmark.graphics.drawRect(px + size%2, py + size%2, 1, 1);
-					}else{
-						px = Math.ceil(ox - size * .5) + (i % size);
-						py = Math.ceil(oy - size * .5) + Math.floor(i/size);
-						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
-					}
-				}
-			}else{
-				//rounds the size to an odd number to be sure to get something that really looks like a circle
-				if(size%2 == 0) size ++;
-				len = size*size;
-				for(i = 0; i < len; ++i) {
-					px = Math.ceil(ox - size * .5) + (i % size);
-					py = Math.ceil(oy - size * .5) + Math.floor(i/size);
-					d = Math.sqrt( Math.pow(px - ox, 2) + Math.pow(py - oy, 2) );
-					if(d <= size * .5) {
-						if(toLandMark) {
-							px = i % size;
-							py = Math.floor(i/size);
-							c = (px+py)%2 == 0? 0xffffff : 0;
-							_landmark.graphics.beginFill(c, .2);
-							_landmark.graphics.drawRect(px + 1, py + 1, 1, 1);
-						}else{
-							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
-						}
-					}
-				}
-			}
+			_drawToLandmark = true;
+			draw(0, 0, 0, 0, null, 0, null);
+			_drawToLandmark = false;
 		}
 	}
 }

@@ -81,6 +81,14 @@ package com.muxxu.kub3dit.components.buttons {
 			updateSkin();
 			dispatchEvent(new Event(Event.CHANGE));
 		}
+		
+		/**
+		 * Sets the enable state of the button.
+		 */
+		public function set enabled(value:Boolean):void {
+			_button.enabled = value;
+			mouseEnabled = mouseChildren = value;
+		}
 
 
 

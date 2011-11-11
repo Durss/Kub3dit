@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.form {
+	import com.nurun.components.form.events.FormComponentEvent;
 	import flash.events.Event;
 	import com.muxxu.kub3dit.graphics.MapSizeCross;
 	import com.muxxu.kub3dit.vo.ToolTipAlign;
@@ -95,6 +96,8 @@ package com.muxxu.kub3dit.components.form {
 			
 			_inputW.addEventListener(MouseEvent.ROLL_OVER, rollOverInputHanlder);
 			_inputH.addEventListener(MouseEvent.ROLL_OVER, rollOverInputHanlder);
+			_inputW.addEventListener(FormComponentEvent.SUBMIT, clickButtonHandler);
+			_inputH.addEventListener(FormComponentEvent.SUBMIT, clickButtonHandler);
 			_submitBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_cancelBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			
@@ -110,7 +113,7 @@ package com.muxxu.kub3dit.components.form {
 			_cross.x = Math.round(_inputH.x - _cross.width - 5);
 			_cross.y = Math.round((_inputW.height - _cross.height) * .5);
 			_submitBt.y = _inputsHolder.y + _inputsHolder.height + 5;
-			_cancelBt.y = _submitBt.y + _submitBt.height - 20;
+			_cancelBt.y = _submitBt.y + _submitBt.height - 15;
 			
 			PosUtils.hAlign(PosUtils.H_ALIGN_CENTER, 0, _inputsHolder, _submitBt, _cancelBt);
 		}
@@ -124,14 +127,15 @@ package com.muxxu.kub3dit.components.form {
 		 * Called when an input is rolled over
 		 */
 		private function rollOverInputHanlder(event:MouseEvent):void {
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("titleMapSize"), ToolTipAlign.TOP, 20, "tooltipContentBig"));
+			//Fire the event from the input to be sure to have a working tooltip
+			event.target.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("titleMapSize"), ToolTipAlign.TOP, 20, "tooltipContentBig"));
 		}
 		
 		/**
 		 * Called when a button is clicked
 		 */
-		private function clickButtonHandler(event:MouseEvent):void {
-			var type:String = event.currentTarget == _submitBt? Event.COMPLETE : Event.CANCEL;
+		private function clickButtonHandler(event:Event):void {
+			var type:String = event.currentTarget == _submitBt || event.currentTarget is InputKube? Event.COMPLETE : Event.CANCEL;
 			dispatchEvent(new Event(type));
 		}
 		

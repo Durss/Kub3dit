@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.components.editor.toolpanels.BucketPanel;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
 	import com.muxxu.kub3dit.components.editor.toolpanels.CirclePanel;
@@ -108,6 +109,8 @@ package com.muxxu.kub3dit.components.editor {
 			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
 			
+			_bucket.enabled = false;
+			
 			_group = new FormComponentGroup();
 			_tools = new Vector.<ButtonEditorTool>();
 			_tools.push(_pencil);
@@ -119,6 +122,7 @@ package com.muxxu.kub3dit.components.editor {
 			
 			_buttonToClassType = new Dictionary();
 			_buttonToClassType[_pencil] = PencilPanel;
+			_buttonToClassType[_bucket] = BucketPanel;
 			_buttonToClassType[_circle] = CirclePanel;
 			_buttonToClassType[_rect] = RectanglePanel;
 			_buttonToClassType[_cube] = CubePanel;

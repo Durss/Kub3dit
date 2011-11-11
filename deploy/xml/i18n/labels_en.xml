@@ -1,16 +1,16 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
-		<label code="splashDefault"><![CDATA[Carte ${X}x${Y}]]></label>
-		<label code="splashCreate"><![CDATA[Taille...]]></label>
-		<label code="splashLoad"><![CDATA[Charger]]></label>
-		<label code="submitMapSize"><![CDATA[Valider]]></label>
-		<label code="cancelMapSize"><![CDATA[Annuler]]></label>
+		<label code="splashDefault"><![CDATA[Map ${X}x${Y}]]></label>
+		<label code="splashCreate"><![CDATA[Custom...]]></label>
+		<label code="splashLoad"><![CDATA[Load]]></label>
+		<label code="submitMapSize"><![CDATA[Submit]]></label>
+		<label code="cancelMapSize"><![CDATA[Cancel]]></label>
 		<label code="inputMapSize"><![CDATA[Zones :]]></label>
-		<label code="defaultHelp"><![CDATA[Utilisez la roulette pour changer les dimensions.<br />Pour des tailles plus peronnalisées utilisez<br />le bouton en-dessous de celui-ci.]]></label>
-		<label code="titleMapSize"><![CDATA[Entrez ici les dimensions souhaitées<br />pour la carte en nombre de zones.]]></label>
+		<label code="defaultHelp"><![CDATA[Use the mouse wheel to change the sizes.<br />To get more customed sizes use<br />the button right under.]]></label>
+		<label code="titleMapSize"><![CDATA[Enter the number of zones<br />you want the map to be.]]></label>
 		
-		<label code="unkownSaveFileType"><![CDATA[Le fichier n'est pas un fichier de carte valide.]]></label>
+		<label code="unkownSaveFileType"><![CDATA[Invalid file type.]]></label>
 		
 		<label code="kube1"><![CDATA[Béton]]></label>
 		<label code="kube2"><![CDATA[Eau]]></label>
@@ -90,47 +90,47 @@
 		<label code="kube76"><![CDATA[Caisse]]></label>
 		<label code="kube77"><![CDATA[Kube de Noël]]></label>
 		
-		<label code="kubesList"><![CDATA[Palette de kube]]></label>
+		<label code="kubesList"><![CDATA[Kube's list]]></label>
 		
-		<label code="helpTools"><![CDATA[Gardez la barre d'espace appuyée<br />pour pouvoir déplacer la grille.]]></label>
-		<label code="helpToolsRubber"><![CDATA[Bascule l'outil courant en mode gomme (E)]]></label>
-		<label code="helpTools1"><![CDATA[Pinceau (1)]]></label>
-		<label code="helpTools2"><![CDATA[Pot de peinture (2)]]></label>
-		<label code="helpTools3"><![CDATA[Cercle (3)]]></label>
+		<label code="helpTools"><![CDATA[Keep space bar pressed<br />to be able to drag the grid.]]></label>
+		<label code="helpToolsRubber"><![CDATA[Toggle the current tool to rubber (E)]]></label>
+		<label code="helpTools1"><![CDATA[Pencil (1)]]></label>
+		<label code="helpTools2"><![CDATA[Paint bucket (2)]]></label>
+		<label code="helpTools3"><![CDATA[Circle (3)]]></label>
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
-		<label code="helpTools8"><![CDATA[Sphère (6)]]></label>
-		<label code="helpSyncCam"><![CDATA[Vous déplacer dans l'environnement 3D<br />changera automatiquement le niveau<br />d'affichage de la grille]]></label>
-		<label code="helpMoveCam"><![CDATA[Déplace la caméra au niveau d'affichage<br />courant de la grille.]]></label>
+		<label code="helpTools8"><![CDATA[Sphere (6)]]></label>
+		<label code="helpSyncCam"><![CDATA[Moving in the 3D environment<br />will automatically change the<br />grid's level.]]></label>
+		<label code="helpMoveCam"><![CDATA[Moves the camera at the<br />current grid's level.]]></label>
 		
 		<label code="axisSelector"><![CDATA[Axe :]]></label>
 		
-		<label code="toolConfig-pencilShape-input"><![CDATA[Taille]]></label>
-		<label code="toolConfig-pencilShape-square"><![CDATA[Carré]]></label>
-		<label code="toolConfig-pencilShape-circle"><![CDATA[Rond]]></label>
+		<label code="toolConfig-pencilShape-input"><![CDATA[Size]]></label>
+		<label code="toolConfig-pencilShape-square"><![CDATA[Square]]></label>
+		<label code="toolConfig-pencilShape-circle"><![CDATA[Circle]]></label>
 		
-		<label code="toolConfig-diskShape-inputRadius"><![CDATA[Rayon]]></label>
-		<label code="toolConfig-diskShape-fill"><![CDATA[Remplir]]></label>
+		<label code="toolConfig-diskShape-inputRadius"><![CDATA[Radius]]></label>
+		<label code="toolConfig-diskShape-fill"><![CDATA[Fill]]></label>
 		
-		<label code="toolConfig-circleShape-inputRadius"><![CDATA[Rayon]]></label>
+		<label code="toolConfig-circleShape-inputRadius"><![CDATA[Radius]]></label>
 		<label code="toolConfig-circleShape-inputThick"><![CDATA[Epaisseur]]></label>
 		
-		<label code="toolConfig-rectShape-inputWidth"><![CDATA[Largeur]]></label>
-		<label code="toolConfig-rectShape-inputHeight"><![CDATA[Hauteur]]></label>
-		<label code="toolConfig-rectShape-inputThick"><![CDATA[Epaisseur]]></label>
+		<label code="toolConfig-rectShape-inputWidth"><![CDATA[Width]]></label>
+		<label code="toolConfig-rectShape-inputHeight"><![CDATA[height]]></label>
+		<label code="toolConfig-rectShape-inputThick"><![CDATA[Thickness]]></label>
 		
-		<label code="toolConfig-cubeShape-inputWidth"><![CDATA[Largeur]]></label>
-		<label code="toolConfig-cubeShape-inputHeight"><![CDATA[Hauteur]]></label>
-		<label code="toolConfig-cubeShape-inputDepth"><![CDATA[Profondeur]]></label>
-		<label code="toolConfig-cubeShape-inputThick"><![CDATA[Epaisseur]]></label>
-		<label code="toolConfig-cubeShape-fill"><![CDATA[Remplir]]></label>
+		<label code="toolConfig-cubeShape-inputWidth"><![CDATA[Width]]></label>
+		<label code="toolConfig-cubeShape-inputHeight"><![CDATA[Height]]></label>
+		<label code="toolConfig-cubeShape-inputDepth"><![CDATA[Depth]]></label>
+		<label code="toolConfig-cubeShape-inputThick"><![CDATA[Thickness]]></label>
+		<label code="toolConfig-cubeShape-fill"><![CDATA[Fill]]></label>
 		
-		<label code="toolConfig-sphereShape-inputRadius"><![CDATA[Rayon]]></label>
-		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Epaisseur]]></label>
-		<label code="toolConfig-sphereShape-fill"><![CDATA[Remplir]]></label>
+		<label code="toolConfig-sphereShape-inputRadius"><![CDATA[Radius]]></label>
+		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Thickness]]></label>
+		<label code="toolConfig-sphereShape-fill"><![CDATA[Fill]]></label>
 		
-		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
-		<label code="moveCamToLevel"><![CDATA[Déplacer la caméra]]></label>
+		<label code="syncLevels"><![CDATA[Synchronise with camera]]></label>
+		<label code="moveCamToLevel"><![CDATA[Move camera]]></label>
 	</labels>
 	
 </root>

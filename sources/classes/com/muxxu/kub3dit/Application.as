@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit {
+	import org.libspark.ui.SWFWheel;
 	import com.muxxu.kub3dit.views.MainMenuView;
 	import net.hires.debug.Stats;
 
@@ -79,7 +80,6 @@ package com.muxxu.kub3dit {
 			addChild(new ToolTipView());
 			addChild(new Stats());
 			
-			
 			_model.start();
 		}
 
@@ -92,6 +92,7 @@ package com.muxxu.kub3dit {
 			
 			stage.align = StageAlign.TOP_LEFT;
 			stage.scaleMode = StageScaleMode.NO_SCALE;
+			SWFWheel.initialize(stage);
 			
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);

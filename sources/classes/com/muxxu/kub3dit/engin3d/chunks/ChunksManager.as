@@ -84,6 +84,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 
 		public function get offsetY():int { return _offsetY; }
 
+		public function get map():Map { return _map; }
+
 
 
 		/* ****** *
@@ -292,8 +294,6 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Defines the number of visible chunks
 		 */
 		public function setVisibleChunks(width:int=10, height:int=10):void {
-			trace('width: ' + (width));
-			trace('height: ' + (height));
 			_chunksW = width;
 			_chunksH = height;
 			_toUpdate = [];

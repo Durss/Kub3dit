@@ -180,8 +180,8 @@ package com.muxxu.kub3dit.components.editor {
 				
 				updateLevel( Math.round(_button.x / (_width-_button.width) * ((_levels-1))) );
 			}
-			if(_bar.hitTestPoint(stage.mouseX, stage.mouseY)) {
-				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Math.floor((_bar.mouseX / _width) * _levels + 1).toString(), ToolTipAlign.TOP));
+			if(_bar.hitTestPoint(stage.mouseX, stage.mouseY) && !_button.hitTestPoint(stage.mouseX, stage.mouseY)) {
+				_bar.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Math.floor((_bar.mouseX / _width) * _levels + 1).toString(), ToolTipAlign.TOP));
 			}
 		}
 		
@@ -231,7 +231,7 @@ package com.muxxu.kub3dit.components.editor {
 			}
 			
 			if(label != null) {
-				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.TOP));
+				event.target.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.TOP));
 			}
 		}
 		
