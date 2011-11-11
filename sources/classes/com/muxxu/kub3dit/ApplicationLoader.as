@@ -69,7 +69,7 @@ package com.muxxu.kub3dit {
 			
 			_barColor		= parseInt(getFV("loaderColor", "000000"), 16);
 			
-			Config.addVariable("lang", "fr");
+			Config.addVariable("lang", "en");
 			Config.addVariable("version", "1");
 			
 			_env			= new EnvironnementManager();

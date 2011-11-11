@@ -21,6 +21,8 @@ package com.muxxu.kub3dit.views {
 		private var _opened:Boolean;
 		private var _alignType:String;
 		private var _margin:int;
+		private var _content:TTTextContent;
+		private var _message:ToolTipMessage;
 		
 		
 		
@@ -59,6 +61,10 @@ package com.muxxu.kub3dit.views {
 		private function initialize():void {
 			_toolTip = addChild(new ToolTip()) as ToolTip;
 			_toolTip.addEventListener(Event.CLOSE, closeHandler);
+			
+			_content = new TTTextContent(false);
+			_message = new ToolTipMessage(_content, null);
+			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}
 		
@@ -141,7 +147,9 @@ package com.muxxu.kub3dit.views {
 		private function openHandler(event:ToolTipEvent):void {
 			_opened = true;
 			_margin = event.margin;
-			_toolTip.open(new ToolTipMessage(new TTTextContent(true, event.data as String, event.style), event.target as InteractiveObject));
+			_message.target = event.target as InteractiveObject;
+			_content.populate(event.data as String, event.style);
+			_toolTip.open(_message);
 			_alignType = event.align;
 			mouseMoveHandler(null);
 		}

@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.model {
+	import com.nurun.structure.environnement.label.Label;
+	import com.muxxu.kub3dit.vo.Constants;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.commands.InitTexturesCmd;
 	import com.muxxu.kub3dit.engin3d.map.Map;
@@ -80,7 +82,13 @@ package com.muxxu.kub3dit.model {
 		 */
 		public function saveMap():void {
 			var ba:ByteArray = new ByteArray();
-			_map.data.readBytes(ba);
+			ba.writeByte(Constants.MAP_FILE_TYPE_1);
+			ba.writeShort(_map.mapSizeX);
+			ba.writeShort(_map.mapSizeY);
+			ba.writeShort(_map.mapSizeZ);
+			ba.position = 0;
+			_map.data.position = 0;
+			_map.data.readBytes(ba,7);
 			ba.compress();
 			ba.position = 0;
 			
@@ -116,7 +124,7 @@ package com.muxxu.kub3dit.model {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_currentKubeId = "3";
+			_currentKubeId = "3";//Defaulty selected kube
 		}
 		
 		/**
@@ -143,11 +151,22 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function loadMapCompleteHandler(event:CommandEvent):void {
 			var data:ByteArray = event.data as ByteArray;
-			data.uncompress();
-			data.position = 0;
-			_map.load(data);
-			
-//			_map = new Map(mapSizeX, mapSizeY, mapSizeZ);
+			try {
+				data.uncompress();
+				data.position = 0;
+			}catch(error:Error) {
+				throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
+				return;
+			}
+			switch(data.readByte()){
+				case Constants.MAP_FILE_TYPE_1:
+					_map = new Map(0,0,0);
+					_map.load(data);
+					update();
+					break;
+				default:
+					throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
+			}
 		}
 		
 		/**

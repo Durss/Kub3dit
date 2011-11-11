@@ -1,4 +1,7 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import flash.geom.Point;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
+
 	import flash.display.Shape;
 	/**
 	 * @author Francois
@@ -11,12 +14,15 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		function dispose():void;
 		
 		/**
-		 * Gets the drawing function
+		 * Called to draw something on the grid
 		 * 
-		 * Returned method must contain the following parameters:
-		 * (X, Y, Z, kubeID, chunksManagerRef)
+		 * @param ox				X position under the mouse
+		 * @param oy				Y position under the mouse
+		 * @param oz				Z position of the grid
+		 * @param chunksManagerRef	chunksmanager reference
+		 * @param gridSize			size of the grid
 		 */
-		function get drawer():Function;
+		function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void;
 		
 		/**
 		 * Gets the landmark graphics

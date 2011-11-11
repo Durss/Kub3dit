@@ -35,7 +35,7 @@ package com.muxxu.kub3dit.components.buttons {
 		 * Creates an instance of <code>ButtonSplashScreen</code>.
 		 */
 		public function ButtonSplashScreen(label:String) {
-			super(label, "splashButton", new SplashScreenButtonGraphic());
+			super(label, "splashScreenButton", new SplashScreenButtonGraphic());
 			contentMargin = new Margin(5, 5, 5, 5);
 			textBoundsMode = false;
 			iconAlign = IconAlign.LEFT;
@@ -101,7 +101,7 @@ package com.muxxu.kub3dit.components.buttons {
 				//"width" value including its left and right gutters. So the
 				//available width for the text content will be lower than before
 				//when the button was autoSized.
-				_labelTxt.width = _width - iconW - marginClone.width;
+				_labelTxt.width = _width - iconW - marginClone.width - 50;//-50 is the properties visitor label offset plus a left margin
 			}
 			if(_labelTxt.length == 0){
 				bounds	= new Rectangle(0,0,0,0);
@@ -143,19 +143,19 @@ package com.muxxu.kub3dit.components.buttons {
 			}
 			
 			if(contains(_labelTxt)) {
-//				if(_textAlign == TextAlign.LEFT) {
+				if(_textAlign == TextAlign.LEFT) {
 //					_labelTxt.x = marginClone.left;
 //					_labelTxt.x -= bounds.left;
-//					align = "left";
-//				}
-//				if(_textAlign == TextAlign.CENTER) {
+					align = "left";
+				}
+				if(_textAlign == TextAlign.CENTER) {
 //					_labelTxt.x = Math.round((_backW - _labelTxt.width) * .5);
-//					align = "center";
-//				}
-//				if(_textAlign == TextAlign.RIGHT) {
+					align = "center";
+				}
+				if(_textAlign == TextAlign.RIGHT) {
 //					_labelTxt.x = _backW - _labelTxt.width - marginClone.right;
-//					align = "right";
-//				}
+					align = "right";
+				}
 //				
 //				if(_height > 0) {
 //					_labelTxt.y	= Math.round((_height - bounds.height) * .5);

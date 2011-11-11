@@ -9,6 +9,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -24,6 +25,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _fillCb:CheckBoxKube;
 		private var _inputThickLabel:CssTextField;
 		private var _inputThick:InputKube;
+		private var _drawToLandmark:Boolean;
 		
 		
 		
@@ -43,12 +45,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * @inheritDoc
-		 */
-		public function get drawer():Function {
-			return drawingMethod;
-		}
 		/**
 		 * @inheritDoc
 		 */
@@ -76,6 +72,48 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			while(numChildren > 0) {
 				if(getChildAt(0) is Disposable) Disposable(getChildAt(0)).dispose();
 				removeChildAt(0);
+			}
+		}
+		
+		/**
+		 * Method that will be used to draw with the tool
+		 */
+		public function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+			var i:int, len:int, r:int, t:int, diameter:int, d:Number, px:Number, py:Number, pz:Number, c:uint;
+			r = parseInt(_inputRadius.text);
+			t = parseInt(_inputThick.text);
+			diameter = r*2;
+			len = diameter*diameter*diameter;
+			if(_drawToLandmark) {
+				_landmark.graphics.clear();
+			}
+			var fill:Boolean = _fillCb.selected;
+			
+			for(i = 0; i < len; ++i) {
+				px = Math.floor(ox - r) + (i % diameter);
+				py = Math.floor(oy - r) + Math.floor(i/diameter)%diameter;
+				pz = Math.floor(oz - r) + Math.floor(i/(diameter*diameter));
+				
+				if(_drawToLandmark) {
+					if(i < diameter*diameter) {
+						px = i% diameter;
+						py = Math.floor(i/diameter);
+						
+						d = Math.round(Math.sqrt((r - px)*(r - px) + (r - py)*(r - py)));
+						if(d < r && ( fill || (!fill && d>=r-t) )) {
+							c = (px+py)%2 == 0? 0xffffff : 0;
+							_landmark.graphics.beginFill(c, .2);
+							_landmark.graphics.drawRect(px-1, py-1, 1, 1);
+						}
+					}else{
+						break;
+					}
+				}else {
+					d = Math.round(Math.sqrt((ox - px)*(ox - px) + (oy - py)*(oy - py) + (oz - pz)*(oz - pz)));
+					if(d < r && ( fill || (!fill && d>=r-t) )) {
+						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+					}
+				}
 			}
 		}
 
@@ -132,49 +170,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Updates the landmark
 		 */
 		private function updateLandMark(event:Event = null):void {
-			drawingMethod(0, 0, 0, 0, null, true);
-		}
-		
-		/**
-		 * Method that will be used to draw with the tool
-		 */
-		private function drawingMethod(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, toLandMark:Boolean = false):void {
-			var i:int, len:int, r:int, t:int, diameter:int, d:Number, px:Number, py:Number, pz:Number, c:uint;
-			r = parseInt(_inputRadius.text);
-			t = parseInt(_inputThick.text);
-			diameter = r*2;
-			len = diameter*diameter*diameter;
-			if(toLandMark) {
-				_landmark.graphics.clear();
-			}
-			var fill:Boolean = _fillCb.selected;
-			
-			for(i = 0; i < len; ++i) {
-				px = Math.ceil(ox - r) + (i % diameter);
-				py = Math.ceil(oy - r) + Math.floor(i/diameter)%diameter;
-				pz = Math.ceil(oz - r) + Math.floor(i/(diameter*diameter));
-				
-				if(toLandMark) {
-					if(i < diameter*diameter) {
-						px = i% diameter;
-						py = Math.floor(i/diameter);
-						
-						d = Math.sqrt((r - px)*(r - px) + (r - py)*(r - py));
-						if(d < r && ( fill || (!fill && d>=r-t) )) {
-							c = (px+py)%2 == 0? 0xffffff : 0;
-							_landmark.graphics.beginFill(c, .2);
-							_landmark.graphics.drawRect(px, py, 1, 1);
-						}
-					}else{
-						break;
-					}
-				}else {
-					d = Math.sqrt((ox - px)*(ox - px) + (oy - py)*(oy - py) + (oz - pz)*(oz - pz));
-					if(d < r && ( fill || (!fill && d>=r-t) )) {
-						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
-					}
-				}
-			}
+			_drawToLandmark = true;
+			draw(0, 0, 0, 0, null, 0, null);
+			_drawToLandmark = false;
 		}
 		
 		/**

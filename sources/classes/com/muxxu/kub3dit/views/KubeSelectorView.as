@@ -52,7 +52,6 @@ package com.muxxu.kub3dit.views {
 		 * Called on model's update
 		 */
 		override public function update(event:IModelEvent):void {
-			trace("KubeSelectorView.update(event)");
 			var model:Model = event.model as Model;
 			if(!_ready)  {
 				_ready = true;

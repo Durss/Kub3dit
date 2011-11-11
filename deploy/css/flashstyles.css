@@ -2,6 +2,7 @@
 .error { font-family:Verdana; font-size:12; color:#CC0000; }
 
 .splashScreenInputLabel { font-family:Verdana; font-size:30; font-weight:bold; color:#47A9D1; flash-charcase:upper; }
+.splashScreenButton { font-family:Verdana; font-size:50; font-weight:bold; color:#ffffff; flash-alpha:1; flash-charcase:upper; text-align:center; }
 
 .link { color:#CC0000; text-decoration:underline; }
 .tooltipContent { font-family:Verdana; font-size:10; color:#ffffff; }
@@ -24,8 +25,6 @@
 .button_over { font-family:Verdana; font-size:12; font-weight:bold; color:#36748D; }
 .button_down { font-family:Verdana; font-size:12; font-weight:bold; color:#234B5C; }
 .button_disabled { font-family:Verdana; font-size:12; font-weight:bold; color:#234B5C; flash-alpha:.4; }
-
-.splashButton { font-family:Verdana; font-size:50; font-weight:bold; color:#ffffff; flash-alpha:1; flash-charcase:upper; }
 
 .comboboxButtonItem { font-family:Verdana; font-size:20; font-weight:bold; color:#265367; flash-alpha:1; }
 .comboboxButtonItem_over { font-family:Verdana; font-size:20; font-weight:bold; color:#36748D; }
