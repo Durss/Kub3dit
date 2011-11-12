@@ -89,7 +89,10 @@ package com.muxxu.kub3dit.components.editor {
 		/**
 		 * Sets the current panel used to configure the drawing draw
 		 */
-		public function set currentPanel(value:IToolPanel):void { _panel = value; }
+		public function set currentPanel(value:IToolPanel):void {
+			_panel = value;
+			_panel.chunksManager = _3dView.manager;
+		}
 
 
 
@@ -206,10 +209,12 @@ package com.muxxu.kub3dit.components.editor {
 			if(_panel != null) {
 				if(_landMark.numChildren > 0) _landMark.removeChildAt(0);
 				var landmark:Shape = _panel.landmark;
-				_landMark.addChild(landmark);
-				landmark.scaleX = landmark.scaleY = _cellSize;
-				landmark.x = Math.floor( (mouseX) / _cellSize) * _cellSize - Math.floor((landmark.width * .5) / _cellSize)*_cellSize;
-				landmark.y = Math.floor( (mouseY) / _cellSize) * _cellSize - Math.floor((landmark.height * .5) / _cellSize)*_cellSize;
+				if(landmark != null) {
+					_landMark.addChild(landmark);
+					landmark.scaleX = landmark.scaleY = _cellSize;
+					landmark.x = Math.floor( (mouseX) / _cellSize) * _cellSize - Math.floor((landmark.width * .5) / _cellSize)*_cellSize;
+					landmark.y = Math.floor( (mouseY) / _cellSize) * _cellSize - Math.floor((landmark.height * .5) / _cellSize)*_cellSize;
+				}
 			}
 			
 			//Look at target orientation
@@ -223,7 +228,7 @@ package com.muxxu.kub3dit.components.editor {
 				if(mouseX >= 0 && mouseY >= 0 &&
 				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && !mousePos.equals(_lastPos)) {
 					_lastPos = mousePos;
-					_panel.draw(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _3dView.manager, _size, new Point(ox, oy));
+					_panel.draw(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _size, new Point(ox, oy));
 				}
 			}
 			
@@ -248,6 +253,7 @@ package com.muxxu.kub3dit.components.editor {
 			rect.width = Math.min(_size,  Math.min(_map.mapSizeX, _map.mapSizeX-ox));
 			rect.height = Math.min(_size, Math.min(_map.mapSizeY, _map.mapSizeY-oy));
 			_bmdGrid.fillRect(rect, 0);
+			
 			//draw radar
 			for(i = 0; i < len; ++i) {
 				py = Math.floor(i/_size);

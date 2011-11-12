@@ -27,6 +27,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _eraseMode:Boolean;
 		private var _landmark:Shape;
 		private var _drawToLandmark:Boolean;
+		private var _chunksManager:ChunksManager;
 		
 		
 		
@@ -60,6 +61,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function get landmark():Shape {
 			return _landmark;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set chunksManager(value:ChunksManager):void {
+			_chunksManager = value;
+		}
 
 
 
@@ -79,7 +87,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * Method that will be used to draw with the tool
 		 */
-		public function draw(ox:int, oy:int, pz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+		public function draw(ox:int, oy:int, pz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
 			var i:int, len:int, size:int, px:int, py:int, d:Number, c:uint;
 			size = parseInt(_inputSize.text);
 			if(_drawToLandmark) {
@@ -97,7 +105,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					}else{
 						px = Math.ceil(ox - size * .5) + (i % size);
 						py = Math.ceil(oy - size * .5) + Math.floor(i/size);
-						chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+						_chunksManager.update(px, py, pz, _eraseMode? 0 : kubeID);
 					}
 				}
 			}else{
@@ -116,7 +124,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 							_landmark.graphics.beginFill(c, .2);
 							_landmark.graphics.drawRect(px, py, 1, 1);
 						}else{
-							chunksManagerRef.update(px, py, pz, _eraseMode? 0 : kubeID);
+							_chunksManager.update(px, py, pz, _eraseMode? 0 : kubeID);
 						}
 					}
 				}
@@ -168,7 +176,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		private function updateLandMark(event:Event = null):void {
 			_drawToLandmark = true;
-			draw(0, 0, 0, 0, null, 0, null);
+			draw(0, 0, 0, 0, 0, null);
 			_drawToLandmark = false;
 		}
 	}

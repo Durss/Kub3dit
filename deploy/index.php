@@ -1,27 +1,30 @@
 <?php
 	session_start();
 	
-	$betaMode = false;
-	
 	//Redirect the user if "www" are on the address. Prevents from SharedObject problems.
 	if (strpos($_SERVER["SERVER_NAME"], "www") > -1) {
 		header("location: http://fevermap.org/kub3dit");
 		die;
 	}
 	
+	$lang = isset($_GET["lang"])? $_GET["lang"] : isset($_SESSION["lang"])? $_SESSION["lang"] : "en";
+	
 	//header('Content-type: text/html; charset=iso-8859-1');
-	$pseudo = "";
-	if(strpos($_SERVER["HTTP_REFERER"], "as3game.blogspot.com")) {
-		$pseudo = "authorizedReferer";
-		$_GET["lang"] = "en";
+	$pseudo = isset($_SESSION["uname"])? $_SESSION["uname"] : "";
+	if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "as3game.blogspot.com")) {
+		$pseudo = "authorized_referer";
+		$lang = "en";
 	}
 	if(isset($_GET['uid'], $_GET['pubkey'])) {
 		$url = "http://muxxu.com/app/xml?app=kub3dit&xml=user&id=".$_GET['uid']."&key=".md5("ad10c672ca9b23cad961163da05071ed" . $_GET["pubkey"]);
 		$xml = simplexml_load_file($url);
-		preg_match('/name="(.*?)"/', $xml, $matches); //*? = quantificateur non gourmand
 		if ($xml->getName() != "error") {
-			if (!isset($_GET["lang"])) $_GET["lang"] = $xml->attributes()->lang;
-			$pseudo	= (string)$xml->attributes()->name;//Force string conversion
+			if (!isset($_GET["lang"])) {
+				$lang = (string)$xml->attributes()->lang;
+			}
+			$pseudo	= (string)$xml->attributes()->name;
+		}else {
+			$pseudo = "goFuckYourself";
 		}
 	}
 	
@@ -43,18 +46,21 @@
 	}
 	
 	function isAuthorizedUser($pseudo, $ref) {
-		return strtolower($pseudo) == $ref || (isset($_SESSION["uname"]) && strtolower($_SESSION["uname"]) == $ref);
+		return strtolower($pseudo) == $ref;
 	}
-	//$authorized = isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
-	//$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
-	//$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
-	$authorized = isAuthorizedUser($pseudo, "dursss");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "authorizedreferer");
+	
+	$authorized = false;//isAuthorizedUser($pseudo, "durss");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
+	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
+	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
+	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
 	
 	if ($authorized) {
-		if (!isset($_SESSION["uname"])) {
+		//if (!isset($_SESSION["uname"])) {
 			$_SESSION["uname"] = $pseudo;
-		}
+			$_SESSION["lang"] = $lang;
+		//}
 	}else {
 		unset( $_SESSION["uname"] );
 	}
@@ -67,8 +73,13 @@
 			header("location: http://muxxu.com/a/kub3dit");
 		}
 		die;
-	} else if(isset($_GET['uid'], $_GET['pubkey'])) {
-		header("location: redirect.php");
+	}else if (isset($_GET['uid'], $_GET['pubkey'])) {// && !isset($_GET['s']) ) {
+		if ($_SERVER["SERVER_NAME"] == "localhost") {
+			$url = "http://localhost/kub3dit/";
+		}else {
+			$url = "http://fevermap.org/kub3dit/";
+		}
+		header("location: redirect.php?url=".$url);//."&pubkey=".$_GET["pubkey"]."&uid=".$_GET["uid"]);
 		die;
 	}else{
 		header("Cache-Control: no-cache, must-revalidate");
@@ -97,8 +108,9 @@
 		}
 		</style>
 		
-		<script type="text/javascript" src="js/swfwheel.js"></script>
 		<script type="text/javascript" src="js/swfobject.js"></script>
+		<script type="text/javascript" src="js/swfwheel.js"></script>
+		<script type="text/javascript" src="js/swffit.js" />
 		<script type="text/javascript">
 			
 		  var _gaq = _gaq || [];
@@ -116,32 +128,38 @@
     </head>
     <body>
 <?php
-		if (isset($_GET["lang"]) && file_exists("xml/i18n/labels_".strtolower($_GET["lang"]).".xml")) {
-			$lang = $_GET["lang"];
-		}else {
-			$lang = "fr";
+		if (isset($lang) && !file_exists("xml/i18n/labels_".strtolower($lang).".xml")) {
+			$lang = "en";
 		}
 ?>
+		<div id="content1">
 		<div id="content">
 			<p>In order to view this page you need JavaScript and Flash Player 11+ support!</p>
 			<a href="http://get.adobe.com/fr/flashplayer/">Install flash</a>
 		</div>
+		</div>
 		
 		<script type="text/javascript">
-			// <![CDATA[
-			var version = "2";
-			var so = new SWFObject('swf/application.swf?v='+version, 'content', '100%', '100%', '11', '#47A9D1');
-			so.useExpressInstall('swf/expressinstall.swf');
-			so.addParam('allowFullScreen', 'true');
-			so.addParam('menu', 'false');
-			so.addParam('wmode', 'direct');
-			so.setAttribute("id", "externalDynamicContent");
-			so.setAttribute("name", "externalDynamicContent");
-			so.addVariable("version", version);
-			so.addVariable("configXml", "./xml/config.xml?v="+version);
-			so.addVariable("lang", "<?php echo $lang; ?>");
-			so.write('content');
-			/*]]>*/
+<?php
+	$version= "5";
+?>
+			var flashvars = {};
+			flashvars["version"] = "<?php echo $version; ?>";
+			flashvars["configXml"] = "./xml/config.xml?v=<?php echo $version; ?>";
+			flashvars["lang"] = "<?php echo $lang; ?>";
+			
+			var attributes = {};
+			attributes["id"] = "externalDynamicContent";
+			attributes["name"] = "externalDynamicContent";
+			
+			var params = {};
+			params['allowFullScreen'] = 'true';
+			params['menu'] = 'false';
+			params['wmode'] = 'direct';
+			
+			swfobject.embedSWF("swf/application.swf?v=<?php echo $version; ?>", "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
+			
+			swffit.fit("externalDynamicContent", 800, 600, 2000, 2000, true, true);
 		</script>
 	</body>
 </html>

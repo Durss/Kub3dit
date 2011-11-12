@@ -1,11 +1,13 @@
 package com.muxxu.kub3dit.views {
-
-	import com.muxxu.kub3dit.controler.FrontControler;
-	import flash.events.MouseEvent;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
+	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
+	import com.nurun.utils.input.keyboard.KeyboardSequenceDetector;
+	import com.nurun.utils.input.keyboard.events.KeyboardSequenceEvent;
+
+	import flash.events.MouseEvent;
 
 	/**
 	 * 
@@ -15,6 +17,7 @@ package com.muxxu.kub3dit.views {
 	public class MainMenuView extends AbstractView {
 		private var _saveBt:ButtonKube;
 		private var _ready:Boolean;
+		private var _ks:KeyboardSequenceDetector;
 		
 		
 		
@@ -61,16 +64,27 @@ package com.muxxu.kub3dit.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			visible = false;
+			
 			_saveBt = addChild(new ButtonKube("Save")) as ButtonKube;
 			_saveBt.addEventListener(MouseEvent.CLICK, clickHandler);
+			
+			_ks = new KeyboardSequenceDetector(stage);
+			_ks.addSequence("show", "showmenu");
+			_ks.addEventListener(KeyboardSequenceEvent.SEQUENCE, keySequenceHandler);
+			
 			computePositions();
+		}
+
+		private function keySequenceHandler(event:KeyboardSequenceEvent):void {
+			visible = !visible;
 		}
 		
 		/**
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			x = 80;
+			
 		}
 
 		private function clickHandler(event:MouseEvent):void {

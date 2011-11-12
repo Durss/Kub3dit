@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.commands {
+	import flash.net.FileFilter;
 	import flash.events.IOErrorEvent;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.commands.Command;
@@ -17,6 +18,8 @@ package com.muxxu.kub3dit.commands {
 	public class BrowseForFileCmd extends EventDispatcher implements Command {
 		
 		private var _fr:FileReference;
+		private var _validExtensions:String;
+		private var _filterLabel:String;
 		
 		
 		
@@ -24,7 +27,9 @@ package com.muxxu.kub3dit.commands {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function  BrowseForFileCmd() {
+		public function  BrowseForFileCmd(filterLabel:String = null, validExtensions:String = null) {
+			_filterLabel = filterLabel;
+			_validExtensions = validExtensions;
 			initialize();
 		}
 
@@ -43,7 +48,11 @@ package com.muxxu.kub3dit.commands {
 		 * @inheritDoc
 		 */
 		public function execute():void {
-			_fr.browse();
+			var extensions:Array;
+			if(_validExtensions != null) {
+				extensions = [new FileFilter(_filterLabel, _validExtensions)];
+			}
+			_fr.browse(extensions);
 		}
 		
 		/**
