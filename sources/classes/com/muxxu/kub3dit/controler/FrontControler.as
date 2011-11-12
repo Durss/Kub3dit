@@ -81,6 +81,13 @@ package com.muxxu.kub3dit.controler {
 		public function createMap(sizeX:int, sizeY:int, sizeZ:int):void {
 			_model.createMap(sizeX, sizeY, sizeZ);
 		}
+		
+		/**
+		 * Tells the model that the 3D view is ready
+		 */
+		public function view3DReady():void {
+			_model.setView3DReady();
+		}
 
 
 		

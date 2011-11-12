@@ -100,6 +100,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphere (6)]]></label>
+		<label code="helpTools9"><![CDATA[Load Sandkube image]]></label>
 		<label code="helpSyncCam"><![CDATA[Moving in the 3D environment<br />will automatically change the<br />grid's level.]]></label>
 		<label code="helpMoveCam"><![CDATA[Moves the camera at the<br />current grid's level.]]></label>
 		
@@ -128,6 +129,8 @@
 		<label code="toolConfig-sphereShape-inputRadius"><![CDATA[Radius]]></label>
 		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Thickness]]></label>
 		<label code="toolConfig-sphereShape-fill"><![CDATA[Fill]]></label>
+		
+		<label code="toolConfig-sandKube-load"><![CDATA[Load]]></label>
 		
 		<label code="syncLevels"><![CDATA[Synchronise with camera]]></label>
 		<label code="moveCamToLevel"><![CDATA[Move camera]]></label>

@@ -22,6 +22,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _lastSize:int;
 		private var _bmd:BitmapData;
 		private var _colors:Array;
+		private var _chunksManager:ChunksManager;
 		
 		
 		
@@ -54,6 +55,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function set eraseMode(value:Boolean):void {
 			_eraseMode = value;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set chunksManager(value:ChunksManager):void {
+			_chunksManager = value;
+		}
 
 
 
@@ -73,7 +81,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * @inheritDoc
 		 */
-		public function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
 			if(_lastSize != gridSize) {
 				_lastSize = gridSize;
 				if(_bmd!=null) _bmd.dispose();
@@ -82,7 +90,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			}
 			
 			var i:int, len:int, px:int, py:int, tile:int, map:Map;
-			map = chunksManagerRef.map;
+			map = _chunksManager.map;
 			len = gridSize*gridSize;
 			var floodMark:uint = 0x55ff5454;
 			var emptyMark:uint = 0x8800ff00;
@@ -115,7 +123,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					if(pixel == floodMark) {
 						px = i%gridSize + gridOffset.x;
 						py = Math.floor(i/gridSize) + gridOffset.y;
-						chunksManagerRef.update(px, py, oz, kubeID);
+						_chunksManager.update(px, py, oz, kubeID);
 					}
 				}
 			}

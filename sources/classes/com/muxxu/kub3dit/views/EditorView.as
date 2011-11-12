@@ -1,7 +1,4 @@
 package com.muxxu.kub3dit.views {
-	import gs.TweenLite;
-	import gs.easing.Sine;
-
 	import com.muxxu.kub3dit.components.editor.ConfigToolPanel;
 	import com.muxxu.kub3dit.components.editor.Grid;
 	import com.muxxu.kub3dit.components.editor.ToolsPanel;
@@ -56,7 +53,7 @@ package com.muxxu.kub3dit.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:Model = event.model as Model;
-			if(!_ready && model.map != null) {
+			if(!_ready && model.view3DReady) {
 				_ready = true;
 				initialize();
 				_kubeSelector.update(event);
@@ -108,7 +105,7 @@ package com.muxxu.kub3dit.views {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_grid.x = Math.round(_tools.width + 10);
+			_grid.x = Math.round(30);
 			_grid.y = 5;
 			_tools.x = 5;
 			_tools.y = 5;
@@ -160,8 +157,10 @@ package com.muxxu.kub3dit.views {
 		 * Called when the view is rolled over/out
 		 */
 		private function rollHandler(event:MouseEvent):void {
-			_over = event.type == MouseEvent.ROLL_OVER;
-			TweenLite.to(this, .4, {x:_over? stage.stageWidth-width : stage.stageWidth - 30, ease:Sine.easeInOut});
+			_over = true;
+			computePositions();
+//			_over = event.type == MouseEvent.ROLL_OVER;
+//			TweenLite.to(this, .4, {x:_over? stage.stageWidth-width : stage.stageWidth - 30, ease:Sine.easeInOut});
 		}
 		
 	}

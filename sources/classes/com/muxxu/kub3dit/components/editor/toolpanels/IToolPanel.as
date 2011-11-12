@@ -19,10 +19,14 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @param ox				X position under the mouse
 		 * @param oy				Y position under the mouse
 		 * @param oz				Z position of the grid
-		 * @param chunksManagerRef	chunksmanager reference
 		 * @param gridSize			size of the grid
 		 */
-		function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void;
+		function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void;
+		
+		/**
+		 * Sets the chunks manager reference.
+		 */
+		function set chunksManager(value:ChunksManager):void;
 		
 		/**
 		 * Gets the landmark graphics

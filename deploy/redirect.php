@@ -37,7 +37,7 @@
     </head>
     <body>
 		<script langauge=javascript>
-			window.top.location.href = "http://fevermap.org/kub3dit/"; 
+			window.top.location.href = "<?php echo $_GET["url"]; ?>";
 		</script>
 	</body>
 </html>

@@ -25,6 +25,7 @@ package com.muxxu.kub3dit.model {
 		
 		private var _initTexturesCmd:InitTexturesCmd;
 		private var _currentKubeId:String;
+		private var _view3DReady:Boolean;
 		private var _map:Map;
 		
 		
@@ -54,6 +55,11 @@ package com.muxxu.kub3dit.model {
 		 * Gets the map's reference.
 		 */
 		public function get map():Map { return _map; }
+		
+		/**
+		 * Gets if the 3D view is ready
+		 */
+		public function get view3DReady():Boolean { return _view3DReady; }
 
 
 
@@ -111,6 +117,14 @@ package com.muxxu.kub3dit.model {
 		 */
 		public function createMap(sizeX:int, sizeY:int, sizeZ:int):void {
 			_map = new Map(sizeX * 32, sizeY * 32, sizeZ);
+			update();
+		}
+		
+		/**
+		 * Tells the model that the 3D view is ready
+		 */
+		public function setView3DReady():void {
+			_view3DReady = true;
 			update();
 		}
 

@@ -29,6 +29,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _inputThick:InputKube;
 		private var _landmark:Shape;
 		private var _drawToLandmark:Boolean;
+		private var _chunksManager:ChunksManager;
 		
 		
 		
@@ -61,6 +62,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function get landmark():Shape {
 			return _landmark;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set chunksManager(value:ChunksManager):void {
+			_chunksManager = value;
+		}
 
 
 
@@ -81,7 +89,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * Method that will be used to draw with the tool
 		 */
-		public function draw(ox:int, oy:int, oz:int, kubeID:int, chunksManagerRef:ChunksManager, gridSize:int, gridOffset:Point):void {
+		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
 			var i:int, len:int, w:int, h:int, d:int, t:int, px:Number, py:Number, pz:Number, c:uint, isBorder:Boolean;
 			w = parseInt(_inputWidth.text);
 			h = parseInt(_inputHeight.text);
@@ -108,12 +116,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					}
 				}else{
 					if(fill) {
-						chunksManagerRef.update(px, pz, py, _eraseMode? 0 : kubeID);
+						_chunksManager.update(px, pz, py, _eraseMode? 0 : kubeID);
 					}else if(i%w < t || i%w >= w-t
 							|| Math.floor(i/w)%h < t || Math.floor(i/w)%h >= h-t
 							|| Math.floor(i/(w*h)) < t || Math.floor(i/(w*h)) >= d-t){
 							
-							chunksManagerRef.update(px, pz, py, _eraseMode? 0 : kubeID);
+							_chunksManager.update(px, pz, py, _eraseMode? 0 : kubeID);
 					}
 				}
 			}
@@ -197,7 +205,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		private function updateLandMark(event:Event = null):void {
 			_drawToLandmark = true;
-			draw(0, 0, 0, 0, null, 0, null);
+			draw(0, 0, 0, 0, 0, null);
 			_drawToLandmark = false;
 		}
 		

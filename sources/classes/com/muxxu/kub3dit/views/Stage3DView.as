@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
@@ -144,6 +145,8 @@ package com.muxxu.kub3dit.views {
 			_ground = new Ground(_context3D, _accelerated);
 			
 			createVoxelChunks();
+			
+			FrontControler.getInstance().view3DReady();
 		}
 		
 		/**
@@ -238,11 +241,11 @@ package com.muxxu.kub3dit.views {
 		 * Get the project matrix.
 		 */
 		private static function getProjectionMatrix(w:Number, h:Number, orthogonal:Boolean = false):Matrix3D {
-			var zNear:int, zFar:int;
+			var zNear:Number, zFar:Number;
 			if(!orthogonal) {
 				//Perspective view
 				var fov:int = 0;//60 * 0.0087266462599;
-				zNear = 1200;
+				zNear = 2000;
 				zFar = 1;
 				var w1:Number = (2 * zNear / (zNear * Math.atan(fov) - w));
 				var h1:Number = (2 * zNear / (zNear * Math.atan(fov) + h));

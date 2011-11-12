@@ -41,6 +41,7 @@ package com.muxxu.kub3dit.components.buttons {
 		private var _selectedSkin:ButtonWarnSkin;
 		private var _tooltip:String;
 		private var _timeout:uint;
+		private var _alwaysOpenConfig:Boolean;
 		
 		
 		
@@ -54,7 +55,8 @@ package com.muxxu.kub3dit.components.buttons {
 		 * @param icon			button's icon
 		 * @param customizable	defines if the tool can be customized
 		 */
-		public function ButtonEditorTool(icon:DisplayObject, customizable:Boolean, tooltip:String = "") {
+		public function ButtonEditorTool(icon:DisplayObject, customizable:Boolean, tooltip:String = "", alwaysOpenConfig:Boolean = false) {
+			_alwaysOpenConfig = alwaysOpenConfig;
 			_tooltip = tooltip;
 			_customizable = customizable;
 			_icon = icon;
@@ -210,7 +212,7 @@ package com.muxxu.kub3dit.components.buttons {
 			if((isOption && !_selected) || !isOption){
 				selected = !_selected;
 			}
-			dispatchEvent(new ButtonEditorToolEvent(ButtonEditorToolEvent.CLICK, isOption));
+			dispatchEvent(new ButtonEditorToolEvent(ButtonEditorToolEvent.CLICK, isOption || _alwaysOpenConfig));
 		}
 		
 	}
