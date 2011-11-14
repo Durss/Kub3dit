@@ -6,7 +6,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeVertexShader;
-	import com.muxxu.kub3dit.engin3d.utils.uploadTextureWithMipmaps;
+	import com.muxxu.kub3dit.events.LightModelEvent;
+	import com.nurun.structure.mvc.views.ViewLocator;
 
 	import flash.display.BitmapData;
 	import flash.display.Shape;
@@ -109,9 +110,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_efTarget = new Shape();
 				
 				//Init cubes textures
-				var bitmapData:BitmapData = Textures.getInstance().bitmapData;
-				_textureCubes = _context3D.createTexture(bitmapData.width, bitmapData.height, Context3DTextureFormat.BGRA, false);
-				uploadTextureWithMipmaps(_textureCubes, bitmapData);
+				updateTexture();
 				
 				var vs:CubeVertexShader = new CubeVertexShader();
 				var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated);
@@ -121,6 +120,17 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			} else {
 				throw new Error("ChunksManager is already initialized!");
 			}
+			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_ADD_COMPLETE, updateTexture);
+		}
+
+		/**
+		 * Updates the texture.
+		 */
+		private function updateTexture(event:LightModelEvent = null):void {
+			var bitmapData:BitmapData = Textures.getInstance().spriteSheet;
+			_textureCubes = _context3D.createTexture(bitmapData.width, bitmapData.height, Context3DTextureFormat.BGRA, false);
+//			uploadTextureWithMipmaps(_textureCubes, bitmapData);
+			_textureCubes.uploadFromBitmapData(bitmapData);
 		}
 		
 		/**

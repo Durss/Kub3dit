@@ -123,7 +123,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					if(pixel == floodMark) {
 						px = i%gridSize + gridOffset.x;
 						py = Math.floor(i/gridSize) + gridOffset.y;
-						_chunksManager.update(px, py, oz, kubeID);
+						_chunksManager.update(px, py, oz, _eraseMode? 0 :kubeID);
 					}
 				}
 			}

@@ -88,6 +88,13 @@ package com.muxxu.kub3dit.controler {
 		public function view3DReady():void {
 			_model.setView3DReady();
 		}
+		
+		/**
+		 * Adds a kube to the textures
+		 */
+		public function addKube(kubeId:String):void {
+			_model.addKube(kubeId);
+		}
 
 
 		

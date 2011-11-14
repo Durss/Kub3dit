@@ -171,17 +171,11 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_shaderProgram.upload(vs.agalcode, fs.agalcode);
 
 			var index:int = 0;
-			var padding:int					= Textures.PADDING;//Padding between each texture
-			var bmd:BitmapData				= Textures.getInstance().bitmapData;
-			var cols:int					= bmd.width/(16+padding);
-			var textureStepRatioX:Number	= (16+padding);
-			var textureStepRatioY:Number	= (16+padding);
-			var tileTop:int = Textures.getInstance().cubesFrames[2][0];
-			var tileTopX:Number = (tileTop%cols) * textureStepRatioX;
-			var tileTopY:Number = Math.floor(tileTop/cols) * textureStepRatioY;
+			var bmd:BitmapData				= Textures.getInstance().spriteSheet;
+			var tileTop:Point = Textures.getInstance().cubesFrames[2][0];
 			
 			_bmd = new BitmapData(16, 16);
-			var rect:Rectangle = new Rectangle(tileTopX, tileTopY, tileTopX + textureStepRatioX, tileTopY + textureStepRatioY);
+			var rect:Rectangle = new Rectangle(tileTop.x, tileTop.y, 16, 16);
 			_bmd.copyPixels(bmd, rect, new Point(0,0));
 				
 			//init texture

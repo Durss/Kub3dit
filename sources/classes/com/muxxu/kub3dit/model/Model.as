@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.model {
+	import com.muxxu.kub3dit.commands.AddKubeCmd;
 	import com.nurun.structure.environnement.label.Label;
 	import com.muxxu.kub3dit.vo.Constants;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
@@ -127,6 +128,16 @@ package com.muxxu.kub3dit.model {
 			_view3DReady = true;
 			update();
 		}
+		
+		/**
+		 * Adds a kube from kube-builder to the textures
+		 */
+		public function addKube(kubeId:String):void {
+			var cmd:AddKubeCmd = new AddKubeCmd(kubeId);
+			cmd.addEventListener(CommandEvent.COMPLETE, addKubeCompleteHandler);
+			cmd.addEventListener(CommandEvent.ERROR, addKubeErrorHandler);
+			cmd.execute();
+		}
 
 
 		
@@ -188,6 +199,20 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function loadMapErrorHandler(event:CommandEvent):void {
 			throw new Kub3ditException(event.data as String, Kub3ditExceptionSeverity.MINOR);
+		}
+		
+		/**
+		 * Called when custom kube add completes
+		 */
+		private function addKubeCompleteHandler(event:CommandEvent):void {
+			ViewLocator.getInstance().dispatchToViews(new LightModelEvent(LightModelEvent.KUBE_ADD_COMPLETE, null));
+		}
+		
+		/**
+		 * Called if custom kube add fails
+		 */
+		private function addKubeErrorHandler(event:CommandEvent):void {
+			ViewLocator.getInstance().dispatchToViews(new LightModelEvent(LightModelEvent.KUBE_ADD_ERROR, null));
 		}
 		
 	}

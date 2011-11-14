@@ -70,7 +70,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Updates a specific tile
 		 */
-		public function updateTile(xloc:int, yloc:int, zloc:int, value:int):void {
+		public function updateTile(xloc:int, yloc:int, zloc:int, value:uint):void {
 			if(xloc * yloc * zloc < _map.length) {
 				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
 				_map.writeByte(value);
@@ -80,10 +80,10 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Gets a specific tile
 		 */
-		public function getTile(xloc:int, yloc:int, zloc:int):int {
+		public function getTile(xloc:int, yloc:int, zloc:int):uint {
 			if (zloc >= 0 && zloc < _mapSizeZ && yloc >= 0 && yloc < _mapSizeY && xloc >= 0 && xloc < _mapSizeX) {
 				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
-				return _map.readByte();
+				return _map.readUnsignedByte();
 			}
 			return 0;
 		}
@@ -96,7 +96,7 @@ package com.muxxu.kub3dit.engin3d.map {
 				var z:int = _mapSizeZ-1, tile:int;
 				do {
 					_map.position = xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY;
-					tile = _map.readByte();
+					tile = _map.readUnsignedByte();
 					z--;
 				}while(z>0 && tile == 0);
 				return tile;

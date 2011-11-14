@@ -1,22 +1,22 @@
 package com.muxxu.kub3dit.views {
-	import com.muxxu.kub3dit.vo.ToolTipAlign;
-	import com.muxxu.kub3dit.events.ToolTipEvent;
-	import com.nurun.utils.math.MathUtils;
 	import gs.TweenLite;
 	import gs.easing.Elastic;
 
 	import com.muxxu.kub3dit.components.buttons.ButtonSplashScreen;
 	import com.muxxu.kub3dit.components.form.MapSizeInput;
 	import com.muxxu.kub3dit.controler.FrontControler;
+	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.graphics.CloudGraphic;
 	import com.muxxu.kub3dit.graphics.LogoGraphic;
 	import com.muxxu.kub3dit.graphics.MainCloudGraphic;
 	import com.muxxu.kub3dit.graphics.SplashScreenBackgroundGraphic;
 	import com.muxxu.kub3dit.model.Model;
+	import com.muxxu.kub3dit.vo.ToolTipAlign;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
+	import com.nurun.utils.math.MathUtils;
 	import com.nurun.utils.pos.PosUtils;
 
 	import flash.display.Sprite;

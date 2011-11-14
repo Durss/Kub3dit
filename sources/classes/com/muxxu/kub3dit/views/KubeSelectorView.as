@@ -1,20 +1,30 @@
 package com.muxxu.kub3dit.views {
-	import com.nurun.structure.environnement.label.Label;
-	import com.nurun.components.text.CssTextField;
+	import gs.TweenLite;
+
 	import com.muxxu.kub3dit.components.KubeSelectorButton;
+	import com.muxxu.kub3dit.components.buttons.ButtonKube;
+	import com.muxxu.kub3dit.components.form.AddKubeForm;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.events.LightModelEvent;
+	import com.muxxu.kub3dit.graphics.AddIcon;
 	import com.muxxu.kub3dit.model.Model;
 	import com.muxxu.kub3dit.utils.drawIsoKube;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.components.form.events.FormComponentGroupEvent;
+	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.pos.PosUtils;
+
+	import mx.effects.easing.Sine;
 
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
 
 
 	/**
@@ -23,12 +33,16 @@ package com.muxxu.kub3dit.views {
 	 * @date 30 oct. 2011;
 	 */
 	public class KubeSelectorView extends AbstractView {
+		
 		private var _ready:Boolean;
 		private var _kubes:Vector.<KubeSelectorButton>;
 		private var _holder:Sprite;
 		private var _group:FormComponentGroup;
 		private var _width:Number;
 		private var _title:CssTextField;
+		private var _addKube:ButtonKube;
+		private var _addKubeForm:AddKubeForm;
+		private var _selectedKubeId:String;
 		
 		
 		
@@ -55,7 +69,8 @@ package com.muxxu.kub3dit.views {
 			var model:Model = event.model as Model;
 			if(!_ready)  {
 				_ready = true;
-				createList(model.currentKubeId);
+				_selectedKubeId = model.currentKubeId;
+				updateList();
 			}
 		}
 		/**
@@ -82,16 +97,34 @@ package com.muxxu.kub3dit.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_kubes = new Vector.<KubeSelectorButton>();
 			_group = new FormComponentGroup();
 			
 			_holder = addChild(new Sprite()) as Sprite;
 			_title = addChild(new CssTextField("kubesListTitle")) as CssTextField;
+			_addKube = addChild(new ButtonKube("Ajouter", false, new AddIcon())) as ButtonKube;
+			_addKubeForm = addChild(new AddKubeForm(_addKube)) as AddKubeForm;
 			
 			_width = 200;
 			_title.text = Label.getLabel("kubesList");
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
+			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
+			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_ADD_COMPLETE, updateList);
+		}
+		
+		/**
+		 * Claled when the view is rolled over.
+		 */
+		private function rollHandler(event:MouseEvent):void {
+			if(event.target != this) return;
+			
+			var i:int, len:int, alpha:Number;
+			len = _kubes.length;
+			alpha = event.type == MouseEvent.ROLL_OVER? 1 : .5;
+			for(i = 0; i < len; ++i) {
+				TweenLite.to(_kubes[i], .2, {alpha:_kubes[i].selected? 1 : alpha, delay:i*.0025, ease:Sine.easeInOut});
+			}
 		}
 		
 		/**
@@ -110,24 +143,43 @@ package com.muxxu.kub3dit.views {
 			PosUtils.hDistribute(_kubes, _width, 2, 2);
 			_title.width = _width;
 			_holder.y = Math.round(_title.height + 2);
+			
+			_addKube.height = _title.height = 20;
+			_addKube.x = _width - _addKube.width;
+			_addKubeForm.width = _width;
+			_addKubeForm.y = _title.height;
+			
+			graphics.clear();
+			graphics.beginFill(0xff0000, 0);
+			graphics.drawRect(0, 0, _width, _holder.y+_holder.height);
+			graphics.endFill();
 		}
 		
 		/**
 		 * Creates the kube's list.
 		 */
-		private function createList(selectedId:String):void {
+		private function updateList(event:Event = null):void {
+			var i:int, len:int;
+			len = _kubes==null? 0 : _kubes.length;
+			for(i = 0; i < len; ++i) {
+				_holder.removeChild(_kubes[i]);
+			}
+			_group.removeAll();
+			_kubes = new Vector.<KubeSelectorButton>();
+			_group.removeEventListener(FormComponentGroupEvent.CHANGE, changeSelectionHandler);
+			
 			var frames:Array = Textures.getInstance().cubesFrames;
 			var bitmaps:Array = Textures.getInstance().bitmapDatas;
 			var top:BitmapData, side:BitmapData, empty:BitmapData, bt:KubeSelectorButton;
 			empty = new BitmapData(16, 16, true, 0);
-			for (var i:String in frames) {
-				top = bitmaps[i][0] == null? empty : bitmaps[i][0];
-				side = bitmaps[i][1] == null? empty : bitmaps[i][1];
-				bt = new KubeSelectorButton( drawIsoKube(top, side, true, .75), i );
+			for (var k:String in frames) {
+				top = bitmaps[k][0] == null? empty : bitmaps[k][0];
+				side = bitmaps[k][1] == null? empty : bitmaps[k][1];
+				bt = new KubeSelectorButton( drawIsoKube(top, side, true, .75), k );
 				_kubes.push(bt);
 				_holder.addChild(bt);
 				_group.add(bt);
-				if(i == selectedId) {
+				if(k == _selectedKubeId) {
 					bt.selected = true;
 				}
 			}
