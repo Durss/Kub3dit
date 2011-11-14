@@ -44,7 +44,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_context3D = context3D;
 			_map = map;
 			_chunkSize = chunkSize;
-			update(0, 0);
+			update(-1, -1);//-1 to be sure that first chunk at 0/0 will be updated the first time
 			_updating = false;
 		}
 

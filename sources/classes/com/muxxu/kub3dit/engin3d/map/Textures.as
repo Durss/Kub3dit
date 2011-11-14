@@ -31,7 +31,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _translucide:Array;
 		private var _bitmapDatas:Array;
 		private var _levelColors:Array;
-		private var _customKubes:Array;
+		private var _customKubes:Vector.<CubeData>;
 		
 		
 		
@@ -125,6 +125,11 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * }
 		 */
 		public function get levelColors():Array { return _levelColors; }
+		
+		/**
+		 * Gets the custom kubes list
+		 */
+		public function get customKubes():Vector.<CubeData> { return _customKubes; }
 
 
 
@@ -144,7 +149,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			_transparent	= [];
 			_bitmapDatas	= [];
 			_levelColors	= [];
-			_customKubes	= [];
+			_customKubes	= new Vector.<CubeData>();
 			
 			//Read sprite sheet map to define kube textures by their ID.
 			_spriteSheet = new BitmapData(1024, 1024, true, 0x55ff0000);
@@ -277,6 +282,8 @@ package com.muxxu.kub3dit.engin3d.map {
 			}
 			_customKubes.push(data);
 			var id:int = 256 - _customKubes.length;
+			
+			Label.addLabel("kube"+id, data.name+"<br />("+data.userName+")");
 			
 			_levelColors[id] = [];
 			_bitmapDatas[id] = [];

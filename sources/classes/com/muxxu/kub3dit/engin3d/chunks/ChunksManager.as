@@ -363,7 +363,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private function createChunksStepHandler(event:Event):void {
 			var i:int, len:int, chunk:Chunk;
 			
-			len = 60;//Number of chunks instance to create per cycle
+			len = 100;//Number of chunks instance to create per cycle
 			for(i = 0; i < len; ++i) {
 				if(_progressX == 0) _chunks[_progressY] = [];
 				//Create chunk

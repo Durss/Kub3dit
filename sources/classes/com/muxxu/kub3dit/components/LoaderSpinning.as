@@ -20,6 +20,7 @@ package com.muxxu.kub3dit.components {
 		 */
 		public function LoaderSpinning() {
 			filters = [new DropShadowFilter(0,0,0,.4,5,5,2,2)];
+			visible = false;
 		}
 
 		
