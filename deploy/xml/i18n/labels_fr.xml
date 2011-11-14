@@ -91,6 +91,12 @@
 		<label code="kube77"><![CDATA[Kube de Noël]]></label>
 		
 		<label code="kubesList"><![CDATA[Palette de kube]]></label>
+		<label code="addKubeButton"><![CDATA[Ajouter un kube]]></label>
+		<label code="submitKube"><![CDATA[Ajouter un kube]]></label>
+		<label code="addKubeDescription"><![CDATA[Vous pouvez ici ajouter des kubes personnalisés à la liste existante de kubes. Pour cela il vous faudra utiliser l'application <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> afin de créer des kubes puis en renseigner l'ID dans le champs ci-dessous.<br />L'ID d'un kube est disponible sur sa fiche de détail]]></label>
+		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
+		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kube personnaliser.]]></label>
+		<label code="invalidKubeId"><![CDATA[ID invalide]]></label>
 		
 		<label code="helpTools"><![CDATA[Gardez la barre d'espace appuyée<br />pour pouvoir déplacer la grille.]]></label>
 		<label code="helpToolsRubber"><![CDATA[Bascule l'outil courant en mode gomme (E)]]></label>

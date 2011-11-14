@@ -208,23 +208,21 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			var i:int, len:int, px:int, py:int, pz:int, tile:int;
 			var ba:ByteArray = event.data as ByteArray;
 			_data = new ByteArray();
-			ba.position = ba.length - _size*_size*_size + _size*_size;//last adition removes the useless sea level
+			ba.position = ba.length - _size*_size*(_size-1);//-1 removes the useless sea level
 			ba.readBytes(_data);
 			len = _bmd.width * _bmd.height;
 			_bmd.fillRect(_bmd.rect, 0);
 			var max:int = _colors.length;
 			for(i = 0; i < len; ++i) {
 				px = i%_size;
-				py = _size - Math.floor(i/_size);
+				py = Math.floor(i/_size);
 				pz = 30;
 				while(pz>=0) {
 					_data.position = px + py*_size + pz*_size*_size;
 					tile = _data.readByte();
 					if(tile > 0) {
-						if(tile > max) {
-							
-						}else{
-							_bmd.setPixel32(px, py, _colors[tile][pz]);
+						if(tile < max) {
+							_bmd.setPixel32(px, (_size-1) - py, _colors[tile][pz]);
 						}
 						break;
 					}

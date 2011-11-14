@@ -64,7 +64,7 @@ package com.muxxu.kub3dit.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			visible = false;
+//			visible = false;
 			
 			_saveBt = addChild(new ButtonKube("Save")) as ButtonKube;
 			_saveBt.addEventListener(MouseEvent.CLICK, clickHandler);

@@ -19,6 +19,7 @@ package com.muxxu.kub3dit.components {
 	 * @date 30 oct. 2011;
 	 */
 	public class KubeSelectorButton extends GraphicButton implements GroupableFormComponent {
+		
 		private var _selected:Boolean;
 		private var _disable:ColorMatrixFilter;
 		private var _glow:GlowFilter;
@@ -35,7 +36,7 @@ package com.muxxu.kub3dit.components {
 		 */
 		public function KubeSelectorButton(background:DisplayObject, id:String) {
 			_id = id;
-			_disable = new ColorMatrixFilter([.8, .2, .2, 0, 0, .2, .8, .2, 0, 0, .2, .2, .8, 0, 0, 0, 0, 0, .5, 0]);
+			_disable = new ColorMatrixFilter([.8, .2, .2, 0, 0, .2, .8, .2, 0, 0, .2, .2, .8, 0, 0, 0, 0, 0, 1, 0]);
 			_glow = new GlowFilter( 0xffffff, 1, 10, 10, 1, 2 );
 			
 			super(background);
@@ -64,6 +65,7 @@ package com.muxxu.kub3dit.components {
 		 */
 		public function set selected(value:Boolean):void {
 			_selected = value;
+			alpha = value? 1 : .5;
 			updateState();
 			dispatchEvent(new Event(Event.CHANGE));
 		}

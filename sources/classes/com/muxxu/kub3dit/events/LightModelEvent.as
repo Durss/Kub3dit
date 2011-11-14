@@ -10,6 +10,9 @@ package com.muxxu.kub3dit.events {
 	public class LightModelEvent extends Event {
 		
 		public static const KUBE_SELECTION_CHANGE:String = "KUBE_SELECTION_CHANGE";
+		public static const KUBE_ADD_COMPLETE:String = "KUBE_ADD_COMPLETE";
+		public static const KUBE_ADD_ERROR:String = "KUBE_ADD_ERROR";
+		
 		private var _data:*;
 		
 		

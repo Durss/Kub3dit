@@ -129,8 +129,6 @@ package com.muxxu.kub3dit.components.editor {
 			_offset = new Point(0,0);
 			
 			_3dView = ViewLocator.getInstance().locateViewByType(Stage3DView) as Stage3DView;
-			_bitmaps = Textures.getInstance().bitmapDatas;
-			_colors = Textures.getInstance().levelColors;
 			
 			_gridHolder = addChild(new Sprite()) as Sprite;
 			_landMark = _gridHolder.addChild(new Sprite()) as Sprite;
@@ -168,6 +166,9 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function enterFrameHandler(event:Event = null):void {
 			if(_3dView == null || _3dView.manager == null || _map == null) return;
+			_bitmaps = Textures.getInstance().bitmapDatas;
+			_colors = Textures.getInstance().levelColors;
+			
 			var i:int, len:int, ox:int, oy:int, px:int, py:int, tile:int;
 			//Drag management
 			if(_dragMode && _pressed) {

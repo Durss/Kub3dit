@@ -18,7 +18,7 @@ package com.muxxu.kub3dit.utils {
 	 *  
 	 * @author Francois
 	 */
-	public function drawIsoKube(top:BitmapData, side:BitmapData, smooth:Boolean = false, scaleCoeff:Number = 1):Shape {
+	public function drawIsoKube(top:BitmapData, side:BitmapData, smooth:Boolean = false, scaleCoeff:Number = 1, asBitmapData:Boolean = false):* {
 			var vertices:Vector.<Number> = Vector.<Number>([
         							//TOP FACE
         							scaleCoeff*19, 0,
@@ -86,8 +86,11 @@ package com.muxxu.kub3dit.utils {
 			shape.graphics.drawTriangles(vertices, indicesRight, UVData);
 			shape.graphics.endFill();
 			
-//			var bmd:BitmapData = new BitmapData(shape.width, shape.height, true, 0);
-//			bmd.draw(shape);
+			if(asBitmapData) {
+				var bmd:BitmapData = new BitmapData(shape.width, shape.height, true, 0);
+				bmd.draw(shape);
+				return bmd;
+			}
 			return shape;
 	}
 }

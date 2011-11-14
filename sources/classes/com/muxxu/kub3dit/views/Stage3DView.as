@@ -147,6 +147,17 @@ package com.muxxu.kub3dit.views {
 			createVoxelChunks();
 			
 			FrontControler.getInstance().view3DReady();
+			stage.addEventListener(Event.RESIZE, resizeHandler);
+			resizeHandler(null);
+		}
+		
+		/**
+		 * Called when window is resized
+		 */
+		private function resizeHandler(event:Event):void {
+			var W:int = stage.stageWidth&~1;//&~1 force even size. Stage 3D is a bit faster with even size
+			var H:int = stage.stageHeight&~1;
+			_context3D.configureBackBuffer(W, H, 0, true);
 		}
 		
 		/**
@@ -205,9 +216,8 @@ package com.muxxu.kub3dit.views {
 		 * Called on ENTER_FRAME to render the chunks
 		 */
 		private function renderFrame(e:Event):void {
-			var W:int = stage.stageWidth;
-			var H:int = stage.stageHeight;
-			_context3D.configureBackBuffer(W, H, 0, true);
+			var W:int = stage.stageWidth&~1;
+			var H:int = stage.stageHeight&~1;
 			_context3D.clear();
 			
 			//compute transformation matrix

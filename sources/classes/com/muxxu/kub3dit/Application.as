@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit {
+	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import flash.display.Bitmap;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
 	import com.muxxu.kub3dit.views.EditorView;
