@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import flash.text.TextField;
 	import com.muxxu.kub3dit.graphics.SelectionIcon;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
@@ -177,6 +178,8 @@ package com.muxxu.kub3dit.components.editor {
 		 * Called when a key is released.
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
+			if(event.target is TextField) return;
+			
 			if(event.keyCode == KeyboardConfigs.TOGGLE_ERASE) {
 				_rubber.selected = !_rubber.selected;
 			}

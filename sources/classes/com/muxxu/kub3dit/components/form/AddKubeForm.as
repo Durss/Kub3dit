@@ -68,6 +68,8 @@ package com.muxxu.kub3dit.components.form {
 
 		public function open():void {
 			_opened = true;
+			stage.focus = _input;
+			_input.textfield.setSelection(0, _input.textfield.length);
 			TweenLite.to(_mask, .25, {scaleY:1});
 		}
 
@@ -114,6 +116,13 @@ package com.muxxu.kub3dit.components.form {
 		 * Called when stage is available
 		 */
 		private function addedToStageHandler(event:Event):void {
+			stage.addEventListener(MouseEvent.MOUSE_UP, releaseStageHandler);
+		}
+		
+		/**
+		 * Called when the mouse is released.
+		 */
+		private function releaseStageHandler(event:MouseEvent):void {
 			if(!contains(event.target as DisplayObject)) close();
 		}
 		
@@ -174,6 +183,7 @@ package com.muxxu.kub3dit.components.form {
 			}
 			_input.enabled = true;
 			_submit.enabled = true;
+			_input.textfield.setSelection(0, _input.textfield.length);
 		}
 		
 	}

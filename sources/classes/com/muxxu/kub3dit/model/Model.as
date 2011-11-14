@@ -1,14 +1,17 @@
 package com.muxxu.kub3dit.model {
 	import com.muxxu.kub3dit.commands.AddKubeCmd;
-	import com.nurun.structure.environnement.label.Label;
-	import com.muxxu.kub3dit.vo.Constants;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.commands.InitTexturesCmd;
+	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.map.Map;
+	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.muxxu.kub3dit.exceptions.Kub3ditException;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
+	import com.muxxu.kub3dit.vo.Constants;
+	import com.muxxu.kub3dit.vo.CubeData;
 	import com.nurun.core.commands.events.CommandEvent;
+	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
@@ -89,13 +92,33 @@ package com.muxxu.kub3dit.model {
 		 */
 		public function saveMap():void {
 			var ba:ByteArray = new ByteArray();
-			ba.writeByte(Constants.MAP_FILE_TYPE_1);
+			//============FILE TYPE============
+			ba.writeByte(Constants.MAP_FILE_TYPE_2);
+			
+			//============CUSTOM CUBES============
+			var i:int, len:int;
+			len = Textures.getInstance().customKubes.length;
+			ba.writeByte(len);
+			for(i = 0; i < len; ++i) {
+				//No need to store the string's length before it because writeUTF already does that
+				ba.writeUTF( Textures.getInstance().customKubes[i].rawData.toXMLString() );
+			}
+			
+			//============CAMERA CONF============
+			ba.writeShort(Camera3D.locX);
+			ba.writeShort(Camera3D.locY);
+			ba.writeShort(Camera3D.locZ);
+			ba.writeUnsignedInt(Camera3D.rotationX);
+			ba.writeInt(Camera3D.rotationY);
+			
+			//============MAP SIZES============
 			ba.writeShort(_map.mapSizeX);
 			ba.writeShort(_map.mapSizeY);
 			ba.writeShort(_map.mapSizeZ);
-			ba.position = 0;
+			
+			//============MAP DATA============
 			_map.data.position = 0;
-			_map.data.readBytes(ba,7);
+			_map.data.readBytes(ba,ba.length);
 			ba.compress();
 			ba.position = 0;
 			
@@ -183,12 +206,32 @@ package com.muxxu.kub3dit.model {
 				throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
 				return;
 			}
-			switch(data.readByte()){
+			var fileVersion:int = data.readByte();
+			switch(fileVersion){
+					
 				case Constants.MAP_FILE_TYPE_1:
 					_map = new Map(0,0,0);
 					_map.load(data);
 					update();
 					break;
+				
+				case Constants.MAP_FILE_TYPE_2:
+					var customs:uint = data.readUnsignedByte();
+					var i:int, len:int, cube:CubeData;
+					for(i = 0; i < customs; ++i) {
+						len = data.readShort();
+						cube = new CubeData();
+						cube.populate(new XML(data.readUTFBytes(len)));
+						Textures.getInstance().addKube(cube);
+					}
+					
+					Camera3D.configure(data);
+					
+					_map = new Map(0,0,0);
+					_map.load(data);
+					update();
+					break;
+				
 				default:
 					throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
 			}

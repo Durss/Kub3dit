@@ -92,7 +92,7 @@ package com.muxxu.kub3dit.commands {
 				return;
 			}
 			if(xml.child("result")[0] == "0") {
-				_data = new CubeData(0);
+				_data = new CubeData();
 				_data.populate(xml.child("kubes")[0].child("kube")[0]);
 				
 				Textures.getInstance().addKube(_data);

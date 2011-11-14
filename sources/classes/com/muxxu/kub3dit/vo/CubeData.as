@@ -1,9 +1,10 @@
 package com.muxxu.kub3dit.vo {
-	import com.nurun.core.lang.boolean.parseBoolean;
 	import com.nurun.core.lang.vo.XMLValueObject;
+
+	import mx.utils.Base64Decoder;
+
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
-	import mx.utils.Base64Decoder;
 	
 	/**
 	 * Fired when data is updated
@@ -24,10 +25,7 @@ package com.muxxu.kub3dit.vo {
 		private var _pseudo:String;
 		private var _date:Number;
 		private var _kub:KUBData;
-		private var _defaultIndex:int;
 		private var _rawData:XML;
-		private var _voted:Boolean;
-		private var _votes:Number;
 		
 		
 		
@@ -37,12 +35,8 @@ package com.muxxu.kub3dit.vo {
 		 * *********** */
 		/**
 		 * Creates an instance of <code>CubeData</code>.
-		 * 
-		 * @param defaultIndex	default index of the item in the collection (used for default sorting)
 		 */
-		public function CubeData(defaultIndex:int) {
-			_defaultIndex = defaultIndex;
-		}
+		public function CubeData() { }
 
 		
 		
@@ -51,8 +45,6 @@ package com.muxxu.kub3dit.vo {
 		 * ***************** */
 
 		public function get rawData():XML { return _rawData; }
-
-		public function get defaultIndex():int { return _defaultIndex; }
 
 		public function get id():Number { return _id; }
 
@@ -67,12 +59,6 @@ package com.muxxu.kub3dit.vo {
 		public function get date():Number { return _date; }
 
 		public function get kub():KUBData { return _kub; }
-
-		public function get voted():Boolean { return _voted; }
-
-		public function set voted(value:Boolean):void { _voted = value; }
-
-		public function get votes():Number { return _votes; }
 
 
 
@@ -91,8 +77,6 @@ package com.muxxu.kub3dit.vo {
 			_pseudo = xml.@pseudo;
 			_date = parseInt(xml.@date);
 			_kub = new KUBData();
-			_voted = parseBoolean(xml.@voted);
-			_votes = parseInt(xml.@votes);
 			var decoder:Base64Decoder = new Base64Decoder();
 			decoder.decode(xml[0]);
 			_kub.fromByteArray(decoder.drain());
@@ -120,7 +104,7 @@ package com.muxxu.kub3dit.vo {
 		 * Gets a clone of the object
 		 */
 		public function clone():CubeData {
-			var ret:CubeData = new CubeData(_defaultIndex);
+			var ret:CubeData = new CubeData();
 			ret.populate(_rawData);
 			return ret;
 		}

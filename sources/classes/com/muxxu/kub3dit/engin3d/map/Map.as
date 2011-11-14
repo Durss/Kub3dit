@@ -153,7 +153,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Loads a map
 		 */
 		public function load(data:ByteArray):void {
-			data.position = 1;//skip file type
+//			data.position = 1;//skip file type
 			_mapSizeX = data.readShort();
 			_mapSizeY = data.readShort();
 			_mapSizeZ = data.readShort();

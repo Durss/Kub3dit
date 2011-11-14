@@ -168,7 +168,7 @@ package com.muxxu.kub3dit.components.editor {
 			if(_3dView == null || _3dView.manager == null || _map == null) return;
 			_bitmaps = Textures.getInstance().bitmapDatas;
 			_colors = Textures.getInstance().levelColors;
-			
+
 			var i:int, len:int, ox:int, oy:int, px:int, py:int, tile:int;
 			//Drag management
 			if(_dragMode && _pressed) {
@@ -342,7 +342,7 @@ package com.muxxu.kub3dit.components.editor {
 		 * Called when mouse wheel is used
 		 */
 		private function mouseWheelHandler(event:MouseEvent):void {
-			_z += event.delta > 0? -1 : 1;
+			_z += event.delta > 0? 1 : +1;
 			_z = MathUtils.restrict(_z, 0, Config.getNumVariable("mapSizeHeight")-1);
 			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
 			_lastPos.x = _lastPos.y = -1;

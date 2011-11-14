@@ -1,5 +1,7 @@
 package  
-com.muxxu.kub3dit.engin3d.camera{
+com.muxxu.kub3dit.engin3d.camera {
+	import flash.text.TextField;
+	import flash.utils.ByteArray;
 	import flash.geom.Vector3D;
 	import flash.display.Stage;
 	import flash.events.Event;
@@ -37,7 +39,18 @@ com.muxxu.kub3dit.engin3d.camera{
 			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
 			
 			_stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheel);
+		}
+		
+		/**
+		 * Configures the camera from a byteArray
+		 */
+		public static function configure(data:ByteArray):void {
+			_dx = data.readShort();
+			_dy = data.readShort();
+			_dz = data.readShort();
 			
+			rotationX = data.readUnsignedInt();
+			rotationY = data.readInt();
 		}
 		
 		private function onEnterFrame(e:Event):void {
@@ -67,6 +80,8 @@ com.muxxu.kub3dit.engin3d.camera{
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
+			if(e.target is TextField) return;
+			
 			var coeff:int = e.ctrlKey? 5 : 1;
 			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z) {
 				_forward = 1 * coeff;
