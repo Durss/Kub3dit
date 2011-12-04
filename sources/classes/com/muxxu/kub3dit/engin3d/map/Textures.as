@@ -32,6 +32,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _bitmapDatas:Array;
 		private var _levelColors:Array;
 		private var _customKubes:Vector.<CubeData>;
+		private var _colorsBmd:BitmapData;
 		
 		
 		
@@ -125,6 +126,11 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * }
 		 */
 		public function get levelColors():Array { return _levelColors; }
+		
+		/**
+		 * Gets the colors bitmap data reference
+		 */
+		public function get colorsBmd():BitmapData { return _colorsBmd; }
 		
 		/**
 		 * Gets the custom kubes list
@@ -257,6 +263,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			
 			
 			//initializes the level colors
+			_colorsBmd = colors;
 			w = colors.width;
 			len = w * colors.height;
 			var pixels:ByteArray = colors.getPixels(colors.rect);

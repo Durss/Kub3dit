@@ -23,6 +23,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		private static var _dz:Number = 1;
 		private static var _mapWidth:Number;
 		private static var _mapHeight:Number;
+		private static var _wasd:Boolean;
 		
 		private var _stage:Stage;
 		private var _lookOffset:Point = new Point();
@@ -83,27 +84,46 @@ com.muxxu.kub3dit.engin3d.camera {
 			if(e.target is TextField) return;
 			
 			var coeff:int = e.ctrlKey? 5 : 1;
-			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z) {
-				_forward = 1 * coeff;
-			}
-			if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
-				_forward = -1 * coeff;
-			}
-			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
-				_strafe = -1 * coeff;
-			} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q) {
-				_strafe = 1 * coeff;
+			if(_wasd) {
+				if(e.keyCode == Keyboard.UP || e.keyCode == 87) {
+					_forward = 1 * coeff;
+				}
+				if(e.keyCode == Keyboard.DOWN || e.keyCode == 83) {
+					_forward = -1 * coeff;
+				}
+				if (e.keyCode == Keyboard.RIGHT || e.keyCode == 68) {
+					_strafe = -1 * coeff;
+				} else if (e.keyCode == Keyboard.LEFT || e.keyCode == 65) {
+					_strafe = 1 * coeff;
+				}
+			}else{
+				if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z) {
+					_forward = 1 * coeff;
+				}
+				if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
+					_forward = -1 * coeff;
+				}
+				if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
+					_strafe = -1 * coeff;
+				} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q) {
+					_strafe = 1 * coeff;
+				}
 			}
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void {
-			if (e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) _forward = 0;
-			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.D) _strafe = 0;
+			if(_wasd) {
+				if (e.keyCode == Keyboard.UP || e.keyCode == 87 || e.keyCode == Keyboard.DOWN || e.keyCode == 83) _forward = 0;
+				if (e.keyCode == Keyboard.RIGHT || e.keyCode == 65 || e.keyCode == Keyboard.LEFT || e.keyCode == 68) _strafe = 0;
+			}else{
+				if (e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) _forward = 0;
+				if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.D) _strafe = 0;
+			}
 		}
 		
 		private function mouseWheel(e:MouseEvent):void {
 			if(e.target is Stage) {
-				_dz += (e.delta > 0)? -1 : 1;
+				_dz += (e.delta > 0)? 1 : -1;
 			}
 		}
 		
@@ -161,6 +181,10 @@ com.muxxu.kub3dit.engin3d.camera {
 		public static function moveZTo(level:Number):void {
 			_dz = level;
 			rotationY = 0;
+		}
+
+		public static function toggleWASD():void {
+			_wasd = !_wasd;
 		}
 		
 	}

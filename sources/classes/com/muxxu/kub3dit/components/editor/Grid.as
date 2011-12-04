@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.map.Map;
@@ -6,8 +7,10 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.muxxu.kub3dit.graphics.GridPattern;
 	import com.muxxu.kub3dit.graphics.LookAtgraphic;
+	import com.muxxu.kub3dit.graphics.RadarIcon;
 	import com.muxxu.kub3dit.views.Stage3DView;
 	import com.nurun.structure.environnement.configuration.Config;
+	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.math.MathUtils;
 
@@ -45,7 +48,6 @@ package com.muxxu.kub3dit.components.editor {
 		private var _lastStartTime:int;
 		private var _subLevelsDrawn:Boolean;
 		private var _cellSize:int;
-		private var _bmdLevels:Vector.<BitmapData>;
 		private var _dragMode:Boolean;
 		private var _offsetDrag:Point;
 		private var _offset:Point;
@@ -58,6 +60,8 @@ package com.muxxu.kub3dit.components.editor {
 		private var _bmdGrid:BitmapData;
 		private var _levelsTarget:BitmapData;
 		private var _map:Map;
+		private var _radarBt:ButtonKube;
+		private var _lastOrigin:Point;
 		
 		
 		
@@ -127,6 +131,7 @@ package com.muxxu.kub3dit.components.editor {
 			_lastPos = new Point(-1,-1);
 			_oldCamPos = new Point(-1,-1);
 			_offset = new Point(0,0);
+			_lastOrigin = new Point();
 			
 			_3dView = ViewLocator.getInstance().locateViewByType(Stage3DView) as Stage3DView;
 			
@@ -134,6 +139,7 @@ package com.muxxu.kub3dit.components.editor {
 			_landMark = _gridHolder.addChild(new Sprite()) as Sprite;
 			_lookAt = _gridHolder.addChild(new LookAtgraphic()) as LookAtgraphic;
 			_levelSlider = addChild(new LevelsSlider()) as LevelsSlider;
+			_radarBt = addChild(new ButtonKube(Label.getLabel("drawFullRadar"), false, new RadarIcon())) as ButtonKube;
 			
 			_bmdGrid = new BitmapData(_size*_cellSize, _size*_cellSize, true, 0);
 			_levelsTarget = _bmdGrid.clone();
@@ -141,6 +147,9 @@ package com.muxxu.kub3dit.components.editor {
 			_levelSlider.y = _size * _cellSize + 5;
 			_levelSlider.width = _size * _cellSize;
 			_z = _levelSlider.level;
+			_radarBt.height = 15;
+			_radarBt.x = Math.round(_levelSlider.width - _radarBt.width);
+			_radarBt.y = _levelSlider.y + 22;
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
@@ -149,6 +158,7 @@ package com.muxxu.kub3dit.components.editor {
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyHandler);
 			_levelSlider.addEventListener(Event.CHANGE, changeLevelHandler);
 			_gridHolder.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			_radarBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_SELECTION_CHANGE, kubeSelectionChangeHandler);
 			
 			_gridHolder.scrollRect = new Rectangle(0,0,_size*_cellSize,_size*_cellSize);
@@ -169,7 +179,7 @@ package com.muxxu.kub3dit.components.editor {
 			_bitmaps = Textures.getInstance().bitmapDatas;
 			_colors = Textures.getInstance().levelColors;
 
-			var i:int, len:int, ox:int, oy:int, px:int, py:int, tile:int;
+			var ox:int, oy:int;
 			//Drag management
 			if(_dragMode && _pressed) {
 				_offset.x = Math.round((_offsetDrag.x - mouseX)/_cellSize) + _offsetOffDrag.x;
@@ -186,6 +196,9 @@ package com.muxxu.kub3dit.components.editor {
 			ox = MathUtils.restrict(ox, -_size * .5, _map.mapSizeX - _size*.5);
 			oy = MathUtils.restrict(oy, -_size * .5, _map.mapSizeY - _size*.5);
 			
+			_lastOrigin.x = ox;
+			_lastOrigin.y = oy;
+			
 			//Draw the water
 			_gridHolder.graphics.clear();
 			_gridHolder.graphics.beginFill(0x80c7db);
@@ -198,13 +211,6 @@ package com.muxxu.kub3dit.components.editor {
 				_subLevelsDrawn = false;
 				_oldCamPos = camPos;
 				_lastStartTime = getTimer();
-				_bmdLevels = new Vector.<BitmapData>();
-			}
-			
-			//If we didn't moved from Xms and if the sublevels aren't drawn, then draw them
-			if(!_subLevelsDrawn && getTimer() - _lastStartTime > 50) {
-				_subLevelsDrawn = true;
-				drawSubLevels(ox, oy);
 			}
 			
 			if(_panel != null) {
@@ -230,39 +236,27 @@ package com.muxxu.kub3dit.components.editor {
 				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && !mousePos.equals(_lastPos)) {
 					_lastPos = mousePos;
 					_panel.draw(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _size, new Point(ox, oy));
+//					_lastStartTime = getTimer();
+//					_subLevelsDrawn = false;
 				}
 			}
 			
-			//Draw sub levels
 			var m:Matrix = new Matrix();
 			m.scale(_cellSize, _cellSize);
-			len = _bmdLevels.length;
-			for(i = 0; i < len; ++i) {
-				_gridHolder.graphics.beginBitmapFill(_bmdLevels[i], m);
-				_gridHolder.graphics.drawRect(0, 0, _size*_cellSize, _size*_cellSize);
-				_gridHolder.graphics.endFill();
-			}
 			
 			//Draw the grid
-			len = _size*_size;
-			//draw disable zone
-			_bmdGrid.fillRect(_bmdGrid.rect, 0x55000000);
-			//draw enabled zone depending on the offsets
-			var rect:Rectangle = new Rectangle();
-			rect.x = ox <0? -ox : 0;
-			rect.y = oy <0? -oy : 0;
-			rect.width = Math.min(_size,  Math.min(_map.mapSizeX, _map.mapSizeX-ox));
-			rect.height = Math.min(_size, Math.min(_map.mapSizeY, _map.mapSizeY-oy));
-			_bmdGrid.fillRect(rect, 0);
-			
-			//draw radar
-			for(i = 0; i < len; ++i) {
-				py = Math.floor(i/_size);
-				px = i - py*_size;
-				tile = _map.getTile(ox+px, oy+py, _z);
-				if(tile > 0) {
-					_bmdGrid.setPixel32(px, py, _colors[tile][_z]);
+			//If we didn't moved from Xms and if the sublevels aren't drawn, then draw them
+			if(getTimer() - _lastStartTime > 100) {
+				//If sublevels haven't been drawn yet since last action that needed it, draw them
+				if(!_subLevelsDrawn) {
+					_subLevelsDrawn = true;
+					drawGridBase(ox, oy);
+					drawSubLevels(ox, oy, _z-1);
 				}
+				drawLevel(ox, oy, _z, 1);
+			}else{
+				drawGridBase(ox, oy);
+				drawLevel(ox, oy, _z, 1);
 			}
 			
 			_gridHolder.graphics.beginBitmapFill(_bmdGrid, m);
@@ -277,32 +271,45 @@ package com.muxxu.kub3dit.components.editor {
 		}
 		
 		/**
+		 * Draws the base of the grid (water and disable zone)
+		 */
+		private function drawGridBase(ox:int, oy:int):void {
+			//draw disable zone
+			_bmdGrid.fillRect(_bmdGrid.rect, 0x55000000);
+			//draw enabled zone depending on the offsets
+			var rect:Rectangle = new Rectangle();
+			rect.x = ox <0? -ox : 0;
+			rect.y = oy <0? -oy : 0;
+			rect.width = Math.min(_size,  Math.min(_map.mapSizeX, _map.mapSizeX-ox));
+			rect.height = Math.min(_size, Math.min(_map.mapSizeY, _map.mapSizeY-oy));
+			_bmdGrid.fillRect(rect, 0);
+		}
+		
+		/**
+		 * Draw one single grid's level
+		 */
+		public function drawLevel(ox:int, oy:int, oz:int, alpha:Number = 1):void {
+			var i:int, len:int, px:int, py:int, tile:int;
+			len = _size * _size;
+			for(i = 0; i < len; ++i) {
+				py = Math.floor(i/_size);
+				px = i - py*_size;
+				tile = _map.getTile(ox+px, oy+py, oz);
+				if(tile > 0) {
+					_bmdGrid.setPixel32(px, py, ((alpha*0xff) << 24) + (_colors[tile][oz] & 0xffffff));
+				}
+			}
+		}
+		
+		/**
 		 * Draw the sublevels
 		 */
-		private function drawSubLevels(ox:int, oy:int):void {
-			var m:Matrix = new Matrix();
-			m.scale(_cellSize/16, _cellSize/16);
-			var i:int, len:int, j:int, lenJ:int, px:int, py:int, tile:int, drawnCells:Object;
-			
-			_bmdLevels = new Vector.<BitmapData>();
-			drawnCells = {};
-			
-			len = Math.min(3, _z);
-			lenJ = _size * _size;
+		private function drawSubLevels(ox:int, oy:int, oz:int):void {
+			var i:int, len:int;
+			len = Math.min(3, oz + 1);
 			var alphaStep:Number = .5 / len;
-			for(i = 0; i < len; ++i) {
-				_levelsTarget.fillRect(_levelsTarget.rect, 0);
-				for(j = 0; j < lenJ; ++j) {
-					py = Math.floor(j/_size);
-					px = j - py*_size;
-					if(drawnCells[px+"-"+py] != undefined) continue;
-					tile = _map.getTile(ox+px, oy+py, _z-i-1);
-					if(tile > 0) {
-						drawnCells[px+"-"+py] = true;
-						_levelsTarget.setPixel32(px, py, (((.6 - i*alphaStep)*0xff) << 24) + (_colors[tile][0] & 0xffffff));
-					}
-				}
-				_bmdLevels.push(_levelsTarget.clone());
+			for(i = len; i >= 0; --i) {
+				drawLevel(ox, oy, oz-i, .6 - i*alphaStep);
 			}
 		}
 		
@@ -342,7 +349,7 @@ package com.muxxu.kub3dit.components.editor {
 		 * Called when mouse wheel is used
 		 */
 		private function mouseWheelHandler(event:MouseEvent):void {
-			_z += event.delta > 0? 1 : +1;
+			_z += event.delta > 0? 1 : -1;
 			_z = MathUtils.restrict(_z, 0, Config.getNumVariable("mapSizeHeight")-1);
 			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
 			_lastPos.x = _lastPos.y = -1;
@@ -364,6 +371,19 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
 			_pressed = false;
+		}
+		
+		/**
+		 * Called when a button is clicked
+		 */
+		private function clickButtonHandler(event:MouseEvent):void {
+			if(event.currentTarget == _radarBt) {
+				var i:int, len:int;
+				len = Config.getNumVariable("mapSizeHeight");
+				for(i = 0; i < len; ++i) {
+					drawLevel(_lastOrigin.x, _lastOrigin.y, i);
+				}
+			}
 		}
 		
 		/**

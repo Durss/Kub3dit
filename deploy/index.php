@@ -50,6 +50,7 @@
 	}
 	
 	$authorized = false;//isAuthorizedUser($pseudo, "durss");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "ebene");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
@@ -141,7 +142,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "8";
+	$version= "9";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";

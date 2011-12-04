@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.views {
+	import com.nurun.utils.input.keyboard.events.KeyboardSequenceEvent;
+	import com.nurun.utils.input.keyboard.KeyboardSequenceDetector;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
@@ -53,6 +55,7 @@ package com.muxxu.kub3dit.views {
 		private var _log:CssTextField;
 		private var _mapSizeH:Number;
 		private var _map:Map;
+		private var _ks:KeyboardSequenceDetector;
 		
 		
 		
@@ -149,6 +152,14 @@ package com.muxxu.kub3dit.views {
 			FrontControler.getInstance().view3DReady();
 			stage.addEventListener(Event.RESIZE, resizeHandler);
 			resizeHandler(null);
+			
+			_ks = new KeyboardSequenceDetector(stage);
+			_ks.addSequence("poil", "poil");
+			_ks.addEventListener(KeyboardSequenceEvent.SEQUENCE, sequenceHandler);
+		}
+
+		private function sequenceHandler(event:KeyboardSequenceEvent):void {
+			Camera3D.toggleWASD();
 		}
 		
 		/**
