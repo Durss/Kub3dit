@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.commands {
+	import flash.display.Bitmap;
+	import flash.display.Loader;
 	import flash.net.FileFilter;
 	import flash.events.IOErrorEvent;
 	import com.nurun.core.commands.events.CommandEvent;
@@ -20,6 +22,8 @@ package com.muxxu.kub3dit.commands {
 		private var _fr:FileReference;
 		private var _validExtensions:String;
 		private var _filterLabel:String;
+		private var _bitmapType:Boolean;
+		private var _loader:Loader;
 		
 		
 		
@@ -27,7 +31,8 @@ package com.muxxu.kub3dit.commands {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function  BrowseForFileCmd(filterLabel:String = null, validExtensions:String = null) {
+		public function  BrowseForFileCmd(filterLabel:String = null, validExtensions:String = null, bitmapType:Boolean = false) {
+			_bitmapType = bitmapType;
 			_filterLabel = filterLabel;
 			_validExtensions = validExtensions;
 			initialize();
@@ -72,6 +77,10 @@ package com.muxxu.kub3dit.commands {
 			_fr.addEventListener(Event.COMPLETE, loadCompleteHandler);
 			_fr.addEventListener(IOErrorEvent.IO_ERROR, loadErrorHandler);
 			_fr.addEventListener(Event.SELECT, selectFileHandler);
+			
+			_loader = new Loader();
+			_loader.contentLoaderInfo.addEventListener(Event.COMPLETE, loadBitmapCompleteHandler);
+			_loader.contentLoaderInfo.addEventListener(IOErrorEvent.IO_ERROR, loadBitmapErrorHandler);
 		}
 		
 		/**
@@ -85,7 +94,11 @@ package com.muxxu.kub3dit.commands {
 		 * Called when file loading completes
 		 */
 		private function loadCompleteHandler(event:Event):void {
-			dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, _fr.data));
+			if(_bitmapType) {
+				_loader.loadBytes(_fr.data);
+			}else{
+				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, _fr.data));
+			}
 		}
 		
 		/**
@@ -93,6 +106,20 @@ package com.muxxu.kub3dit.commands {
 		 */
 		private function selectFileHandler(event:Event):void {
 			_fr.load();
+		}
+		
+		/**
+		 * Called when bitmap loading completes.
+		 */
+		private function loadBitmapCompleteHandler(event:Event):void {
+			dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, Bitmap(_loader.content).bitmapData.clone()));
+		}
+		
+		/**
+		 * Called if bitmap loading fails
+		 */
+		private function loadBitmapErrorHandler(event:IOErrorEvent):void {
+			dispatchEvent(new CommandEvent(CommandEvent.ERROR, event.text));
 		}
 	}
 }
