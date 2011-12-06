@@ -126,8 +126,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 						py = _size - 1 - reg;
 					}
 					
-					px += ox - _size * .5;
-					py += oy - _size * .5;
+					px += ox - Math.floor(_size * .5);
+					py += oy - Math.floor(_size * .5) - 1;
 					
 					_chunksManager.update(px, py, pz, tile);
 				}

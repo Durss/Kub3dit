@@ -1,6 +1,4 @@
 package com.muxxu.kub3dit.components.editor {
-	import flash.utils.Dictionary;
-	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
@@ -12,7 +10,10 @@ package com.muxxu.kub3dit.components.editor {
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.errors.IllegalOperationError;
+	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
+	import flash.utils.Dictionary;
 	
 	/**
 	 * 
@@ -20,6 +21,7 @@ package com.muxxu.kub3dit.components.editor {
 	 * @date 31 oct. 2011;
 	 */
 	public class ConfigToolPanel extends Sprite {
+		
 		private var _back:Shape;
 		private var _panel:IToolPanel;
 		private var _width:Number;
@@ -65,6 +67,7 @@ package com.muxxu.kub3dit.components.editor {
 			if(_panel != null) {
 //				_panel.dispose();
 				if(_holder.contains(_panel as DisplayObject)) _holder.removeChild(_panel as DisplayObject);
+				_panel.removeEventListener(Event.RESIZE, computePositions);
 			}
 			
 			if(_panelTypeToPanel[value] == undefined) {
@@ -72,6 +75,7 @@ package com.muxxu.kub3dit.components.editor {
 			}else{
 				_panel = _panelTypeToPanel[value];
 			}
+			_panel.addEventListener(Event.RESIZE, computePositions);
 			if(_panel == null) {
 				throw new IllegalOperationError("Class reference isn't IToolPanel typed!");
 				return null;
@@ -139,7 +143,7 @@ package com.muxxu.kub3dit.components.editor {
 		/**
 		 * Resizes and replaces the elements.
 		 */
-		private function computePositions():void {
+		private function computePositions(event:Event = null):void {
 			if(!_opened) return;
 			
 			var dispObj:DisplayObject = _panel as DisplayObject;
