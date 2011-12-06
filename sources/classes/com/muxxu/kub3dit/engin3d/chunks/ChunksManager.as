@@ -56,6 +56,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _posToChunk:Array;
 		private var _mapSizeH:int;
 		private var _accelerated:Boolean;
+		private var _invalidateStack:Array;
 		
 		
 		
@@ -131,6 +132,35 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_textureCubes = _context3D.createTexture(bitmapData.width, bitmapData.height, Context3DTextureFormat.BGRA, false);
 //			uploadTextureWithMipmaps(_textureCubes, bitmapData);
 			_textureCubes.uploadFromBitmapData(bitmapData);
+		}
+		
+		/**
+		 * Adds a cube to the invalidate stack.
+		 * Adding a cube in this stack won't make it appear in the 3D world.
+		 * You'll have to call "invalidate" method to process all the invalidable
+		 * cubes added to the stack. Or clearInvalidateStack to cancel the process.
+		 */
+		public function addInvalidableCube(x:int, y:int, z:int, tile:int):void {
+			_invalidateStack.push(new InvalidatableCube(x, y, z, tile));
+		}
+		
+		/**
+		 * Clears all the invalite stack
+		 */
+		public function clearInvalidateStack():void {
+			_invalidateStack = [];
+		}
+
+		
+		/**
+		 * Adds all the invalidable cubes to the data
+		 */
+		public function invalidate():void {
+			var cube:InvalidatableCube;
+			while(_invalidateStack.length > 0) {
+				cube = _invalidateStack.pop();
+				update(cube.px, cube.py, cube.pz, cube.tile);
+			}
 		}
 		
 		/**
@@ -211,6 +241,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_progressY = 0;
 			_chunks = [];
 			_posToChunk = [];
+			_invalidateStack = [];
 			
 			if(_chunksH <= 0 || _chunksW <= 0) {
 				throw new IllegalOperationError("Please define the number of visible chunks first. Must be greater than 0 on both width and height.");
@@ -390,5 +421,19 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			dispatchEvent(new ManagerEvent(ManagerEvent.PROGRESS, p));
 		}
 		
+	}
+}
+
+internal class InvalidatableCube {
+	public var px:int;
+	public var py:int;
+	public var pz:int;
+	public var tile:int;
+
+	public function InvalidatableCube(p_px:int, p_py:int, p_pz:int, p_tile:int):void {
+		tile = p_tile;
+		pz = p_pz;
+		py = p_py;
+		px = p_px;
 	}
 }

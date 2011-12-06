@@ -33,6 +33,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _levelColors:Array;
 		private var _customKubes:Vector.<CubeData>;
 		private var _colorsBmd:BitmapData;
+		private var _genColors:Array;//used for image generation. Provides a quick way to get only different colors of different kubes
 		
 		
 		
@@ -128,6 +129,20 @@ package com.muxxu.kub3dit.engin3d.map {
 		public function get levelColors():Array { return _levelColors; }
 		
 		/**
+		 * Gets only the different levels colors
+		 * 
+		 * 2D array structured like that :
+		 * [
+		 * 	kubeID:	[
+		 * 				{c:uint, z:int}
+		 * 				{c:uint, z:int}
+		 * 				{c:uint, z:int}
+		 * 			]
+		 * }
+		 */
+		public function get genColors():Array { return _genColors; }
+		
+		/**
 		 * Gets the colors bitmap data reference
 		 */
 		public function get colorsBmd():BitmapData { return _colorsBmd; }
@@ -155,6 +170,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			_transparent	= [];
 			_bitmapDatas	= [];
 			_levelColors	= [];
+			_genColors		= [];
 			_customKubes	= new Vector.<CubeData>();
 			
 			//Read sprite sheet map to define kube textures by their ID.
@@ -267,13 +283,22 @@ package com.muxxu.kub3dit.engin3d.map {
 			w = colors.width;
 			len = w * colors.height;
 			var pixels:ByteArray = colors.getPixels(colors.rect);
+			var done:Object = {};
+			var color:uint;
 			for(i = 0; i < len; ++i) {
 				id = int(i/w) + 1;
 				if(i%w == 0) {
 					_levelColors[id] = [];
+					_genColors[id] = [];
+					done = {};
 				}
 				pixels.position = i*4;
-				_levelColors[id][i%w] = pixels.readUnsignedInt();
+				color = pixels.readUnsignedInt();
+				_levelColors[id][i%w] = color;
+				if(done[color] == undefined) {
+					done[color] = true;
+					_genColors[id].push({c:color, z:i%w});
+				}
 			}
 		}
 		
@@ -343,6 +368,8 @@ package com.muxxu.kub3dit.engin3d.map {
 					for(j = 1; j < 32; j+=2) {
 						_levelColors[id][j] = _levelColors[id][j+1] =
 						ColorFunctions.setRGBSaturation(ColorUtil.adjustBrightness2(color, j/2*3), sat + (240-sat) * .35/16 * j ) + 0xff000000;
+						_genColors[id].push({c:color, z:j});
+						_genColors[id].push({c:color, z:j});
 					}
 					_levelColors[id][0] = _levelColors[id][1] = _levelColors[id][2];
 				}

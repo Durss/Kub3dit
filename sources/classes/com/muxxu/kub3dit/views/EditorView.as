@@ -105,14 +105,15 @@ package com.muxxu.kub3dit.views {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_grid.x = 35;
-			_grid.y = 5;
-			_tools.x = 10;
+			_tools.x = 6;
 			_tools.y = 5;
 			
-			_kubeSelector.width = Math.round(_grid.x + _grid.width - 10);
-			_kubeSelector.x = 10;
+			_grid.x = 30;
+			_grid.y = 5;
+			
+			_kubeSelector.x = _tools.x;
 			_kubeSelector.y = Math.max(_tools.height, _grid.height) + 15;
+			_kubeSelector.width = Math.round(_grid.x + _grid.width - _kubeSelector.x);
 			
 			_background.width = Math.round(_grid.x + _grid.width + 5);
 			_background.height = Math.round(_kubeSelector.y + _kubeSelector.height) + 10;

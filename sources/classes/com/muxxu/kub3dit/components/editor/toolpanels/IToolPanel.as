@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import flash.events.IEventDispatcher;
 	import flash.geom.Point;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 
@@ -6,7 +7,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	/**
 	 * @author Francois
 	 */
-	public interface IToolPanel {
+	public interface IToolPanel extends IEventDispatcher {
 		
 		/**
 		 * Makes the component garbage collectable.
