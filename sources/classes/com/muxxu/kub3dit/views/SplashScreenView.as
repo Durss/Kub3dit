@@ -133,7 +133,7 @@ package com.muxxu.kub3dit.views {
 			
 			_backButtons.width = _buttonsHolder.width * 1.5;
 			_backButtons.height = _buttonsHolder.height * 1.5;
-			computePositions();//dirty but needed!
+			computePositions();//double compute dirty but needed!
 		}
 		
 		/**
@@ -148,7 +148,7 @@ package com.muxxu.kub3dit.views {
 			_shadow = new DropShadowFilter(10,135,0,.2,10,10,1,2);
 			for(i = 0; i < len; ++i) {
 				cloud = _cloudsHolder.addChild(new CloudGraphic()) as CloudGraphic;
-				cloud.gotoAndStop(Math.ceil(Math.random() * cloud.totalFrames));
+				cloud.gotoAndStop(Math.ceil(Math.random() * (cloud.totalFrames-1)));
 				cloud.x = i/(len-1)*stage.stageWidth;
 				cloud.y = Math.random()*stage.stageHeight - cloud.height*.5;
 				cloud.filters = [_shadow];
@@ -271,7 +271,11 @@ package com.muxxu.kub3dit.views {
 				cloud = _clouds[i];
 				cloud.x += _speeds[i];
 				if(cloud.x > stage.stageWidth) {
-					cloud.gotoAndStop(Math.ceil(Math.random() * cloud.totalFrames));
+					if(Math.random()>.98) {
+						cloud.gotoAndStop(cloud.totalFrames);
+					}else{
+						cloud.gotoAndStop(Math.ceil(Math.random() * (cloud.totalFrames-1)));
+					}
 					cloud.x = -cloud.getBounds(cloud).right;
 					cloud.y = Math.random()*stage.stageHeight - cloud.height*.5;
 				}

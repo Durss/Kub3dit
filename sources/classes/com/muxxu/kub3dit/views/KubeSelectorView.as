@@ -43,6 +43,7 @@ package com.muxxu.kub3dit.views {
 		private var _addKube:ButtonKube;
 		private var _addKubeForm:AddKubeForm;
 		private var _selectedKubeId:String;
+		private var _selectMode:Boolean;
 		
 		
 		
@@ -79,6 +80,45 @@ package com.muxxu.kub3dit.views {
 		override public function set width(value:Number):void {
 			_width = value;
 			computePositions();
+		}
+		
+		/**
+		 * Sets if the view should be in selection mode or not.
+		 * Selection mode provides a way choose multiple enabled cubes
+		 */
+		public function set selectMode(value:Boolean):void {
+			_selectMode = value;
+			
+			var i:int, len:int, alpha:Number;
+			len = _kubes.length;
+			alpha = _selectMode? 1 : .5;
+			for(i = 0; i < len; ++i) {
+				_kubes[i].selectionMode = value;
+				TweenLite.killTweensOf(_kubes[i]);
+				TweenLite.to(_kubes[i], .2, {alpha:_kubes[i].selected? 1 : alpha, delay:i*.0025, ease:Sine.easeInOut});
+			}
+			
+			if(value) {
+				_group.allowMultipleSelection = true;
+			}else{
+				_group.allowMultipleSelection = false;
+			}
+		}
+		
+		/**
+		 * Gets all the enabled kubes. Used for image generation.
+		 * Returns an associative array whose keys are the enabled kubes IDs.
+		 */
+		public function get enabledCubes():Array {
+			var i:int, len:int, ret:Array;
+			len = _kubes.length;
+			ret = [];
+			for(i = 0; i < len; ++i) {
+				if(_kubes[i].selected) {
+					ret[parseInt(_kubes[i].id)] = true;
+				}
+			}
+			return ret;
 		}
 
 
@@ -117,12 +157,13 @@ package com.muxxu.kub3dit.views {
 		 * Claled when the view is rolled over.
 		 */
 		private function rollHandler(event:MouseEvent):void {
-			if(event.target != this) return;
+			if(event.target != this || (event.type == MouseEvent.ROLL_OUT && _selectMode)) return;
 			
 			var i:int, len:int, alpha:Number;
 			len = _kubes.length;
 			alpha = event.type == MouseEvent.ROLL_OVER? 1 : .5;
 			for(i = 0; i < len; ++i) {
+				TweenLite.killTweensOf(_kubes[i]);
 				TweenLite.to(_kubes[i], .2, {alpha:_kubes[i].selected? 1 : alpha, delay:i*.0025, ease:Sine.easeInOut});
 			}
 		}
@@ -191,7 +232,9 @@ package com.muxxu.kub3dit.views {
 		 * Called when a new kube is selected
 		 */
 		private function changeSelectionHandler(event:FormComponentGroupEvent):void {
-			FrontControler.getInstance().changeKubeId( KubeSelectorButton(event.selectedItem).id );
+			if(_selectMode) return;
+			
+			FrontControler.getInstance().changeKubeId(KubeSelectorButton(event.selectedItem).id);
 		}
 		
 	}

@@ -37,11 +37,11 @@ package com.muxxu.kub3dit.components.form.input {
 			if(isNumeric) {
 				textfield.restrict = "[0-9]";
 				textfield.maxChars = maxNumValue.toString().length;
-				width = textfield.maxChars * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style).fontSize)+1) + locMargins.width;
+				width = textfield.maxChars * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style)["fontSize"])+1) + locMargins.width;
 				addEventListener(Event.CHANGE, changeValueHandler);
 				addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
 			}else{
-				width = 10 * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style).fontSize)+1) + locMargins.width;
+				width = 10 * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style)["fontSize"])+1) + locMargins.width;
 			}
 		}
 

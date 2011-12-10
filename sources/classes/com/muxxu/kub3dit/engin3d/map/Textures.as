@@ -297,7 +297,7 @@ package com.muxxu.kub3dit.engin3d.map {
 				_levelColors[id][i%w] = color;
 				if(done[color] == undefined) {
 					done[color] = true;
-					_genColors[id].push({c:color, z:i%w});
+					(_genColors[id] as Array).push({c:color, z:i%w});
 				}
 			}
 		}
@@ -368,8 +368,9 @@ package com.muxxu.kub3dit.engin3d.map {
 					for(j = 1; j < 32; j+=2) {
 						_levelColors[id][j] = _levelColors[id][j+1] =
 						ColorFunctions.setRGBSaturation(ColorUtil.adjustBrightness2(color, j/2*3), sat + (240-sat) * .35/16 * j ) + 0xff000000;
-						_genColors[id].push({c:color, z:j});
-						_genColors[id].push({c:color, z:j});
+						if(_genColors[id] == undefined) _genColors[id] = [];
+						(_genColors[id] as Array).push({c:color, z:j});
+						(_genColors[id] as Array).push({c:color, z:j});
 					}
 					_levelColors[id][0] = _levelColors[id][1] = _levelColors[id][2];
 				}

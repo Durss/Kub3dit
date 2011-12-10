@@ -62,6 +62,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _map:Map;
 		private var _radarBt:ButtonKube;
 		private var _lastOrigin:Point;
+		private var _radarMode:Boolean;
 		
 		
 		
@@ -208,8 +209,9 @@ package com.muxxu.kub3dit.components.editor {
 			//Sub levels drawing management
 			var camPos:Point = new Point(Camera3D.locX, Camera3D.locY);
 			if(!camPos.equals(_oldCamPos) || _dragMode) {
-				_subLevelsDrawn = false;
 				_oldCamPos = camPos;
+				_radarMode = false;
+				_subLevelsDrawn = false;
 				_lastStartTime = getTimer();
 			}
 			
@@ -219,8 +221,8 @@ package com.muxxu.kub3dit.components.editor {
 				if(landmark != null) {
 					_landMark.addChild(landmark);
 					landmark.scaleX = landmark.scaleY = _cellSize;
-					landmark.x = Math.floor( (mouseX) / _cellSize) * _cellSize - Math.floor((landmark.width * .5) / _cellSize)*_cellSize;
-					landmark.y = Math.floor( (mouseY) / _cellSize) * _cellSize - Math.floor((landmark.height * .5) / _cellSize)*_cellSize;
+					landmark.x = Math.floor( ((mouseX) / _cellSize) - Math.floor((landmark.width * .5) / _cellSize))*_cellSize;
+					landmark.y = Math.floor( ((mouseY) / _cellSize) - Math.floor((landmark.height * .5) / _cellSize))*_cellSize;
 				}
 			}
 			
@@ -236,8 +238,11 @@ package com.muxxu.kub3dit.components.editor {
 				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && !mousePos.equals(_lastPos)) {
 					_lastPos = mousePos;
 					_panel.draw(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _size, new Point(ox, oy));
-//					_lastStartTime = getTimer();
-//					_subLevelsDrawn = false;
+					if(_panel.eraseMode) {
+						_lastStartTime = getTimer();
+						_subLevelsDrawn = false;
+					}
+					_radarMode = false;
 				}
 			}
 			
@@ -253,7 +258,7 @@ package com.muxxu.kub3dit.components.editor {
 					drawGridBase(ox, oy);
 					drawSubLevels(ox, oy, _z-1);
 				}
-				drawLevel(ox, oy, _z, 1);
+				if(!_radarMode) drawLevel(ox, oy, _z, 1);
 			}else{
 				drawGridBase(ox, oy);
 				drawLevel(ox, oy, _z, 1);
@@ -383,6 +388,7 @@ package com.muxxu.kub3dit.components.editor {
 				for(i = 0; i < len; ++i) {
 					drawLevel(_lastOrigin.x, _lastOrigin.y, i);
 				}
+				_radarMode = true;//Prevents from drawing the current level over the radar rendering.
 			}
 		}
 		

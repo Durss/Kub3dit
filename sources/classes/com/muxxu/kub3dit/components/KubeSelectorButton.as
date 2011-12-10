@@ -1,4 +1,7 @@
 package com.muxxu.kub3dit.components {
+	import flash.filters.DropShadowFilter;
+	import com.muxxu.kub3dit.graphics.DisabledCubeIcon;
+	import com.muxxu.kub3dit.graphics.EnabledCubeIcon;
 	import com.muxxu.kub3dit.vo.ToolTipAlign;
 	import com.nurun.structure.environnement.label.Label;
 	import com.muxxu.kub3dit.events.ToolTipEvent;
@@ -20,10 +23,16 @@ package com.muxxu.kub3dit.components {
 	 */
 	public class KubeSelectorButton extends GraphicButton implements GroupableFormComponent {
 		
+		private var _id:int;
 		private var _selected:Boolean;
 		private var _disable:ColorMatrixFilter;
 		private var _glow:GlowFilter;
-		private var _id:String;
+		private var _selectionMode:Boolean;
+		private var _enabledIcon:EnabledCubeIcon;
+		private var _disabledIcon:DisabledCubeIcon;
+		private var _filter:DropShadowFilter;
+		private var _defaultModeState:Boolean;
+		private var _selectionModeState:Boolean;
 		
 		
 		
@@ -35,11 +44,17 @@ package com.muxxu.kub3dit.components {
 		 * Creates an instance of <code>KubeButton</code>.
 		 */
 		public function KubeSelectorButton(background:DisplayObject, id:String) {
-			_id = id;
+			_id = parseInt(id);
 			_disable = new ColorMatrixFilter([.8, .2, .2, 0, 0, .2, .8, .2, 0, 0, .2, .2, .8, 0, 0, 0, 0, 0, 1, 0]);
 			_glow = new GlowFilter( 0xffffff, 1, 10, 10, 1, 2 );
 			
 			super(background);
+			
+			_filter = new DropShadowFilter(0,0,0,1,2,2,10,2);
+			_enabledIcon = new EnabledCubeIcon();
+			_disabledIcon = new DisabledCubeIcon();
+			
+			_enabledIcon.filters = _disabledIcon.filters = [_filter];
 			
 			addEventListener(NurunButtonEvent.OVER, overHandler);
 			addEventListener(NurunButtonEvent.OUT, outHandler);
@@ -47,6 +62,8 @@ package com.muxxu.kub3dit.components {
 			addEventListener(NurunButtonEvent.CLICK, clickCustomHandler, false, 9999);
 			
 			selected = false;
+			_defaultModeState = false;
+			_selectionModeState = _id != 1 && _id != 56 && (_id < 56 || _id > 68) && _id != 71 && _id != 73 && _id != 75 && _id != 77;
 		}
 
 		
@@ -65,7 +82,6 @@ package com.muxxu.kub3dit.components {
 		 */
 		public function set selected(value:Boolean):void {
 			_selected = value;
-			alpha = value? 1 : .5;
 			updateState();
 			dispatchEvent(new Event(Event.CHANGE));
 		}
@@ -73,7 +89,28 @@ package com.muxxu.kub3dit.components {
 		/**
 		 * Gets the related kube's ID
 		 */
-		public function get id():String { return _id; }
+		public function get id():String { return _id.toString(); }
+		
+		/**
+		 * Sets the selection mode of the component
+		 */
+		public function set selectionMode(value:Boolean):void {
+			_selected = value? _selectionModeState : _defaultModeState;
+			_selectionMode = value;
+			if(value) {
+				addChild(_enabledIcon);
+				addChild(_disabledIcon);
+				_enabledIcon.x = 30 - _enabledIcon.width;
+				_enabledIcon.y = 30 - _enabledIcon.height;
+				_disabledIcon.x = 30 - _disabledIcon.width;
+				_disabledIcon.y = 30 - _disabledIcon.height;
+				updateState();
+			}else if(contains(_enabledIcon)) {
+				removeChild(_enabledIcon);
+				removeChild(_disabledIcon);
+//				updateState();
+			}
+		}
 
 
 
@@ -130,10 +167,19 @@ package com.muxxu.kub3dit.components {
 		 * Updates the component's state
 		 */
 		protected function updateState():void {
-			if(_selected) {
-				background.filters = [_glow];
+			_enabledIcon.visible = _selected;
+			_disabledIcon.visible = !_selected;
+			if(_selectionMode) {
+				_selectionModeState = _selected;
+				background.filters = [];
 			}else{
-				background.filters = [_disable];
+				_defaultModeState = _selected;
+				if(_selected) {
+					background.filters = [_glow];
+				}else{
+					background.filters = [_disable];
+				}
+				alpha = _selected? 1 : .5;
 			}
 		}
 		

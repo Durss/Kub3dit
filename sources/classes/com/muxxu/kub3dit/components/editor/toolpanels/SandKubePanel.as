@@ -39,6 +39,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _rCwBt:GraphicButtonKube;
 		private var _rCcwBt:GraphicButtonKube;
 		private var _rotation:int;
+		private var _eraseMode:Boolean;
 		
 		
 		
@@ -58,6 +59,19 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
+		public function set eraseMode(value:Boolean):void {
+			_eraseMode = value;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get eraseMode():Boolean {
+			return _eraseMode;
+		}
 		
 		/**
 		 * @inheritDoc
@@ -71,13 +85,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		public function get landmark():Shape {
 			return _landMark;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function set eraseMode(value:Boolean):void {
-			
 		}
 
 
