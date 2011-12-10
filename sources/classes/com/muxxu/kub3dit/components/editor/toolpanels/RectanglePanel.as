@@ -18,6 +18,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	 * @date 31 oct. 2011;
 	 */
 	public class RectanglePanel extends Sprite implements IToolPanel {
+		
 		private var _eraseMode:Boolean;
 		private var _inputWidthLabel:CssTextField;
 		private var _inputWidth:InputKube;
@@ -54,6 +55,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		public function set eraseMode(value:Boolean):void {
 			_eraseMode = value;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get eraseMode():Boolean {
+			return _eraseMode;
 		}
 		
 		/**

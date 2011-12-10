@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.views.KubeSelectorView;
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import flash.ui.Keyboard;
 	import flash.events.KeyboardEvent;
 	import com.nurun.components.text.CssTextField;
@@ -27,9 +29,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	 * @date 3 déc. 2011;
 	 */
 	public class ImageGenPanel extends Sprite implements IToolPanel {
+		
 		private var _chunksManager:ChunksManager;
 		private var _landMark:Shape;
-//		private var _colorsBmd:BitmapData;
 		private var _loadBt:ButtonKube;
 		private var _clearBt:ButtonKube;
 		private var _cmd:BrowseForFileCmd;
@@ -40,10 +42,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _ox:int;
 		private var _oy:int;
 		private var _oz:int;
-//		private var _colorsPixels:ByteArray;
 		private var _levelsCb:CheckBoxKube;
 		private var _colorsArray:Array;
 		private var _processPercent:CssTextField;
+		private var _selectorView:KubeSelectorView;
+		private var _eraseMode:Boolean;
+		private var _enabledCubes:Array;
 		
 		
 		
@@ -66,6 +70,20 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * @inheritDoc
 		 */
+		public function set eraseMode(value:Boolean):void {
+			_eraseMode = value;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get eraseMode():Boolean {
+			return _eraseMode;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function set chunksManager(value:ChunksManager):void {
 			_chunksManager = value;
 		}
@@ -75,13 +93,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		public function get landmark():Shape {
 			return _landMark;
-		}
-
-		/**
-		 * @inheritDoc
-		 */
-		public function set eraseMode(value:Boolean):void {
-			
 		}
 		
 		/**
@@ -104,13 +115,17 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			if(_pixels == null || _pixels.length == 0) return;
+			
 			_oz = oz;
 			_oy = oy;
 			_ox = ox;
 			_running = true;
 			_index = 0;
 			_pixels.position = 0;
+			_enabledCubes = _selectorView.enabledCubes;
 			addChild(_processPercent);
+			_chunksManager.clearInvalidateStack();
 			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			enterFrameHandler();
@@ -137,6 +152,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_selectorView = ViewLocator.getInstance().locateViewByType(KubeSelectorView) as KubeSelectorView;
 			_landMark = new Shape();
 //			_colorsBmd = Textures.getInstance().colorsBmd;
 //			_colorsPixels = _colorsBmd.getPixels(_colorsBmd.rect);
@@ -167,6 +183,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Called when the component is removed from the stage
 		 */
 		private function removedFromStageHandler(event:Event):void {
+			_selectorView.selectMode = false;
 			stopProcessing();
 		}
 		
@@ -174,7 +191,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Called when the stage is available.
 		 */
 		private function addedToStageHandler(event:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			_selectorView.selectMode = true;
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 		}
 		
@@ -222,6 +239,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				_cmd.execute();
 				
 			}else if(event.currentTarget == _clearBt){
+				_pixels = null;
 				_landMark.graphics.clear();
 				_clearBt.enabled = false;
 			}
@@ -264,23 +282,27 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					distMin = int.MAX_VALUE;
 					id = 1;
 					do {
-						c2 = _colorsArray[id][cIndex]["c"];
-						dist = ColorFunctions.getDistanceBetweenColors(c1, c2);
-						if(dist < distMin) {
-							tile = id;
-							distMin = dist;
-							cS = c2;
-							pz = _colorsArray[id][cIndex]["z"];
-//						}else if(cIndex == 0){
-//							//Skips the whole kube's level
-//							id ++;
-//							cIndex = 0;
-						}
-						
-						cIndex ++;
-						if(cIndex > _colorsArray[id].length-1) {
+						if(_enabledCubes[id] == undefined) {
 							id ++;
-							cIndex = 0;
+						}else{
+							c2 = _colorsArray[id][cIndex]["c"];
+							dist = ColorFunctions.getDistanceBetweenColors(c1, c2);
+							if(dist < distMin) {
+								tile = id;
+								distMin = dist;
+								cS = c2;
+								pz = _colorsArray[id][cIndex]["z"];
+	//						}else if(cIndex == 0){
+	//							//Skips the whole kube's level
+	//							id ++;
+	//							cIndex = 0;
+							}
+							
+							cIndex ++;
+							if(cIndex > (_colorsArray[id] as Array).length-1) {
+								id ++;
+								cIndex = 0;
+							}
 						}
 						
 						if(_colorsArray[id] == undefined) id = -1;
@@ -289,7 +311,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					px += _ox - Math.floor(w * .5);
 					py += _oy - Math.floor(h * .5);
 					
-					_chunksManager.addInvalidableCube(px, py, _levelsCb.selected? pz : _oz + pz, tile);
+					_chunksManager.addInvalidableCube(px, py, _levelsCb.selected? _oz + pz : _oz, tile);
 				}
 				
 				_index++;

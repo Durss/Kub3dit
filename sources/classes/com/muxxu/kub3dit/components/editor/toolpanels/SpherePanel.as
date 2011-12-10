@@ -56,6 +56,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * @inheritDoc
 		 */
+		public function get eraseMode():Boolean {
+			return _eraseMode;
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function get landmark():Shape {
 			return _landmark;
 		}

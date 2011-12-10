@@ -38,5 +38,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Defines the erase mode.
 		 */
 		function set eraseMode(value:Boolean):void;
+		
+		/**
+		 * Gets the erase mode state.
+		 */
+		function get eraseMode():Boolean;
 	}
 }

@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.form {
+	import flash.events.EventDispatcher;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import flash.events.Event;
 	import com.muxxu.kub3dit.graphics.MapSizeCross;
@@ -128,7 +129,7 @@ package com.muxxu.kub3dit.components.form {
 		 */
 		private function rollOverInputHanlder(event:MouseEvent):void {
 			//Fire the event from the input to be sure to have a working tooltip
-			event.target.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("titleMapSize"), ToolTipAlign.TOP, 20, "tooltipContentBig"));
+			EventDispatcher(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("titleMapSize"), ToolTipAlign.TOP, 20, "tooltipContentBig"));
 		}
 		
 		/**

@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import flash.events.EventDispatcher;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
@@ -230,7 +231,7 @@ package com.muxxu.kub3dit.components.editor {
 			}
 			
 			if(label != null) {
-				event.target.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.TOP));
+				EventDispatcher(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.TOP));
 			}
 		}
 		

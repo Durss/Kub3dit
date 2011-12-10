@@ -56,9 +56,9 @@ package com.muxxu.kub3dit.commands {
 		public function execute():void {
 			var request:URLRequest = new URLRequest("http://fevermap.org/kubebuilder/php/ws/getKubes.php");
 			var urlVars:URLVariables = new URLVariables();
-			urlVars.kubeId = _kubeId;
-			urlVars.start = 0;
-			urlVars.length = 1;
+			urlVars["kubeId"] = _kubeId;
+			urlVars["start"] = 0;
+			urlVars["length"] = 1;
 			request.data = urlVars;
 			request.method = URLRequestMethod.POST;
 			_loader.load(request);
@@ -93,7 +93,7 @@ package com.muxxu.kub3dit.commands {
 			}
 			if(xml.child("result")[0] == "0") {
 				_data = new CubeData();
-				_data.populate(xml.child("kubes")[0].child("kube")[0]);
+				_data.populate(XML(xml.child("kubes")[0]).child("kube")[0]);
 				
 				Textures.getInstance().addKube(_data);
 				
