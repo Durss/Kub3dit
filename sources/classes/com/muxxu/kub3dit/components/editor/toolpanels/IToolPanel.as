@@ -43,5 +43,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Gets the erase mode state.
 		 */
 		function get eraseMode():Boolean;
+		
+		/**
+		 * Gets if the landmark should be fixed.
+		 * If this getter returns true, then the landmark will be fixed at the
+		 * top left of the editor's grid.
+		 */
+		function get fixedLandmark():Boolean;
 	}
 }

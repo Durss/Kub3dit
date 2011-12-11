@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
@@ -186,8 +187,8 @@ package com.muxxu.kub3dit.components.editor {
 				_offset.x = Math.round((_offsetDrag.x - mouseX)/_cellSize) + _offsetOffDrag.x;
 				_offset.y = Math.round((_offsetDrag.y - mouseY)/_cellSize) + _offsetOffDrag.y;
 			}
-			ox = Math.round(-Camera3D.locX - _size * .5) + _offset.x;
-			oy = Math.round(Camera3D.locY - _size * .5) + _offset.y;
+			ox = Math.round(-Camera3D.locX / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.x;
+			oy = Math.round(Camera3D.locY / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.y;
 			//Limit drag
 			if(ox < -_size*.5) _offset.x -= ox+_size*.5;
 			if(oy < -_size*.5) _offset.y -= oy+_size*.5;
@@ -207,7 +208,7 @@ package com.muxxu.kub3dit.components.editor {
 			_gridHolder.graphics.endFill();
 			
 			//Sub levels drawing management
-			var camPos:Point = new Point(Camera3D.locX, Camera3D.locY);
+			var camPos:Point = new Point(Camera3D.locX / ChunkData.CUBE_SIZE_RATIO, Camera3D.locY / ChunkData.CUBE_SIZE_RATIO);
 			if(!camPos.equals(_oldCamPos) || _dragMode) {
 				_oldCamPos = camPos;
 				_radarMode = false;

@@ -73,6 +73,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function set chunksManager(value:ChunksManager):void {
 			_chunksManager = value;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get fixedLandmark():Boolean {
+			return false;
+		}
 
 
 

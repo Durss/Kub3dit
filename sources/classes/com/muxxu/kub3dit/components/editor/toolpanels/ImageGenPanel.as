@@ -105,6 +105,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				return super.height;
 			}
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get fixedLandmark():Boolean {
+			return false;
+		}
 
 
 

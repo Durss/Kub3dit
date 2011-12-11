@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.nurun.utils.input.keyboard.events.KeyboardSequenceEvent;
 	import com.nurun.utils.input.keyboard.KeyboardSequenceDetector;
 	import com.muxxu.kub3dit.controler.FrontControler;
@@ -184,8 +185,8 @@ package com.muxxu.kub3dit.views {
 			_manager.initialize(_context3D, _chunkSize, _accelerated);
 			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
 			Camera3D.setMapSize(_mapSizeW, _mapSizeH);
-			Camera3D.setPosition(new Vector3D(0,0,2));
-			Camera3D.setPosition(new Vector3D(-_mapSizeW*.5,_mapSizeH*.5, 2));
+//			Camera3D.setPosition(new Vector3D(0,0,2));
+			Camera3D.setPosition(new Vector3D(-_mapSizeW*.5 * ChunkData.CUBE_SIZE_RATIO,_mapSizeH*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
 			Camera3D.rotationX = 0;
 			
 			//Do the following AFTER camera init to be sure the chunks loading priority
@@ -244,8 +245,8 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(Math.floor(_visibleChunks*.5), 8);//Number of cubes to do the fog on
-			var farplane:int = _visibleCubes*.5;//Number of cubes to start the fog at
+			var fogLength:int = Math.min(Math.floor(_visibleChunks*.5), 8) * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to do the fog on
+			var farplane:int = _visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			

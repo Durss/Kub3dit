@@ -86,6 +86,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function get landmark():Shape {
 			return _landMark;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get fixedLandmark():Boolean {
+			return false;
+		}
 
 
 
