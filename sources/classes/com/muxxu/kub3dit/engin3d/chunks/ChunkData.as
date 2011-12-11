@@ -6,6 +6,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 
 	
 	public class ChunkData {
+		public static const CUBE_SIZE_RATIO:Number = 100;
 		
 		public var _x:int;
 		public var _y:int;
@@ -49,7 +50,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var textureStepRatioY:Number	= 1 / bmd.height;
 			var textureStretchX:Number		= 1 / bmd.width * .3;
 			var textureStretchY:Number		= 1 / bmd.height * .3;
-			var sizeRatio:Number			= 16 / bmd.width;
+			var textureSizeRatio:Number		= 16 / bmd.width;
 			var count:int = 0;
 			var buffer:Vector.<Number> = new Vector.<Number>();
 			var xloc:int;
@@ -57,6 +58,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var zloc:int;
 			var index:int = 0;
 			var i_index:int = 0;
+			var cubeSizeRatio:Number = CUBE_SIZE_RATIO;
+			var vertexOffset:Number = .5 * cubeSizeRatio;
+			var px:int = _x * cubeSizeRatio;
+			var py:int = _y * cubeSizeRatio;
 //			var wasCubeOver:Boolean;
 //			var dropShadow:Boolean;
 			var transparent:Array = Textures.getInstance().transparencies;
@@ -71,6 +76,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 //					for(zloc = _sizeZ-1; zloc > -1; --zloc) {
 					
 						var tile:int = _data[zloc][yloc][xloc];
+						var xLoc2:int = xloc * cubeSizeRatio;
+						var yLoc2:int = yloc * cubeSizeRatio;
+						var zLoc2:int = zloc * cubeSizeRatio;
 						if (tile != 0) {
 							var tileTop:Point = cubesFrameCoos[tile][0];
 							var tileSide:Point = cubesFrameCoos[tile][1];
@@ -91,7 +99,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							var rightCube:int	= _map.getTile(xloc + _x - 1, yloc + _y, zloc);
 							var overCube:int	= _map.getTile(xloc + _x, yloc + _y, zloc + 1);
 							
-							var alpha:Number = translucide[tile]===true? .5 : 1;
+							var alpha:Number = translucide[tile]===true? .4 : 1;
 //							if(!dropShadow && wasCubeOver && overCube == 0) dropShadow = true;
 //							var brightness:Number = dropShadow? .85: 1;
 							var brightness:Number = 1;
@@ -110,35 +118,35 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								_indexesArray[i_index++] = 3 + (count);
 								count += 4;
 								
-								buffer[index++] = -.5 + xloc + _x; //X
-								buffer[index++] = .5 + yloc + _y; //Y
-								buffer[index++] = .5 - zloc; //Z
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX; //U
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY; //V
+								buffer[index++] = -vertexOffset + xLoc2 + px; //X
+								buffer[index++] = vertexOffset + yLoc2 + py; //Y
+								buffer[index++] = vertexOffset - zLoc2; //Z
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX; //U
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY; //V
 								buffer[index++] = alpha;//Alpha
 								buffer[index++] = brightness;//Brightness
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 							
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 							}
@@ -156,33 +164,33 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								_indexesArray[i_index++] = 3 + (count);
 								count += 4;
 
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
-								buffer[index++] = tileSideX  + sizeRatio - textureStretchX;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
+								buffer[index++] = tileSideX  + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
@@ -203,35 +211,35 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								_indexesArray[i_index++] = 3 + (count);
 								count += 4;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 				
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 							}
@@ -249,33 +257,33 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								_indexesArray[i_index++] = 3 + (count);
 								count += 4;
 							              
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] =  tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
-								buffer[index++] = tileSideX + sizeRatio - textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
+								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
-								buffer[index++] = tileSideY + sizeRatio - textureStretchY;
+								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
@@ -296,34 +304,34 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								_indexesArray[i_index++] = 3 + (count);
 								count += 4;
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
-								buffer[index++] = tileTopX + sizeRatio - textureStretchX;
-								buffer[index++] =  tileTopY + sizeRatio - textureStretchY;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
+								buffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
+								buffer[index++] =  tileTopY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
 								buffer[index++] = tileTopX + textureStretchX;
-								buffer[index++] = tileTopY + sizeRatio - textureStretchY;
+								buffer[index++] = tileTopY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
 								buffer[index++] = tileTopX + textureStretchX;
 								buffer[index++] = tileTopY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = -.5 - zloc;
-								buffer[index++] = tileTopX + sizeRatio - textureStretchX;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = -vertexOffset - zLoc2;
+								buffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileTopY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
@@ -332,7 +340,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							
 							
 							// BOTTOM
-							if (zloc > 0 && tileBottom.x > -1
+							if (zLoc2 > 0 && tileBottom.x > -1
 							&& (underCube == 0 || transparent[tile] === true || transparent[underCube] === true) ) {
 								_indexesArray[i_index++] = 0 + (count);
 								_indexesArray[i_index++] = 1 + (count);
@@ -344,38 +352,38 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								count += 4;
 								
 								//back right
-								buffer[index++] = -.5 + xloc + _x; //X
-								buffer[index++] = .5 + yloc + _y; //Y
-								buffer[index++] = .5 - zloc; //Z
-								buffer[index++] = tileBottomX + sizeRatio - textureStretchX;
-								buffer[index++] = tileBottomY + sizeRatio - textureStretchY;
+								buffer[index++] = -vertexOffset + xLoc2 + px; //X
+								buffer[index++] = vertexOffset + yLoc2 + py; //Y
+								buffer[index++] = vertexOffset - zLoc2; //Z
+								buffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
+								buffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
 								//back left
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = .5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
-								buffer[index++] = tileBottomX + sizeRatio - textureStretchX;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
+								buffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileBottomY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
 								//Front left
-								buffer[index++] = .5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
+								buffer[index++] = vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
 								buffer[index++] = tileBottomX + textureStretchX;
 								buffer[index++] = tileBottomY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
 								//Front right
-								buffer[index++] = -.5 + xloc + _x;
-								buffer[index++] = -.5 + yloc + _y;
-								buffer[index++] = .5 - zloc;
+								buffer[index++] = -vertexOffset + xLoc2 + px;
+								buffer[index++] = -vertexOffset + yLoc2 + py;
+								buffer[index++] = vertexOffset - zLoc2;
 								buffer[index++] = tileBottomX + textureStretchX;
-								buffer[index++] = tileBottomY + sizeRatio - textureStretchY;
+								buffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 							}

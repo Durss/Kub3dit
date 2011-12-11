@@ -1,5 +1,6 @@
 package  
 com.muxxu.kub3dit.engin3d.camera {
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import flash.text.TextField;
 	import flash.utils.ByteArray;
 	import flash.geom.Vector3D;
@@ -71,13 +72,13 @@ com.muxxu.kub3dit.engin3d.camera {
 			var radians2:Number = Math.atan2(offy, offx);
 			var moveX:Number = Math.cos(radians2+radians1)*dist;
 			var moveY:Number = Math.sin(radians2+radians1)*dist;
-			_dx -= moveX * .025;
-			_dy += moveY * .025;
-			_dz += moveZ * .025;
-			_dx = Math.min(1, Math.max(_dx,-_mapWidth));
-			_dy = Math.max(-1, Math.min(_dy,_mapHeight));
+			_dx -= moveX * .025 * ChunkData.CUBE_SIZE_RATIO;
+			_dy += moveY * .025 * ChunkData.CUBE_SIZE_RATIO;
+			_dz += moveZ * .025 * ChunkData.CUBE_SIZE_RATIO;
+			_dx = Math.min(1, Math.max(_dx,-_mapWidth*ChunkData.CUBE_SIZE_RATIO));
+			_dy = Math.max(-1, Math.min(_dy,_mapHeight*ChunkData.CUBE_SIZE_RATIO));
 //			if(_dz < 1.5) _dz = 1.5;
-			_dz = Math.max(Math.min(_dz,30), 0);
+			_dz = Math.max(Math.min(_dz,30*ChunkData.CUBE_SIZE_RATIO), -ChunkData.CUBE_SIZE_RATIO*.3);
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
@@ -123,7 +124,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		
 		private function mouseWheel(e:MouseEvent):void {
 			if(e.target is Stage) {
-				_dz += (e.delta > 0)? 1 : -1;
+				_dz += (e.delta > 0)? ChunkData.CUBE_SIZE_RATIO : -ChunkData.CUBE_SIZE_RATIO;
 			}
 		}
 		

@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.ground {
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
@@ -93,36 +94,37 @@ package com.muxxu.kub3dit.engin3d.ground {
 			
 			//Init vertices
 			var index:int = 0;
-			var offsetX:Number = -_width*.5-Math.floor(Camera3D.locX/16)*16;
-			var offsetY:Number = -_height*.5+Math.floor(Camera3D.locY/16)*16;
+			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE_RATIO;
+			var offsetX:Number = -_width * cubeSizeRatio*.5-Math.floor((Camera3D.locX / cubeSizeRatio)/16)*16;
+			var offsetY:Number = -_height * cubeSizeRatio*.5+Math.floor((Camera3D.locY / cubeSizeRatio)/16)*16;
 			_vertexBuffer = new Vector.<Number>();
 			_vertexBuffer[index++] = offsetX;//X
 			_vertexBuffer[index++] = offsetY;//Y
-			_vertexBuffer[index++] = .5;//Z
+			_vertexBuffer[index++] = .5 * cubeSizeRatio;//Z
 			_vertexBuffer[index++] = 0;//U
 			_vertexBuffer[index++] = _inc;//V
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
-			_vertexBuffer[index++] = offsetX+_width;
+			_vertexBuffer[index++] = offsetX+_width * cubeSizeRatio;
 			_vertexBuffer[index++] = offsetY;
-			_vertexBuffer[index++] = .5;
+			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = _width;
 			_vertexBuffer[index++] = _inc;
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
-			_vertexBuffer[index++] = offsetX+_width;
-			_vertexBuffer[index++] = offsetY+_height;
-			_vertexBuffer[index++] = .5;
+			_vertexBuffer[index++] = offsetX+_width * cubeSizeRatio;
+			_vertexBuffer[index++] = offsetY+_height * cubeSizeRatio;
+			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = _width;
 			_vertexBuffer[index++] = _height+_inc;
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
 			_vertexBuffer[index++] = offsetX;
-			_vertexBuffer[index++] = offsetY+_height;
-			_vertexBuffer[index++] = .5;
+			_vertexBuffer[index++] = offsetY+_height * cubeSizeRatio;
+			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = 0;
 			_vertexBuffer[index++] = _height+_inc;
 			_vertexBuffer[index++] = 1;//alpha
