@@ -8,6 +8,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	import com.muxxu.kub3dit.engin3d.molehill.CubeVertexShader;
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.nurun.utils.math.MathUtils;
 
 	import flash.display.BitmapData;
 	import flash.display.Shape;
@@ -57,6 +58,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _mapSizeH:int;
 		private var _accelerated:Boolean;
 		private var _invalidateStack:Array;
+		private var _visibleCubes:int;
+		private var _visibleChunks:Number;
 		
 		
 		
@@ -88,6 +91,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 
 		public function get map():Map { return _map; }
 
+		public function get visibleCubes():int { return _visibleCubes; }
+
+		public function get visibleChunks():Number { return _visibleChunks; }
+
 
 
 		/* ****** *
@@ -96,8 +103,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		/**
 		 * Initializes the chunks manager
 		 */
-		public function initialize(context3D:Context3D, chunkSize:int, accelerated:Boolean):void {
-			_accelerated = accelerated;
+		public function initialize(context3D:Context3D, accelerated:Boolean):void {
 			// okay this function should set up and dispose any buffers
 			// this is only ever called once at the start of the program
 			if(!_intialized) {
@@ -107,6 +113,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_context3D = context3D;
 				_mapSizeW = _map.mapSizeX;
 				_mapSizeH = _map.mapSizeY;
+				_accelerated = accelerated;
+				_chunkSize = 16;//Number of cubes to compose a chunk of
+				_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
+				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);//Number of visible chunks around us
 				
 				_efTarget = new Shape();
 				
@@ -118,6 +128,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_shaderProgram = _context3D.createProgram();
 				_shaderProgram.upload(vs.agalcode, fs.agalcode);
 				_map.addEventListener(MapEvent.LOAD, loadMapHandler);
+				updateVisibleChunks();
 			} else {
 				throw new Error("ChunksManager is already initialized!");
 			}
@@ -251,7 +262,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var j:int, lenJ:int;
 			len = _chunks.length;
 			for(i = 0; i < len; ++i) {
-				lenJ = _chunks[i].length;
+				lenJ = (_chunks[i] as Array).length;
 				for(j = 0; j < lenJ; ++j) {
 					Chunk(_chunks[i][j]).dispose();
 				}
@@ -288,8 +299,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			//Compute scroll offsets
 			var viewXShift:int = Camera3D.rotationX>180 && Camera3D.rotationX<360? 1 : 0;
 			var viewYShift:int = Camera3D.rotationX>90 && Camera3D.rotationX<270? 0 : 1;
-			_offsetX = Math.floor((-Camera3D.locX-(_chunkSize*_chunksW*.5))/_chunkSize)+viewXShift;
-			_offsetY = Math.floor((Camera3D.locY-(_chunkSize*_chunksH*.5))/_chunkSize)+viewYShift;
+			_offsetX = Math.floor((-Camera3D.locX/ChunkData.CUBE_SIZE_RATIO-(_chunkSize*_chunksW*.5))/_chunkSize)+viewXShift;
+			_offsetY = Math.floor((Camera3D.locY/ChunkData.CUBE_SIZE_RATIO-(_chunkSize*_chunksH*.5))/_chunkSize)+viewYShift;
 			//max limit
 			_offsetX = Math.min(Math.floor(_mapSizeW/_chunkSize - _chunksW), _offsetX);
 			_offsetY = Math.min(Math.floor(_mapSizeH/_chunkSize - _chunksH), _offsetY);
@@ -324,7 +335,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var i:int, len:int;
 			len = drawArray.length;
 			for (i = 0; i < len; ++i) {
-				Chunk(drawArray[i].chunk).renderBuffer();
+				Chunk(drawArray[i]["chunk"]).renderBuffer();
 			}
 			
 			_prevOffsetX = _offsetX;
@@ -332,13 +343,15 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		}
 		
 		/**
-		 * Defines the number of visible chunks
+		 * Changes the rendering distance.
+		 * 
+		 * @param sign	+1 to enhance the distance, -1 to reduce it.
 		 */
-		public function setVisibleChunks(width:int=10, height:int=10):void {
-			_chunksW = width;
-			_chunksH = height;
-			_toUpdate = [];
-			create();
+		public function changeRenderingDistance(sign:int):void {
+			_visibleCubes += _chunkSize * MathUtils.sign(sign);
+			_visibleCubes = Math.max(_visibleCubes, _chunkSize);
+			_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
+			updateVisibleChunks();
 		}
 
 
@@ -348,22 +361,23 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * PRIVATE *
 		 * ******* */
 		/**
+		 * Defines the number of visible chunks
+		 */
+		private function updateVisibleChunks():void {
+			_chunksW = Math.min(_visibleChunks, _mapSizeW/_chunkSize);
+			_chunksH = Math.min(_visibleChunks, _mapSizeH/_chunkSize);
+			_toUpdate = [];
+			create();
+		}
+		
+		/**
 		 * Called when a new map is loaded
 		 */
 		private function loadMapHandler(event:MapEvent):void {
-			var i:int, len:int;
-			var j:int, lenJ:int, chunk:Chunk;
-			len = _chunks.length;
-			for(i = 0; i < len; ++i) {
-				lenJ = _chunks[i].length;
-				for(j = 0; j < lenJ; ++j) {
-					chunk = Chunk(_chunks[i][j]);
-					if(!chunk.updating) {
-						//TODO not sure it works well... the originX/Y thing
-						_toUpdate.push({chunk:chunk, pz:_lastProjection.transformVector(new Vector3D(chunk.originX, chunk.originY, 0)).z});
-					}
-				}
-			}
+			_mapSizeW = _map.mapSizeX;
+			_mapSizeH = _map.mapSizeY;
+			_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
+			updateVisibleChunks();
 		}
 		
 		/**
@@ -376,13 +390,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_toUpdate.sortOn("pz", Array.NUMERIC);
 			//place all the chunks that are Z negative to the end
 			len = _toUpdate.length;
-			while(_toUpdate[0].pz < -3 && i < len) {
+			while(_toUpdate[0]["pz"] < -3 && i < len) {
 				_toUpdate.push(_toUpdate.shift()); // Put it at the end
 				i++; 
 			}
 			//Renders all the possible chunks. If it's taking too much time, stop
 			while(len > 0 && getTimer()-s < 20) {
-				Chunk(_toUpdate[0].chunk).createBuffers();
+				Chunk(_toUpdate[0]["chunk"]).createBuffers();
 				_toUpdate.splice(0, 1);
 				len--;
 			}

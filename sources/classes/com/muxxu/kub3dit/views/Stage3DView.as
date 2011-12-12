@@ -1,10 +1,8 @@
 package com.muxxu.kub3dit.views {
-	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
-	import com.nurun.utils.input.keyboard.events.KeyboardSequenceEvent;
-	import com.nurun.utils.input.keyboard.KeyboardSequenceDetector;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.ground.Ground;
@@ -16,7 +14,6 @@ package com.muxxu.kub3dit.views {
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
-	import com.nurun.utils.math.MathUtils;
 	import com.nurun.utils.pos.PosUtils;
 
 	import flash.display.Stage;
@@ -48,15 +45,9 @@ package com.muxxu.kub3dit.views {
 		private var _accelerated:Boolean;
 		private var _background:Background;
 		private var _ground:Ground;
-		private var _visibleChunks:int;
-		private var _mapSizeW:int;
-		private var _chunkSize:int;
 		private var _ready:Boolean;
-		private var _visibleCubes:int;
 		private var _log:CssTextField;
-		private var _mapSizeH:Number;
 		private var _map:Map;
-		private var _ks:KeyboardSequenceDetector;
 		
 		
 		
@@ -76,12 +67,6 @@ package com.muxxu.kub3dit.views {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
-		/**
-		 * Gets the number of visible cubes.
-		 * Used by radar and grid.
-		 */
-		public function get visibleCubes():int { return _visibleCubes; }
-		
 		/**
 		 * Gets the chunks manager's reference
 		 */
@@ -148,19 +133,13 @@ package com.muxxu.kub3dit.views {
 			_background = new Background(_context3D);
 			_ground = new Ground(_context3D, _accelerated);
 			
-			createVoxelChunks();
 			
 			FrontControler.getInstance().view3DReady();
 			stage.addEventListener(Event.RESIZE, resizeHandler);
+			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
 			resizeHandler(null);
 			
-			_ks = new KeyboardSequenceDetector(stage);
-			_ks.addSequence("poil", "poil");
-			_ks.addEventListener(KeyboardSequenceEvent.SEQUENCE, sequenceHandler);
-		}
-
-		private function sequenceHandler(event:KeyboardSequenceEvent):void {
-			Camera3D.toggleWASD();
+			initChunksManager();
 		}
 		
 		/**
@@ -175,24 +154,17 @@ package com.muxxu.kub3dit.views {
 		/**
 		 * Creates the voxel chunks
 		 */
-		private function createVoxelChunks():void {
-			_chunkSize = 8;//Number of cubes to compose a chunk of
-			_mapSizeW = _map.mapSizeX;//Numer of cubes to compose the map of in width
-			_mapSizeH = _map.mapSizeY;//Numer of cubes to compose the map of in height
-			_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
-			_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);//Number of visible chunks around us
-			
-			_manager.initialize(_context3D, _chunkSize, _accelerated);
-			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
-			Camera3D.setMapSize(_mapSizeW, _mapSizeH);
-//			Camera3D.setPosition(new Vector3D(0,0,2));
-			Camera3D.setPosition(new Vector3D(-_mapSizeW*.5 * ChunkData.CUBE_SIZE_RATIO,_mapSizeH*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
+		private function initChunksManager():void {
+			Camera3D.setMapSize(_map.mapSizeX, _map.mapSizeY, _map.mapSizeZ);
+			Camera3D.setPosition(new Vector3D(-_map.mapSizeX*.5 * ChunkData.CUBE_SIZE_RATIO,_map.mapSizeY*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
 			Camera3D.rotationX = 0;
 			
-			//Do the following AFTER camera init to be sure the chunks loading priority
+			//Inits the camera correctly to be sure the chunks loading priority
 			//based on the z-sorting will be done correctly
 			renderFrame(null);
-			_manager.setVisibleChunks(Math.min(_visibleChunks, _mapSizeW/_chunkSize), Math.min(_visibleChunks, _mapSizeH/_chunkSize));
+			
+			_manager.initialize(_context3D, _accelerated);
+			
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 		}
 
@@ -201,11 +173,8 @@ package com.muxxu.kub3dit.views {
 			
 			if(event.keyCode == Keyboard.NUMPAD_ADD || event.keyCode == Keyboard.NUMPAD_SUBTRACT
 			|| event.keyCode == KeyboardConfigs.FOG_FAR || event.keyCode == KeyboardConfigs.FOG_NEAR) {
-//				_visibleChunks += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
-				_visibleCubes += (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? _chunkSize : -_chunkSize;
-				_visibleCubes = Math.max(_visibleCubes, _chunkSize);
-				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
-				_manager.setVisibleChunks(_visibleChunks,_visibleChunks);
+				var sign:int = (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
+				_manager.changeRenderingDistance(sign);
 			}
 			
 			if(event.keyCode == Keyboard.ESCAPE && event.ctrlKey) {
@@ -245,8 +214,8 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(Math.floor(_visibleChunks*.5), 8) * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to do the fog on
-			var farplane:int = _visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to start the fog at
+			var fogLength:int = Math.min(Math.floor(_manager.visibleChunks*.5), 8) * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to do the fog on
+			var farplane:int = _manager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			

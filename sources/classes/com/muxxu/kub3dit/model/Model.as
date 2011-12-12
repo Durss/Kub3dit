@@ -1,4 +1,13 @@
 package com.muxxu.kub3dit.model {
+	import com.muxxu.kub3dit.commands.LoadMapCmd;
+	import com.asual.swfaddress.SWFAddressEvent;
+	import com.asual.swfaddress.SWFAddress;
+	import com.muxxu.kub3dit.commands.UploadMapCmd;
+	import com.nurun.core.commands.ProgressiveCommand;
+	import com.nurun.core.commands.events.ProgressiveCommandEvent;
+	import by.blooddy.crypto.image.PNGEncoder;
+	import flash.display.BitmapData;
+	import com.muxxu.kub3dit.commands.GenerateRadarCmd;
 	import com.muxxu.kub3dit.commands.AddKubeCmd;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.commands.InitTexturesCmd;
@@ -31,6 +40,11 @@ package com.muxxu.kub3dit.model {
 		private var _currentKubeId:String;
 		private var _view3DReady:Boolean;
 		private var _map:Map;
+		private var _saveCmd:GenerateRadarCmd;
+		private var _saveData:ByteArray;
+		private var _uploadCmd:UploadMapCmd;
+		private var _loadMapCmd:LoadMapCmd;
+		private var _ignoreLoadId:String;
 		
 		
 		
@@ -91,39 +105,16 @@ package com.muxxu.kub3dit.model {
 		 * Saves the currentMap
 		 */
 		public function saveMap():void {
-			var ba:ByteArray = new ByteArray();
-			//============FILE TYPE============
-			ba.writeByte(Constants.MAP_FILE_TYPE_2);
-			
-			//============CUSTOM CUBES============
-			var i:int, len:int;
-			len = Textures.getInstance().customKubes.length;
-			ba.writeByte(len);
-			for(i = 0; i < len; ++i) {
-				//No need to store the string's length before it because writeUTF already does that
-				ba.writeUTF( Textures.getInstance().customKubes[i].rawData.toXMLString() );
+			if(_saveCmd != null) {
+				_saveCmd.removeEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
+				_saveCmd.removeEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
 			}
-			
-			//============CAMERA CONF============
-			ba.writeShort(Camera3D.locX);
-			ba.writeShort(Camera3D.locY);
-			ba.writeShort(Camera3D.locZ);
-			ba.writeUnsignedInt(Camera3D.rotationX);
-			ba.writeInt(Camera3D.rotationY);
-			
-			//============MAP SIZES============
-			ba.writeShort(_map.mapSizeX);
-			ba.writeShort(_map.mapSizeY);
-			ba.writeShort(_map.mapSizeZ);
-			
-			//============MAP DATA============
-			_map.data.position = 0;
-			_map.data.readBytes(ba,ba.length);
-			ba.compress();
-			ba.position = 0;
-			
-			var fr:FileReference = new FileReference();
-			fr.save(ba, "kub3dit.map");
+			_saveCmd = new GenerateRadarCmd(_map);
+			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
+			_saveCmd.addEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
+			_saveCmd.addEventListener(ProgressiveCommandEvent.PROGRESS, commandProgressHandler);
+			_saveCmd.execute();
+			lock();
 		}
 		
 		/**
@@ -140,7 +131,8 @@ package com.muxxu.kub3dit.model {
 		 * Creates a map
 		 */
 		public function createMap(sizeX:int, sizeY:int, sizeZ:int):void {
-			_map = new Map(sizeX * 32, sizeY * 32, sizeZ);
+			if(_map == null) _map = new Map();
+			_map.generateEmptyMap(sizeX * 32, sizeY * 32, sizeZ);
 			update();
 		}
 		
@@ -161,6 +153,25 @@ package com.muxxu.kub3dit.model {
 			cmd.addEventListener(CommandEvent.ERROR, addKubeErrorHandler);
 			cmd.execute();
 		}
+		
+		/**
+		 * Downloads the map
+		 */
+		public function downloadMap():void {
+			var fr:FileReference = new FileReference();
+			fr.save(_saveData, "kub3dit-map.png");
+		}
+		
+		/**
+		 * Downloads the map
+		 */
+		public function uploadMap():void {
+			lock();
+			_uploadCmd = new UploadMapCmd(_saveData);
+			_uploadCmd.addEventListener(CommandEvent.COMPLETE, uploadCompleteHandler);
+			_uploadCmd.addEventListener(CommandEvent.ERROR, uploadErrorHandler);
+			_uploadCmd.execute();
+		}
 
 
 		
@@ -180,6 +191,22 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function initCompleteHandler(event:CommandEvent):void {
 			update();
+			SWFAddress.addEventListener(SWFAddressEvent.CHANGE, changeAddressHandler);
+		}
+		
+		/**
+		 * Called when URL changes
+		 */
+		private function changeAddressHandler(event:SWFAddressEvent):void {
+			var id:String = SWFAddress.getValue().replace(/[^A-Za-z0-9]/g, "");
+			if(id.length > 0 && _ignoreLoadId != id) {
+				lock();
+				_loadMapCmd = new LoadMapCmd(id);
+				_loadMapCmd.addEventListener(CommandEvent.COMPLETE, loadMapCompleteHandler);
+				_loadMapCmd.addEventListener(CommandEvent.ERROR, loadMapErrorHandler);
+				_loadMapCmd.execute();
+			}
+			_ignoreLoadId = null;
 		}
 		
 		/**
@@ -188,6 +215,28 @@ package com.muxxu.kub3dit.model {
 		private function update():void {
 			dispatchEvent(new ModelEvent(ModelEvent.UPDATE, this));
 		}
+		
+		/**
+		 * Called during a progression
+		 */
+		private function commandProgressHandler(event:ProgressiveCommandEvent):void {
+			dispatchEvent(new LightModelEvent(LightModelEvent.PROGRESS, ProgressiveCommand(event.target).progress));
+		}
+		
+		/**
+		 * Locks the UI
+		 */
+		private function lock():void {
+			dispatchEvent(new LightModelEvent(LightModelEvent.LOCK));
+		}
+
+		/**
+		 * Unlocks the UI
+		 */
+		private function unlock():void {
+			dispatchEvent(new LightModelEvent(LightModelEvent.UNLOCK));
+		}
+
 		
 		
 		
@@ -198,7 +247,26 @@ package com.muxxu.kub3dit.model {
 		 * Called when a map's loading completes
 		 */
 		private function loadMapCompleteHandler(event:CommandEvent):void {
+			unlock();
+			
 			var data:ByteArray = event.data as ByteArray;
+			//Search for PNG signature
+			data.position = 0;
+			if(data.readUnsignedInt() == 0x89504e47) {
+				data.position = data.length - 4;
+				//search for ".K3D" signature at the end
+				if(data.readUnsignedInt() == 0x2e4b3344) {
+					data.position = data.length - 4 - 4;
+					var dataLen:Number = data.readUnsignedInt();
+					data.position = data.length - 4 - 4 - dataLen;
+					var tmp:ByteArray = new ByteArray();
+					tmp.writeBytes(data, data.position, dataLen);
+					data = tmp;
+					data.position = 0;
+				}
+			}else{
+				data.position == 0;
+			}
 			try {
 				data.uncompress();
 				data.position = 0;
@@ -210,7 +278,7 @@ package com.muxxu.kub3dit.model {
 			switch(fileVersion){
 					
 				case Constants.MAP_FILE_TYPE_1:
-					_map = new Map(0,0,0);
+					if(_map == null) _map = new Map();
 					_map.load(data);
 					update();
 					break;
@@ -227,7 +295,7 @@ package com.muxxu.kub3dit.model {
 					
 					Camera3D.configure(data);
 					
-					_map = new Map(0,0,0);
+					if(_map == null) _map = new Map();
 					_map.load(data);
 					update();
 					break;
@@ -241,6 +309,11 @@ package com.muxxu.kub3dit.model {
 		 * Called if map loading fails
 		 */
 		private function loadMapErrorHandler(event:CommandEvent):void {
+			unlock();
+			
+			//Ignore loading fired by URL change
+			if(event.currentTarget is LoadMapCmd) return;
+			
 			throw new Kub3ditException(event.data as String, Kub3ditExceptionSeverity.MINOR);
 		}
 		
@@ -256,6 +329,92 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function addKubeErrorHandler(event:CommandEvent):void {
 			ViewLocator.getInstance().dispatchToViews(new LightModelEvent(LightModelEvent.KUBE_ADD_ERROR, null));
+		}
+		
+		
+		
+		
+		
+		
+		//__________________________________________________________ MAP SAVE
+		
+		/**
+		 * Called when save generation completes
+		 */
+		private function saveGenerationCompleteHandler(event:CommandEvent):void {
+			var bmd:BitmapData = _saveCmd.bitmapData;
+			
+			var ba:ByteArray = new ByteArray();
+			//============FILE TYPE============
+			ba.writeByte(Constants.MAP_FILE_TYPE_2);
+			
+			//============CUSTOM CUBES============
+			var i:int, len:int;
+			len = Textures.getInstance().customKubes.length;
+			ba.writeByte(len);
+			for(i = 0; i < len; ++i) {
+				//No need to store the string's length before it because writeUTF already does that \o/
+				ba.writeUTF( Textures.getInstance().customKubes[i].rawData.toXMLString() );
+			}
+			
+			//============CAMERA CONF============
+			ba.writeShort(Camera3D.locX);
+			ba.writeShort(Camera3D.locY);
+			ba.writeShort(Camera3D.locZ);
+			ba.writeUnsignedInt(Camera3D.rotationX);
+			ba.writeInt(Camera3D.rotationY);
+			
+			//============MAP SIZES============
+			ba.writeShort(_map.mapSizeX);
+			ba.writeShort(_map.mapSizeY);
+			ba.writeShort(_map.mapSizeZ);
+			
+			//============MAP DATA============
+			_map.data.position = 0;
+			_map.data.readBytes(ba,ba.length);
+			ba.compress();
+			ba.position = 0;
+			_saveData = PNGEncoder.encode(bmd);
+			_saveData.position = _saveData.length;
+			_saveData.writeBytes(ba);
+			_saveData.writeUnsignedInt(ba.length);
+			_saveData.writeUnsignedInt(0x2e4b3344);
+			_saveData.position = 0 ;
+			
+			dispatchEvent(new LightModelEvent(LightModelEvent.SAVE_MAP_GENERATION_COMPLETE, _saveData));
+			
+			unlock();
+		}
+		
+		/**
+		 * Called if saving failed
+		 */
+		private function saveGenerationErrorHandler(event:CommandEvent):void {
+			//TODO display error
+			unlock();
+		}
+		
+		
+		
+		
+		//__________________________________________________________ MAP UPLOAD
+		
+		/**
+		 * Called when map's upload completes
+		 */
+		private function uploadCompleteHandler(event:CommandEvent):void {
+			unlock();
+			_ignoreLoadId = event.data as String;
+			dispatchEvent(new LightModelEvent(LightModelEvent.MAP_UPLOAD_COMPLETE, _ignoreLoadId));
+			SWFAddress.setValue(_ignoreLoadId);//let this at last! Callback SWFAddress callback sets this var to null
+		}
+
+		/**
+		 * Called if map's upload fails
+		 */
+		private function uploadErrorHandler(event:CommandEvent):void {
+			unlock();
+			throw new Kub3ditException(Label.getLabel("uploadMapError"), Kub3ditExceptionSeverity.MINOR);
 		}
 		
 	}

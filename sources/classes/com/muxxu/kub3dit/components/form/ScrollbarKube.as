@@ -1,4 +1,4 @@
-package com.muxxu.kub3dit.components {
+package com.muxxu.kub3dit.components.form {
 	import com.muxxu.kub3dit.graphics.ScrollbarDownBtSkin;
 	import com.muxxu.kub3dit.graphics.ScrollbarScrollerBtBigSkin;
 	import com.muxxu.kub3dit.graphics.ScrollbarScrollerBtSkin;

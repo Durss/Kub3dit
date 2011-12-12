@@ -1,4 +1,4 @@
-package com.muxxu.kub3dit.components {
+package com.muxxu.kub3dit.components.buttons {
 	import flash.filters.DropShadowFilter;
 	import com.muxxu.kub3dit.graphics.DisabledCubeIcon;
 	import com.muxxu.kub3dit.graphics.EnabledCubeIcon;

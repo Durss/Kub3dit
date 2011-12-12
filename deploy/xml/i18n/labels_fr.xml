@@ -1,6 +1,12 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<!-- Errors -->
+		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
+		<label code="uploadMapError"><![CDATA[Une erreur est survenue lors de l'upload.<br />Merci de ré-essayer.<br /><br />Si le problème persiste, contactez <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
+		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kube personnaliser.]]></label>
+		
+		<!-- Splash screen -->
 		<label code="splashDefault"><![CDATA[Carte ${X}x${Y}]]></label>
 		<label code="splashCreate"><![CDATA[Taille...]]></label>
 		<label code="splashLoad"><![CDATA[Charger]]></label>
@@ -9,9 +15,9 @@
 		<label code="inputMapSize"><![CDATA[Zones :]]></label>
 		<label code="defaultHelp"><![CDATA[Utilisez la roulette pour changer les dimensions.<br />Pour des tailles plus peronnalisées utilisez<br />le bouton en-dessous de celui-ci.]]></label>
 		<label code="titleMapSize"><![CDATA[Entrez ici les dimensions souhaitées<br />pour la carte en nombre de zones.]]></label>
+		<label code="unkownSaveFileType"><![CDATA[Le fichier séléctionné n'est pas un fichier de carte valide.]]></label>
 		
-		<label code="unkownSaveFileType"><![CDATA[Le fichier n'est pas un fichier de carte valide.]]></label>
-		
+		<!-- Editor -->
 		<label code="kube1"><![CDATA[Béton]]></label>
 		<label code="kube2"><![CDATA[Eau]]></label>
 		<label code="kube3"><![CDATA[Terre brune]]></label>
@@ -94,8 +100,6 @@
 		<label code="addKubeButton"><![CDATA[Ajouter un kube]]></label>
 		<label code="submitKube"><![CDATA[Ajouter un kube]]></label>
 		<label code="addKubeDescription"><![CDATA[Vous pouvez ici ajouter des kubes personnalisés à la liste existante de kubes. Pour cela il vous faudra utiliser l'application <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> afin de créer des kubes puis en renseigner l'ID dans le champs ci-dessous.<br />L'ID d'un kube est disponible sur sa fiche de détail]]></label>
-		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
-		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kube personnaliser.]]></label>
 		<label code="invalidKubeId"><![CDATA[ID invalide]]></label>
 		
 		<label code="helpTools"><![CDATA[Gardez la barre d'espace appuyée<br />pour pouvoir déplacer la grille.]]></label>
@@ -146,6 +150,15 @@
 		
 		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>
+		
+		
+		<!-- Save/upload -->
+		<label code="prompt-save"><![CDATA[Enregistrement]]></label>
+		<label code="prompt-mapDownload"><![CDATA[Télécharger]]></label>
+		<label code="prompt-mapUpload"><![CDATA[Uploader]]></label>
+		<label code="prompt-mapUploadInfo"><![CDATA[Cette option n'est disponible que pour<br />les cartes pesant moins de {SIZE_MAX}Ko<br />La carte actuelle pèse {SIZE}Ko.]]></label>
+		<label code="prompt-mapSave"><![CDATA[Enregistrement]]></label>
+		<label code="prompt-mapUploadCopyLink"><![CDATA[Copier l'URL]]></label>
 	</labels>
 	
 </root>
