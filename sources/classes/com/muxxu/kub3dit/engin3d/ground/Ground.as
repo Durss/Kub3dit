@@ -95,8 +95,8 @@ package com.muxxu.kub3dit.engin3d.ground {
 			//Init vertices
 			var index:int = 0;
 			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE_RATIO;
-			var offsetX:Number = -_width * cubeSizeRatio*.5-Math.floor((Camera3D.locX / cubeSizeRatio)/16)*16;
-			var offsetY:Number = -_height * cubeSizeRatio*.5+Math.floor((Camera3D.locY / cubeSizeRatio)/16)*16;
+			var offsetX:Number = -_width * cubeSizeRatio*.5-Math.floor(Camera3D.locX/(16*cubeSizeRatio))*(16*cubeSizeRatio);
+			var offsetY:Number = -_height * cubeSizeRatio*.5+Math.floor(Camera3D.locY/(16*cubeSizeRatio))*(16*cubeSizeRatio);
 			_vertexBuffer = new Vector.<Number>();
 			_vertexBuffer[index++] = offsetX;//X
 			_vertexBuffer[index++] = offsetY;//Y

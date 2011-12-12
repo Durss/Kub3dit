@@ -31,13 +31,8 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Creates an instance of <code>Map</code>.
 		 */
-		public function Map(mapSizeX:int, mapSizeY:int, mapSizeZ:int) {
-			_mapSizeX=mapSizeX;
-			_mapSizeY=mapSizeY;
-			_mapSizeZ=mapSizeZ;
-			
-			_map = new ByteArray();
-			_map.length = _mapSizeX * _mapSizeY * _mapSizeZ;
+		public function Map() {
+			super();
 		}
 
 		
@@ -67,6 +62,16 @@ package com.muxxu.kub3dit.engin3d.map {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+
+		public function generateEmptyMap(mapSizeX:int, mapSizeY:int, mapSizeZ:int):void {
+			_mapSizeX=mapSizeX;
+			_mapSizeY=mapSizeY;
+			_mapSizeZ=mapSizeZ;
+			
+			_map = new ByteArray();
+			_map.length = _mapSizeX * _mapSizeY * _mapSizeZ;
+		}
+		
 		/**
 		 * Updates a specific tile
 		 */
@@ -153,10 +158,10 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Loads a map
 		 */
 		public function load(data:ByteArray):void {
-//			data.position = 1;//skip file type
 			_mapSizeX = data.readShort();
 			_mapSizeY = data.readShort();
 			_mapSizeZ = data.readShort();
+			_map = new ByteArray();
 			data.readBytes(_map);
 			dispatchEvent(new MapEvent(MapEvent.LOAD));
 		}

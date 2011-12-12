@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.buttons {
+	import flash.utils.Dictionary;
 	import com.muxxu.kub3dit.graphics.ButtonSkin;
 	import com.nurun.components.button.BaseButton;
 	import com.nurun.components.button.IconAlign;
@@ -18,6 +19,7 @@ package com.muxxu.kub3dit.components.buttons {
 	 * @author Francois
 	 */
 	public class ButtonKube extends BaseButton {
+		private var _visitedIcons:Dictionary;
 		
 		
 		
@@ -34,10 +36,14 @@ package com.muxxu.kub3dit.components.buttons {
 			contentMargin = big? new Margin(5, 5, 5, 5) : new Margin(2, 1, 2, 1);
 			textBoundsMode = false;
 			iconAlign = IconAlign.LEFT;
-			textAlign = icon == null? TextAlign.CENTER : TextAlign.LEFT;
+			textAlign = icon == null || big? TextAlign.CENTER : TextAlign.LEFT;
 			iconSpacing = label.length == 0? 0 : big? 5 : 5;
 			applyDefaultFrameVisitorNoTween(this, background);
-			if(icon != null && icon is MovieClip) applyDefaultFrameVisitorNoTween(this, icon);
+			_visitedIcons = new Dictionary();
+			if(icon != null && icon is MovieClip) {
+				applyDefaultFrameVisitorNoTween(this, icon);
+				_visitedIcons[icon] = true;
+			}
 			accept(new CssVisitor());
 		}
 
@@ -46,6 +52,13 @@ package com.muxxu.kub3dit.components.buttons {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		override public function set icon(value:DisplayObject):void {
+			super.icon = value;
+			if(icon != null && icon is MovieClip && _visitedIcons[icon] == undefined) {
+				applyDefaultFrameVisitorNoTween(this, icon);
+				_visitedIcons[icon] = true;
+			}
+		}
 
 
 

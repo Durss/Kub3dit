@@ -72,14 +72,14 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Gets the cubes frames
 		 * 
-		 * 2D array structured like that :
+		 * <pre>2D array structured like that :
 		 * [
 		 * 	kubeID:	[
 		 * 				0(top face): Point()
 		 * 				1(side face): Point()
 		 * 				2(bottom face): Point()
 		 * 			]
-		 * }
+		 * }</pre>
 		 */
 		public function get cubesFrames():Array { return _cubesFramesCoos; }
 		
@@ -102,21 +102,21 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Gets the bitmapDatas
 		 * 
-		 * 2D array structured like that :
+		 * <pre>2D array structured like that :
 		 * [
 		 * 	kubeID:	[
 		 * 				0(top face): BitmapData()
 		 * 				1(side face): BitmapData()
 		 * 				2(bottom face): BitmapData()
 		 * 			]
-		 * }
+		 * }</pre>
 		 */
 		public function get bitmapDatas():Array { return _bitmapDatas; }
 		
 		/**
 		 * Gets the level colors
 		 * 
-		 * 2D array structured like that :
+		 * <pre>2D array structured like that :
 		 * [
 		 * 	kubeID:	[
 		 * 				1(level): uint
@@ -124,21 +124,21 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * 				...(level): uint
 		 * 				31(level): uint
 		 * 			]
-		 * }
+		 * }</pre>
 		 */
 		public function get levelColors():Array { return _levelColors; }
 		
 		/**
 		 * Gets only the different levels colors
 		 * 
-		 * 2D array structured like that :
+		 * <pre>2D array structured like that :
 		 * [
 		 * 	kubeID:	[
 		 * 				{c:uint, z:int}
 		 * 				{c:uint, z:int}
 		 * 				{c:uint, z:int}
 		 * 			]
-		 * }
+		 * }</pre>
 		 */
 		public function get genColors():Array { return _genColors; }
 		

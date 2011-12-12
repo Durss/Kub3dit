@@ -1,8 +1,8 @@
 package com.muxxu.kub3dit.components.editor {
-	import flash.events.EventDispatcher;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.graphics.LevelSelectorIcon;
 	import com.muxxu.kub3dit.vo.ToolTipAlign;
@@ -17,6 +17,7 @@ package com.muxxu.kub3dit.components.editor {
 
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.EventDispatcher;
 	import flash.events.MouseEvent;
 	
 	[Event(name="change", type="flash.events.Event")]
@@ -171,7 +172,7 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function enterFrameHandler(event:Event):void {
 			if(_syncCb.selected) {
-				updateLevel(Math.round(Camera3D.locZ));
+				updateLevel(Math.round(Camera3D.locZ/ChunkData.CUBE_SIZE_RATIO));
 				updateButtonState(level);
 			}
 			if(_pressed) {

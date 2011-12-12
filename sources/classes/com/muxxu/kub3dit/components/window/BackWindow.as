@@ -1,4 +1,4 @@
-package com.muxxu.kub3dit.components {
+package com.muxxu.kub3dit.components.window {
 	import flash.geom.Rectangle;
 	import flash.display.Sprite;
 	import flash.events.Event;

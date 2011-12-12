@@ -1,8 +1,11 @@
 package com.muxxu.kub3dit {
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
+	import com.muxxu.kub3dit.views.DownloadView;
 	import com.muxxu.kub3dit.views.EditorView;
+	import com.muxxu.kub3dit.views.LockView;
 	import com.muxxu.kub3dit.views.MainMenuView;
+	import com.muxxu.kub3dit.views.ProgressView;
 	import com.muxxu.kub3dit.views.SplashScreenView;
 	import com.muxxu.kub3dit.views.Stage3DView;
 	import com.muxxu.kub3dit.views.ToolTipView;
@@ -74,8 +77,11 @@ package com.muxxu.kub3dit {
 			addChild(new EditorView());
 			addChild(new MainMenuView());
 			addChild(new SplashScreenView());
+			addChild(new LockView());
+			addChild(new ProgressView());
+			addChild(new DownloadView());
 			addChild(new ToolTipView());
-//			addChild(new Stats());
+//			addChild(new Stats()).y = 50;
 			
 			_model.start();
 		}

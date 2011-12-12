@@ -23,8 +23,8 @@ com.muxxu.kub3dit.engin3d.camera {
 		private static var _dy:Number = 0;
 		private static var _dz:Number = 1;
 		private static var _mapWidth:Number;
-		private static var _mapHeight:Number;
-		private static var _wasd:Boolean;
+		private static var _mapDepth:Number;
+		private static var _mapHeight:int;
 		
 		private var _stage:Stage;
 		private var _lookOffset:Point = new Point();
@@ -38,7 +38,7 @@ com.muxxu.kub3dit.engin3d.camera {
 			_stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDown);
 			_stage.addEventListener(KeyboardEvent.KEY_DOWN, onKeyDown);
 			_stage.addEventListener(KeyboardEvent.KEY_UP, onKeyUp);
-			_stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
+			_stage.addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			
 			_stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheel);
 		}
@@ -53,9 +53,14 @@ com.muxxu.kub3dit.engin3d.camera {
 			
 			rotationX = data.readUnsignedInt();
 			rotationY = data.readInt();
+			
+			_mapWidth = data.readShort();
+			_mapDepth = data.readShort();
+			_mapHeight = data.readShort();
+			data.position -= 6;//map reads those data after camera
 		}
 		
-		private function onEnterFrame(e:Event):void {
+		private function enterFrameHandler(e:Event):void {
 			var offx:Number = _strafe * 15;
 			if(!_mouseView) {
 				offx = 0;
@@ -76,55 +81,36 @@ com.muxxu.kub3dit.engin3d.camera {
 			_dy += moveY * .025 * ChunkData.CUBE_SIZE_RATIO;
 			_dz += moveZ * .025 * ChunkData.CUBE_SIZE_RATIO;
 			_dx = Math.min(1, Math.max(_dx,-_mapWidth*ChunkData.CUBE_SIZE_RATIO));
-			_dy = Math.max(-1, Math.min(_dy,_mapHeight*ChunkData.CUBE_SIZE_RATIO));
-//			if(_dz < 1.5) _dz = 1.5;
-			_dz = Math.max(Math.min(_dz,30*ChunkData.CUBE_SIZE_RATIO), -ChunkData.CUBE_SIZE_RATIO*.3);
+			_dy = Math.max(-1, Math.min(_dy,_mapDepth*ChunkData.CUBE_SIZE_RATIO));
+			_dz = Math.max(Math.min(_dz,_mapHeight*ChunkData.CUBE_SIZE_RATIO), -ChunkData.CUBE_SIZE_RATIO*.3);
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
 			if(e.target is TextField) return;
 			
 			var coeff:int = e.ctrlKey? 5 : 1;
-			if(_wasd) {
-				if(e.keyCode == Keyboard.UP || e.keyCode == 87) {
-					_forward = 1 * coeff;
-				}
-				if(e.keyCode == Keyboard.DOWN || e.keyCode == 83) {
-					_forward = -1 * coeff;
-				}
-				if (e.keyCode == Keyboard.RIGHT || e.keyCode == 68) {
-					_strafe = -1 * coeff;
-				} else if (e.keyCode == Keyboard.LEFT || e.keyCode == 65) {
-					_strafe = 1 * coeff;
-				}
-			}else{
-				if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z) {
-					_forward = 1 * coeff;
-				}
-				if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
-					_forward = -1 * coeff;
-				}
-				if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
-					_strafe = -1 * coeff;
-				} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q) {
-					_strafe = 1 * coeff;
-				}
+			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.W) {
+				_forward = 1 * coeff;
+			}
+			if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
+				_forward = -1 * coeff;
+			}
+			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
+				_strafe = -1 * coeff;
+			} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.A) {
+				_strafe = 1 * coeff;
 			}
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void {
-			if(_wasd) {
-				if (e.keyCode == Keyboard.UP || e.keyCode == 87 || e.keyCode == Keyboard.DOWN || e.keyCode == 83) _forward = 0;
-				if (e.keyCode == Keyboard.RIGHT || e.keyCode == 65 || e.keyCode == Keyboard.LEFT || e.keyCode == 68) _strafe = 0;
-			}else{
-				if (e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) _forward = 0;
-				if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.D) _strafe = 0;
-			}
+			if (e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S || e.keyCode == Keyboard.W) _forward = 0;
+			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.D || e.keyCode == Keyboard.A) _strafe = 0;
 		}
 		
 		private function mouseWheel(e:MouseEvent):void {
 			if(e.target is Stage) {
 				_dz += (e.delta > 0)? ChunkData.CUBE_SIZE_RATIO : -ChunkData.CUBE_SIZE_RATIO;
+				_dz = Math.round(_dz/ChunkData.CUBE_SIZE_RATIO) * ChunkData.CUBE_SIZE_RATIO;
 			}
 		}
 		
@@ -174,18 +160,15 @@ com.muxxu.kub3dit.engin3d.camera {
 			_dz = vector3D.z;
 		}
 
-		public static function setMapSize(width:Number, height:Number):void {
+		public static function setMapSize(width:Number, depth:Number, height:Number):void {
 			_mapWidth = width;
+			_mapDepth = depth;
 			_mapHeight = height;
 		}
 
 		public static function moveZTo(level:Number):void {
-			_dz = level;
+			_dz = level * ChunkData.CUBE_SIZE_RATIO;
 			rotationY = 0;
-		}
-
-		public static function toggleWASD():void {
-			_wasd = !_wasd;
 		}
 		
 	}

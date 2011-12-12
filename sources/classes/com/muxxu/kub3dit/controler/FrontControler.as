@@ -95,6 +95,20 @@ package com.muxxu.kub3dit.controler {
 		public function addKube(kubeId:String):void {
 			_model.addKube(kubeId);
 		}
+		
+		/**
+		 * Downloads the map
+		 */
+		public function downloadMap():void {
+			_model.downloadMap();
+		}
+		
+		/**
+		 * Uploads the map
+		 */
+		public function uploadMap():void {
+			_model.uploadMap();
+		}
 
 
 		

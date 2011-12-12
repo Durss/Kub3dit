@@ -49,7 +49,7 @@
 		return strtolower($pseudo) == $ref;
 	}
 	
-	$authorized = false;//isAuthorizedUser($pseudo, "durss");
+	$authorized = false;//isAuthorizedUser($pseudo, "durss");//uncoment to authorize only me
 	$authorized = $authorized || isAuthorizedUser($pseudo, "ebene");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
@@ -110,6 +110,7 @@
 		</style>
 		
 		<script type="text/javascript" src="js/swfobject.js"></script>
+		<script type="text/javascript" src="js/SWFAddress.js"></script>
 		<script type="text/javascript" src="js/swfwheel.js"></script>
 		<script type="text/javascript" src="js/swffit.js" />
 		<script type="text/javascript">
@@ -142,7 +143,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "11.1";
+	$version= "13";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";

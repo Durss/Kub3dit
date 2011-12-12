@@ -13,14 +13,18 @@
 	</labels>
 	
 	<vars>
+		<var code="root"><![CDATA[]]></var>
+		<var code="shareUrl"><![CDATA[http://fevermap.org/kub3dit/#{ID}]]></var>
 		<var code="mapSizeHeight">31</var>
 	</vars>
 	
 	<paths>
-		<path code="spritesheet"><![CDATA[kubes/spritesheet.png]]></path>
-		<path code="spritemap"><![CDATA[kubes/spritesheet.txt]]></path>
-		<path code="spriteadditionals"><![CDATA[kubes/additionals.txt]]></path>
-		<path code="levelColors"><![CDATA[kubes/levelColors.png]]></path>
+		<path code="spritesheet"><![CDATA[{v_root}kubes/spritesheet.png]]></path>
+		<path code="spritemap"><![CDATA[{v_root}kubes/spritesheet.txt]]></path>
+		<path code="spriteadditionals"><![CDATA[{v_root}kubes/additionals.txt]]></path>
+		<path code="levelColors"><![CDATA[{v_root}kubes/levelColors.png]]></path>
+		<path code="uploadMapPath"><![CDATA[{v_root}php/uploadMap.php]]></path>
+		<path code="loadMapPath"><![CDATA[{v_root}php/loadMap.php]]></path>
 	</paths>
 	
 	<dependencies />

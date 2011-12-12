@@ -5,9 +5,9 @@ package com.muxxu.kub3dit.vo {
 	 */
 	public class KeyboardConfigs {
 		
-		public static var TOGGLE_ERASE:* = Keyboard.E;
-		public static var FOG_FAR:* = Keyboard.EQUAL;
-		public static var FOG_NEAR:* = Keyboard.LEFTBRACKET;
+		public static var TOGGLE_ERASE:uint = Keyboard.E;
+		public static var FOG_FAR:uint = Keyboard.EQUAL;
+		public static var FOG_NEAR:uint = Keyboard.LEFTBRACKET;
 		
 	}
 }

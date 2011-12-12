@@ -48,6 +48,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _selectorView:KubeSelectorView;
 		private var _eraseMode:Boolean;
 		private var _enabledCubes:Array;
+		private var _multipleLevels:Boolean;
 		
 		
 		
@@ -131,6 +132,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_index = 0;
 			_pixels.position = 0;
 			_enabledCubes = _selectorView.enabledCubes;
+			_multipleLevels = _levelsCb.selected;
 			addChild(_processPercent);
 			_chunksManager.clearInvalidateStack();
 			removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
@@ -246,7 +248,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				_cmd.execute();
 				
 			}else if(event.currentTarget == _clearBt){
-				_pixels = null;
 				_landMark.graphics.clear();
 				_clearBt.enabled = false;
 			}
@@ -318,11 +319,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					px += _ox - Math.floor(w * .5);
 					py += _oy - Math.floor(h * .5);
 					
-					_chunksManager.addInvalidableCube(px, py, _levelsCb.selected? _oz + pz : _oz, tile);
+					_chunksManager.addInvalidableCube(px, py, _multipleLevels? _oz + pz : _oz, tile);
 				}
 				
 				_index++;
-			}while(getTimer()-startTime < 35 && _pixels.bytesAvailable);
+			}while(getTimer()-startTime < 40 && _pixels.bytesAvailable);
 			
 			_processPercent.text = Math.round(_pixels.position/_pixels.length * 100)+"%";
 			
