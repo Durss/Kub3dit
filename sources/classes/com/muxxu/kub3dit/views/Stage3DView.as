@@ -124,7 +124,7 @@ package com.muxxu.kub3dit.views {
 		private function context3DReadyHandler(event:Event):void {
 			_manager = new ChunksManager(_map);
 			_context3D = _stage3D.context3D;
-			_context3D.enableErrorChecking = false;
+			_context3D.enableErrorChecking = true;
 			_context3D.setCulling(Context3DTriangleFace.BACK);
 			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);

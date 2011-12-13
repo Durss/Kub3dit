@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.graphics.LevelsIcon;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
@@ -44,6 +45,7 @@ package com.muxxu.kub3dit.views {
 		private var _uploadIcon:UploadIcon;
 		private var _submitIcon:SubmitIcon;
 		private var _mapUrl:String;
+		private var _levelsBt:ButtonKube;
 		
 		
 		
@@ -95,11 +97,12 @@ package com.muxxu.kub3dit.views {
 			_submitIcon = new SubmitIcon();
 			_disableLayer = addChild(new Sprite()) as Sprite;
 			_content = new Sprite();
+			_levelsBt = _content.addChild(new ButtonKube(Label.getLabel("prompt-mapDownloadLevels"), true, new LevelsIcon())) as ButtonKube;
 			_downloadBt = _content.addChild(new ButtonKube(Label.getLabel("prompt-mapDownload"), true, new DownloadIcon())) as ButtonKube;
 			_uploadBt = _content.addChild(new ButtonKube(Label.getLabel("prompt-mapUpload"), true, _uploadIcon)) as ButtonKube;
 			
-			_downloadBt.width = _uploadBt.width = 250;
-			PosUtils.vPlaceNext(5, _downloadBt, _uploadBt);
+			_levelsBt.width = _downloadBt.width = _uploadBt.width = 250;
+			PosUtils.vPlaceNext(5, _levelsBt, _downloadBt, _uploadBt);
 			
 			_window = addChild(new PromptWindow(Label.getLabel("prompt-mapSave"), _content)) as PromptWindow;
 			
@@ -117,6 +120,8 @@ package com.muxxu.kub3dit.views {
 				TweenLite.to(this, .25, {autoAlpha:0});
 			}else if(event.target == _downloadBt) {
 				FrontControler.getInstance().downloadMap();
+			}else if(event.target == _levelsBt) {
+				FrontControler.getInstance().downloadMapLevels();
 			}else if(event.target == _uploadBt) {
 				if(_uploadBt.icon == _uploadIcon) {
 					FrontControler.getInstance().uploadMap();

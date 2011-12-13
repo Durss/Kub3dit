@@ -157,6 +157,7 @@
 		<label code="prompt-mapDownload"><![CDATA[Télécharger]]></label>
 		<label code="prompt-mapUpload"><![CDATA[Uploader]]></label>
 		<label code="prompt-mapUploadInfo"><![CDATA[Cette option n'est disponible que pour<br />les cartes pesant moins de {SIZE_MAX}Ko<br />La carte actuelle pèse {SIZE}Ko.]]></label>
+		<label code="prompt-mapDownloadLevels"><![CDATA[Télécharger plans]]></label>
 		<label code="prompt-mapSave"><![CDATA[Enregistrement]]></label>
 		<label code="prompt-mapUploadCopyLink"><![CDATA[Copier l'URL]]></label>
 	</labels>
