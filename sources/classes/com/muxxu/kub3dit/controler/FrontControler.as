@@ -97,6 +97,13 @@ package com.muxxu.kub3dit.controler {
 		}
 		
 		/**
+		 * Downloads the map's levels
+		 */
+		public function downloadMapLevels():void {
+			_model.downloadMapLevels();
+		}
+		
+		/**
 		 * Downloads the map
 		 */
 		public function downloadMap():void {

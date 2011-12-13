@@ -1,16 +1,17 @@
 package com.muxxu.kub3dit.model {
-	import com.muxxu.kub3dit.commands.LoadMapCmd;
-	import com.asual.swfaddress.SWFAddressEvent;
-	import com.asual.swfaddress.SWFAddress;
-	import com.muxxu.kub3dit.commands.UploadMapCmd;
-	import com.nurun.core.commands.ProgressiveCommand;
-	import com.nurun.core.commands.events.ProgressiveCommandEvent;
 	import by.blooddy.crypto.image.PNGEncoder;
-	import flash.display.BitmapData;
-	import com.muxxu.kub3dit.commands.GenerateRadarCmd;
+
+	import nochump.util.zip.ZipEntry;
+	import nochump.util.zip.ZipOutput;
+
+	import com.asual.swfaddress.SWFAddress;
+	import com.asual.swfaddress.SWFAddressEvent;
 	import com.muxxu.kub3dit.commands.AddKubeCmd;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
+	import com.muxxu.kub3dit.commands.GenerateRadarAndLevelsCmd;
 	import com.muxxu.kub3dit.commands.InitTexturesCmd;
+	import com.muxxu.kub3dit.commands.LoadMapCmd;
+	import com.muxxu.kub3dit.commands.UploadMapCmd;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
@@ -19,12 +20,15 @@ package com.muxxu.kub3dit.model {
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
 	import com.muxxu.kub3dit.vo.Constants;
 	import com.muxxu.kub3dit.vo.CubeData;
+	import com.nurun.core.commands.ProgressiveCommand;
 	import com.nurun.core.commands.events.CommandEvent;
+	import com.nurun.core.commands.events.ProgressiveCommandEvent;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
 
+	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
@@ -40,7 +44,7 @@ package com.muxxu.kub3dit.model {
 		private var _currentKubeId:String;
 		private var _view3DReady:Boolean;
 		private var _map:Map;
-		private var _saveCmd:GenerateRadarCmd;
+		private var _saveCmd:GenerateRadarAndLevelsCmd;
 		private var _saveData:ByteArray;
 		private var _uploadCmd:UploadMapCmd;
 		private var _loadMapCmd:LoadMapCmd;
@@ -109,7 +113,7 @@ package com.muxxu.kub3dit.model {
 				_saveCmd.removeEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
 				_saveCmd.removeEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
 			}
-			_saveCmd = new GenerateRadarCmd(_map);
+			_saveCmd = new GenerateRadarAndLevelsCmd(_map);
 			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
 			_saveCmd.addEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
 			_saveCmd.addEventListener(ProgressiveCommandEvent.PROGRESS, commandProgressHandler);
@@ -152,6 +156,25 @@ package com.muxxu.kub3dit.model {
 			cmd.addEventListener(CommandEvent.COMPLETE, addKubeCompleteHandler);
 			cmd.addEventListener(CommandEvent.ERROR, addKubeErrorHandler);
 			cmd.execute();
+		}
+		
+		/**
+		 * Downloads the map's levels
+		 */
+		public function downloadMapLevels():void {
+			var i:int, len:int;
+			len = _saveCmd.levelsData.length;
+			var zipOut:ZipOutput = new ZipOutput();
+			for(i = 0; i < len; ++i) {
+				var fileName:String = (i+1)+".png";
+				var ze:ZipEntry = new ZipEntry(fileName);
+				zipOut.putNextEntry(ze);
+				zipOut.write( _saveCmd.levelsData[i] );
+				zipOut.closeEntry();
+			}
+			zipOut.finish();
+			var fr:FileReference = new FileReference();
+			fr.save(zipOut.byteArray, "kub3dit-map.zip");
 		}
 		
 		/**
