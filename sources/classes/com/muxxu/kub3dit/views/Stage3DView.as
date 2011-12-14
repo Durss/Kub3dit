@@ -155,7 +155,7 @@ package com.muxxu.kub3dit.views {
 		 * Creates the voxel chunks
 		 */
 		private function initChunksManager():void {
-			Camera3D.setMapSize(_map.mapSizeX, _map.mapSizeY, _map.mapSizeZ);
+			Camera3D.setMap(_map);
 			Camera3D.setPosition(new Vector3D(-_map.mapSizeX*.5 * ChunkData.CUBE_SIZE_RATIO,_map.mapSizeY*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
 			Camera3D.rotationX = 0;
 			

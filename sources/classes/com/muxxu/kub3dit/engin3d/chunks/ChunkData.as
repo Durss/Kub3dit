@@ -1,8 +1,10 @@
 package com.muxxu.kub3dit.engin3d.chunks {
-	import flash.geom.Point;
 	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.engin3d.vo.Face;
 	import flash.display.BitmapData;
+	import flash.geom.Point;
+
 
 	
 	public class ChunkData {
@@ -17,6 +19,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public var _bufferArray:Vector.<Number>;
 		public var _indexesArray:Vector.<uint>;
 		private var _map:Map;
+		private var _faces:Vector.<Face>;
 		
 		public function ChunkData(sizeX:int, sizeY:int, sizeZ:int, map:Map) {
 			_map = map;
@@ -29,6 +32,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Creates the bugger arrays
 		 */
 		public function createArrays():void {
+			_faces = new Vector.<Face>();
 			_indexesArray = new Vector.<uint>();
 			_bufferArray = createBufferArray();
 		}
@@ -41,6 +45,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_map = null;
 			_bufferArray = null;
 			_indexesArray = null;
+			_faces = new Vector.<Face>();
 		}
 
 		
@@ -149,6 +154,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
+								
+								_faces.push(new Face(buffer, index, 7, false));
+								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -196,6 +204,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
+								_faces.push(new Face(buffer, index, 7, false));
+								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -242,6 +252,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
+								
+								_faces.push(new Face(buffer, index, 7, false));
+								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -288,6 +301,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
+								
+								_faces.push(new Face(buffer, index, 7, false));
+								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -335,6 +351,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileTopY + textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
+								
+								_faces.push(new Face(buffer, index, 7, false));
+								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -386,6 +405,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
+								
+								_faces.push(new Face(buffer, index, 7, false));
+								_faces.push(new Face(buffer, index, 7, true));
 							}
 						
 //							wasCubeOver = true;

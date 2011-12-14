@@ -1,15 +1,17 @@
 package  
 com.muxxu.kub3dit.engin3d.camera {
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
-	import flash.text.TextField;
-	import flash.utils.ByteArray;
-	import flash.geom.Vector3D;
+	import com.muxxu.kub3dit.engin3d.map.Map;
+
 	import flash.display.Stage;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.geom.Vector3D;
+	import flash.text.TextField;
 	import flash.ui.Keyboard;
+	import flash.utils.ByteArray;
 	
 	/**
 	 * ...
@@ -25,6 +27,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		private static var _mapWidth:Number;
 		private static var _mapDepth:Number;
 		private static var _mapHeight:int;
+		private static var _map:Map;
 		
 		private var _stage:Stage;
 		private var _lookOffset:Point = new Point();
@@ -70,19 +73,35 @@ com.muxxu.kub3dit.engin3d.camera {
 			var dist:Number = (Math.sqrt(offx * offx + offy * offy));
 			if (rotationX<0)	rotationX+=360;
 			if (rotationX>360)	rotationX-=360;
-				
+			
+			var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
 			var moveZ:Number = Math.cos((Camera3D.rotationY+90)*Math.PI/180) * 15 * _forward;
 			dist -= Math.abs(moveZ);
+			moveZ *= .01;
 			var radians1:Number = rotationX / 180 * Math.PI;
 			var radians2:Number = Math.atan2(offy, offx);
-			var moveX:Number = Math.cos(radians2+radians1)*dist;
-			var moveY:Number = Math.sin(radians2+radians1)*dist;
-			_dx -= moveX * .025 * ChunkData.CUBE_SIZE_RATIO;
-			_dy += moveY * .025 * ChunkData.CUBE_SIZE_RATIO;
-			_dz += moveZ * .025 * ChunkData.CUBE_SIZE_RATIO;
-			_dx = Math.min(1, Math.max(_dx,-_mapWidth*ChunkData.CUBE_SIZE_RATIO));
-			_dy = Math.max(-1, Math.min(_dy,_mapDepth*ChunkData.CUBE_SIZE_RATIO));
-			_dz = Math.max(Math.min(_dz,_mapHeight*ChunkData.CUBE_SIZE_RATIO), -ChunkData.CUBE_SIZE_RATIO*.3);
+			var moveX:Number = Math.cos(radians2+radians1)*dist *.01;
+			var moveY:Number = Math.sin(radians2+radians1)*dist *.01;
+			_dx -= moveX * ratio;
+			_dy += moveY * ratio;
+			_dz += moveZ * ratio;
+			_dx = Math.min(1, Math.max(_dx,-_mapWidth*ratio));
+			_dy = Math.max(-1, Math.min(_dy,_mapDepth*ratio));
+			_dz = Math.max(Math.min(_dz,_mapHeight*ratio), -ratio*.3);
+			
+			//dirty collision detection attempt
+//			var px:Number, py:Number, pz:Number;
+//			px = _dx - moveX*ratio*2;
+//			py = _dy + moveY*ratio*2;
+//			pz = _dz + moveZ*ratio*2;
+//			while(_map.getTile(-px/ratio, py/ratio, pz/ratio) > 0) {
+//				px += moveX*ratio*2;
+//				py -= moveY*ratio*2;
+//				pz -= moveZ*ratio*2;
+//				_dx = px;// - ratio * .5;
+//				_dy = py;// + ratio * .5;
+//				_dz = pz;// + ratio * .5;
+//			}
 		}
 		
 		private function onKeyDown(e:KeyboardEvent):void {
@@ -109,8 +128,9 @@ com.muxxu.kub3dit.engin3d.camera {
 		
 		private function mouseWheel(e:MouseEvent):void {
 			if(e.target is Stage) {
-				_dz += (e.delta > 0)? ChunkData.CUBE_SIZE_RATIO : -ChunkData.CUBE_SIZE_RATIO;
-				_dz = Math.round(_dz/ChunkData.CUBE_SIZE_RATIO) * ChunkData.CUBE_SIZE_RATIO;
+				var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
+				_dz += (e.delta > 0)? ratio : -ratio;
+				_dz = Math.round(_dz/ratio) * ratio;
 			}
 		}
 		
@@ -160,10 +180,11 @@ com.muxxu.kub3dit.engin3d.camera {
 			_dz = vector3D.z;
 		}
 
-		public static function setMapSize(width:Number, depth:Number, height:Number):void {
-			_mapWidth = width;
-			_mapDepth = depth;
-			_mapHeight = height;
+		public static function setMap(map:Map):void {
+			_map = map;
+			_mapWidth = _map.mapSizeX;
+			_mapDepth = _map.mapSizeY;
+			_mapHeight = _map.mapSizeZ;
 		}
 
 		public static function moveZTo(level:Number):void {
