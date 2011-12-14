@@ -395,7 +395,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				i++; 
 			}
 			//Renders all the possible chunks. If it's taking too much time, stop
-			while(len > 0 && getTimer()-s < 20) {
+			while(len > 0 && getTimer()-s < 10) {
 				Chunk(_toUpdate[0]["chunk"]).createBuffers();
 				_toUpdate.splice(0, 1);
 				len--;
@@ -408,7 +408,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private function createChunksStepHandler(event:Event):void {
 			var i:int, len:int, chunk:Chunk;
 			
-			len = 100;//Number of chunks instance to create per cycle
+			len = 200;//Number of chunks instance to create per cycle
 			for(i = 0; i < len; ++i) {
 				if(_progressX == 0) _chunks[_progressY] = [];
 				//Create chunk
