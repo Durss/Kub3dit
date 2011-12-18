@@ -3,6 +3,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import com.muxxu.kub3dit.components.form.input.InputKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.nurun.components.form.FormComponentGroup;
+	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.environnement.label.Label;
@@ -182,6 +183,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputLabel.y = Math.round((_inputSize.height - _inputLabel.height) * .5);
 			_squareRB.x = _circleRB.x = Math.round(_inputSize.x + _inputSize.width + 15);
 			_circleRB.y = Math.round(_squareRB.height + 5);
+			
+			var i:int, len:int = numChildren;
+			for(i = 0; i < len; ++i) {
+				if(getChildAt(i) is Validable) Validable(getChildAt(i)).validate();
+			}
 		}
 		
 		/**

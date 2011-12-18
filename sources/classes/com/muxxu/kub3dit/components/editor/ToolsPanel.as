@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.components.editor.toolpanels.SelectionPanel;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
 	import com.muxxu.kub3dit.components.editor.toolpanels.BucketPanel;
@@ -117,7 +118,7 @@ package com.muxxu.kub3dit.components.editor {
 			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true, Label.getLabel("helpTools7") )) as ButtonEditorTool;
 			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
 			_skBt	= addChild(new ButtonEditorTool( new SandKubeIcon(), false, Label.getLabel("helpToolsSk"), true)) as ButtonEditorTool;
-			_imgBt	= addChild(new ButtonEditorTool( new ImageIcon(), false, Label.getLabel("helpToolsSk"), true)) as ButtonEditorTool;
+			_imgBt	= addChild(new ButtonEditorTool( new ImageIcon(), false, Label.getLabel("helpToolsImg"), true)) as ButtonEditorTool;
 			_select	= addChild(new ButtonEditorTool( new SelectionIcon(), false, Label.getLabel("helpToolsSelect"), true)) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
 			
@@ -133,7 +134,7 @@ package com.muxxu.kub3dit.components.editor {
 			_tools.push(_imgBt);
 			_tools.push(_select);
 			
-			_select.enabled = false;
+//			_select.enabled = false;
 			
 			_buttonToClassType = new Dictionary();
 			_buttonToClassType[_pencil] = PencilPanel;
@@ -144,7 +145,7 @@ package com.muxxu.kub3dit.components.editor {
 			_buttonToClassType[_sphere] = SpherePanel;
 			_buttonToClassType[_skBt] = SandKubePanel;
 			_buttonToClassType[_imgBt] = ImageGenPanel;
-			_buttonToClassType[_select] = SandKubePanel;
+			_buttonToClassType[_select] = SelectionPanel;
 			
 			var i:int, len:int;
 			len = _tools.length;

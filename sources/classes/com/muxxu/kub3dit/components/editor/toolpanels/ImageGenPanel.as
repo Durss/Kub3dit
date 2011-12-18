@@ -1,25 +1,26 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
-	import com.muxxu.kub3dit.views.KubeSelectorView;
-	import com.nurun.structure.mvc.views.ViewLocator;
-	import flash.ui.Keyboard;
-	import flash.events.KeyboardEvent;
-	import com.nurun.components.text.CssTextField;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.views.KubeSelectorView;
+	import com.nurun.components.invalidator.Validable;
+	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.color.ColorFunctions;
 
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.geom.Point;
+	import flash.ui.Keyboard;
 	import flash.utils.ByteArray;
 	import flash.utils.getTimer;
 	
@@ -175,6 +176,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_clearBt.x = Math.round(_loadBt.x + _loadBt.width + 5);
 			_clearBt.enabled = false;
 			_levelsCb.y = Math.round(_clearBt.y + _clearBt.height);
+			
+			var i:int, len:int = numChildren;
+			for(i = 0; i < len; ++i) {
+				if(getChildAt(i) is Validable) Validable(getChildAt(i)).validate();
+			}
 			
 			_processPercent.text = "100%";
 			_processPercent.x = Math.round((_clearBt.x + _clearBt.width - _processPercent.width) * .5);

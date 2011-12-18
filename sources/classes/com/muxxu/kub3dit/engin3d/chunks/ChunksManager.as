@@ -390,7 +390,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_toUpdate.sortOn("pz", Array.NUMERIC);
 			//place all the chunks that are Z negative to the end
 			len = _toUpdate.length;
-			while(_toUpdate[0]["pz"] < -3 && i < len) {
+			while(_toUpdate[0]["pz"] < -ChunkData.CUBE_SIZE_RATIO*3 && i < len) {
 				_toUpdate.push(_toUpdate.shift()); // Put it at the end
 				i++; 
 			}

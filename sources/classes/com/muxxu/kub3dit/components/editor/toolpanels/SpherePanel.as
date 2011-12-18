@@ -2,6 +2,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
+	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.environnement.label.Label;
@@ -169,6 +170,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputRadius.addEventListener(Event.CHANGE, updateLandMark);
 			_inputThick.addEventListener(Event.CHANGE, updateLandMark);
 			
+			
+			var i:int, len:int = numChildren;
+			for(i = 0; i < len; ++i) {
+				if(getChildAt(i) is Validable) Validable(getChildAt(i)).validate();
+			}
+			
 			computePositions();
 			updateLandMark();
 		}
@@ -186,6 +193,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputThick.y = Math.round(_fillCb.y + _fillCb.height + 5);
 			_inputThick.x = Math.round(_inputThickLabel.x + _inputThickLabel.width + 4);
 			_inputThickLabel.y = Math.round( _inputThick.y + (_inputThick.height - _inputThickLabel.height) * .5 );
+			
 		}
 		
 		/**

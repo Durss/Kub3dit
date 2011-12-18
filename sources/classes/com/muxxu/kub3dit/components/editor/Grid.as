@@ -194,7 +194,7 @@ package com.muxxu.kub3dit.components.editor {
 			if(oy < -_size*.5) _offset.y -= oy+_size*.5;
 			if(ox > _map.mapSizeX - _size*.5) _offset.x -= ox - (_map.mapSizeX - _size*.5);
 			if(oy > _map.mapSizeY - _size*.5) _offset.y -= oy - (_map.mapSizeY - _size*.5);
-			//limit global offsetà
+			//limit global offset
 			ox = MathUtils.restrict(ox, -_size * .5, _map.mapSizeX - _size*.5);
 			oy = MathUtils.restrict(oy, -_size * .5, _map.mapSizeY - _size*.5);
 			
@@ -222,8 +222,12 @@ package com.muxxu.kub3dit.components.editor {
 				if(landmark != null) {
 					_landMark.addChild(landmark);
 					landmark.scaleX = landmark.scaleY = _cellSize;
-					landmark.x = Math.floor( ((mouseX) / _cellSize) - Math.floor((landmark.width * .5) / _cellSize))*_cellSize;
-					landmark.y = Math.floor( ((mouseY) / _cellSize) - Math.floor((landmark.height * .5) / _cellSize))*_cellSize;
+					if(!_panel.fixedLandmark) {
+						landmark.x = Math.floor( ((mouseX) / _cellSize) - Math.floor((landmark.width * .5) / _cellSize))*_cellSize;
+						landmark.y = Math.floor( ((mouseY) / _cellSize) - Math.floor((landmark.height * .5) / _cellSize))*_cellSize;
+					}else{
+						landmark.x = landmark.y = 0;
+					}
 				}
 			}
 			
