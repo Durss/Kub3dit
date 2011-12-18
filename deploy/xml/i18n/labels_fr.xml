@@ -111,6 +111,7 @@
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphère (6)]]></label>
 		<label code="helpToolsSk"><![CDATA[Charger image Sandkube]]></label>
+		<label code="helpToolsImg"><![CDATA[Générer depuis une image]]></label>
 		<label code="helpToolsSelect"><![CDATA[Sélection (m)]]></label>
 		<label code="helpSyncCam"><![CDATA[Synchronise le niveau d'affichage de<br />la grille et la position de la caméra.]]></label>
 		
@@ -147,6 +148,11 @@
 		<label code="toolConfig-imageGen-load"><![CDATA[Charger]]></label>
 		<label code="toolConfig-imageGen-clear"><![CDATA[Effacer]]></label>
 		<label code="toolConfig-imageGen-levels"><![CDATA[Plusieurs niveaux]]></label>
+		
+		<label code="toolConfig-selector-copyHelp"><![CDATA[Tracez un rectangle de sélection sur<br />la carte pour définir la zone à copier.]]></label>
+		<label code="toolConfig-selector-copy"><![CDATA[Copier]]></label>
+		<label code="toolConfig-selector-cancel"><![CDATA[Annuler]]></label>
+		<label code="toolConfig-selector-depth"><![CDATA[Profondeur]]></label>
 		
 		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>

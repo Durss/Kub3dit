@@ -219,12 +219,15 @@ package com.muxxu.kub3dit.views {
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			
-			_ground.render();
+			_ground.render(_manager.visibleChunks+1);
 			_manager.render(m, W, H);
 			
 			_context3D.present();
 			
-//			_log.text = _manager.offsetX+" :: "+_manager.offsetY+"\n"+Camera3D.locX+" :: "+Camera3D.locY;
+//			var invert:Matrix3D = m.clone();
+//			m.invert();
+//			var unprojected:Matrix3D = new Matrix3D();
+			
 			PosUtils.centerInStage(_log);
 		}
 

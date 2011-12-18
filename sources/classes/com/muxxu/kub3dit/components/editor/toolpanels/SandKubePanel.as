@@ -1,22 +1,23 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
-	import com.nurun.utils.math.MathUtils;
-	import flash.geom.Matrix;
-	import com.muxxu.kub3dit.graphics.RotationCCWIcon;
-	import com.muxxu.kub3dit.graphics.RotationCWIcon;
-	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
+	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.graphics.RotationCCWIcon;
+	import com.muxxu.kub3dit.graphics.RotationCWIcon;
+	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.lang.Disposable;
 	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.utils.math.MathUtils;
 
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.MouseEvent;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	
@@ -128,12 +129,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 						reg = px;
 						px = _size - 1 - py;
 						py = reg;
-					}
+					}else
 					if(_rotation == 180) {
 						reg = px;
 						px = _size - 1 - px;
 						py = _size - 1 - py;
-					}
+					}else
 					if(_rotation == 270) {
 						reg = px;
 						px = py;
@@ -178,6 +179,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_rCcwBt.x = _rotationLabel.x + _rotationLabel.width + 10;
 			_rCwBt.x = _rCcwBt.x + _rCcwBt.width + 10;
 			_rCwBt.y = _rCcwBt.y = _rotationLabel.y;
+			
+			var i:int, len:int = numChildren;
+			for(i = 0; i < len; ++i) {
+				if(getChildAt(i) is Validable) Validable(getChildAt(i)).validate();
+			}
 			
 			_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = false;
 			_rotationLabel.alpha = .4;
