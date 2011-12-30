@@ -144,6 +144,7 @@
 		<label code="toolConfig-sandKube-load"><![CDATA[Charger]]></label>
 		<label code="toolConfig-sandKube-clear"><![CDATA[Effacer]]></label>
 		<label code="toolConfig-sandKube-rotate"><![CDATA[Rotation]]></label>
+		<label code="toolConfig-sandKube-flip"><![CDATA[Renverser]]></label>
 		
 		<label code="toolConfig-imageGen-load"><![CDATA[Charger]]></label>
 		<label code="toolConfig-imageGen-clear"><![CDATA[Effacer]]></label>
@@ -153,6 +154,8 @@
 		<label code="toolConfig-selector-copy"><![CDATA[Copier]]></label>
 		<label code="toolConfig-selector-cancel"><![CDATA[Annuler]]></label>
 		<label code="toolConfig-selector-depth"><![CDATA[Profondeur]]></label>
+		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
+		<label code="toolConfig-selector-flip"><![CDATA[Renverser]]></label>
 		
 		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>

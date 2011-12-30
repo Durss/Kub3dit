@@ -141,7 +141,6 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private function updateTexture(event:LightModelEvent = null):void {
 			var bitmapData:BitmapData = Textures.getInstance().spriteSheet;
 			_textureCubes = _context3D.createTexture(bitmapData.width, bitmapData.height, Context3DTextureFormat.BGRA, false);
-//			uploadTextureWithMipmaps(_textureCubes, bitmapData);
 			_textureCubes.uploadFromBitmapData(bitmapData);
 		}
 		

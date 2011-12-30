@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.vo.CubeSize;
 	import flash.events.IEventDispatcher;
 	import flash.geom.Point;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
@@ -50,5 +51,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * top left of the editor's grid.
 		 */
 		function get fixedLandmark():Boolean;
+		
+		/**
+		 * Gets the sizes of the 3D landmark
+		 */
+//		function get landmark3DSize():CubeSize;
 	}
 }
