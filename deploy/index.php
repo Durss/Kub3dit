@@ -52,10 +52,13 @@
 	$authorized = false;//isAuthorizedUser($pseudo, "durss");//uncoment to authorize only me
 	$authorized = $authorized || isAuthorizedUser($pseudo, "ebene");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "mllenolwenn");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
+	
+	if(date("d.m.Y") == "30.12.2011") $authorized = true;
 	
 	if ($authorized) {
 		//if (!isset($_SESSION["uname"])) {
@@ -143,7 +146,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "14.1";
+	$version= "14.3";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";

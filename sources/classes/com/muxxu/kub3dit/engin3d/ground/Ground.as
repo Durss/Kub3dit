@@ -72,12 +72,12 @@ package com.muxxu.kub3dit.engin3d.ground {
 			if(_timer == 0)_inc += 1/16;
 			_timer = (_timer+1)%(16/2);
 			_inc = _inc%16;
-			size = Math.max(size, 1) * 16;
+			size = (Math.max(size, 2) + 4) * 16;
 			
 			//Init vertices
 			var index:int = 0;
-			var offsetX:Number = -size * cubeSizeRatio*.5-Math.floor(Camera3D.locX/(16*cubeSizeRatio))*(16*cubeSizeRatio);
-			var offsetY:Number = -size * cubeSizeRatio*.5+Math.floor(Camera3D.locY/(16*cubeSizeRatio))*(16*cubeSizeRatio);
+			var offsetX:Number = -(size * cubeSizeRatio * .5)-Math.floor(Camera3D.locX/(16*cubeSizeRatio))*(16*cubeSizeRatio);
+			var offsetY:Number = -(size * cubeSizeRatio * .5)+Math.floor(Camera3D.locY/(16*cubeSizeRatio))*(16*cubeSizeRatio);
 			
 			_vertexBuffer = new Vector.<Number>();
 			_vertexBuffer[index++] = offsetX;//X
@@ -119,9 +119,6 @@ package com.muxxu.kub3dit.engin3d.ground {
 			var indexBuffer:IndexBuffer3D = _context3D.createIndexBuffer(_indexBuffer.length);
 			buffer.uploadFromVector(_vertexBuffer, 0, _vertexBuffer.length / 7);
 			indexBuffer.uploadFromVector(_indexBuffer, 0, _indexBuffer.length);
-			
-//			projection = projection.clone();
-//			projection.appendTranslation(0,0,0);
 			
 			_context3D.setVertexBufferAt(0, buffer, 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
 			_context3D.setVertexBufferAt(1, buffer, 3, Context3DVertexBufferFormat.FLOAT_2); //uv

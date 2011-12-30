@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.engin3d.preview.PreviewCursor;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
@@ -48,6 +49,7 @@ package com.muxxu.kub3dit.views {
 		private var _ready:Boolean;
 		private var _log:CssTextField;
 		private var _map:Map;
+		private var _preview:PreviewCursor;
 		
 		
 		
@@ -130,8 +132,9 @@ package com.muxxu.kub3dit.views {
 			_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			_accelerated = _context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 			
-			_background = new Background(_context3D);
-			_ground = new Ground(_context3D, _accelerated);
+			_background	= new Background(_context3D);
+			_ground		= new Ground(_context3D, _accelerated);
+			_preview	= new PreviewCursor(_context3D, _accelerated);
 			
 			
 			FrontControler.getInstance().view3DReady();
@@ -214,12 +217,14 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(Math.floor(_manager.visibleChunks*.5), 8) * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to do the fog on
-			var farplane:int = _manager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO;//Number of cubes to start the fog at
+			var fogLength:int = Math.min(_manager.visibleChunks * 3, 24) * ChunkData.CUBE_SIZE_RATIO;
+			// Number of cubes to do the fog on
+			var farplane:int = _manager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO - fogLength;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			
 			_ground.render(_manager.visibleChunks+1);
+			_preview.render();
 			_manager.render(m, W, H);
 			
 			_context3D.present();

@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.graphics.FLipVerticalIcon;
+	import com.muxxu.kub3dit.graphics.FLipHorizontalIcon;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
@@ -56,6 +58,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _rotationLabel:CssTextField;
 		private var _rotation:int;
 		private var _bmd:BitmapData;
+		private var _hFlipBt:GraphicButtonKube;
+		private var _vFlipBt:GraphicButtonKube;
+		private var _flipLabel:CssTextField;
+		private var _hflipState:Boolean;
+		private var _vflipState:Boolean;
 		
 		
 		
@@ -164,9 +171,17 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				var px:int, py:int, pz:int, tile:int, reg:int;
 				var w:uint = _copyData.readUnsignedInt();
 				var h:uint = _copyData.readUnsignedInt();
+				var rW:int, rH:int;
 				
-				ox -= Math.floor(w*.5);
-				oy -= Math.floor(h*.5);
+				if(_rotation == 0 || _rotation == 180) {
+					rW = w;
+					rH = h;
+				}else{
+					rW = h;
+					rH = w;
+				}
+				ox -= Math.floor(rW*.5);
+				oy -= Math.floor(rH*.5);
 				
 				var i:int = 0;
 				//past data from top left at the upper level
@@ -179,9 +194,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					if(pz < 0) break;
 					
 					if(tile > 0) {
-						if(_rotation == 90) {
+						if (_rotation == 90) {
 							reg = px;
-							px = w - 1 - py;
+							px = h - 1 - py;
 							py = reg;
 						}else 
 						if(_rotation == 180) {
@@ -192,8 +207,16 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 						if(_rotation == 270) {
 							reg = px;
 							px = py;
-							py = h - 1 - reg;
+							py = w - 1 - reg;
 						}
+					
+						if(_hflipState) {
+							px = rW - 1 - px;
+						}
+						if(_vflipState) {
+							py = rH - 1 - py;
+						}
+						
 						_chunksManager.update(ox + px, oy + py, oz - pz, tile);
 					}
 					i++;
@@ -224,13 +247,20 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			
 			_copyBt = addChild(new ButtonKube(Label.getLabel("toolConfig-selector-copy"))) as ButtonKube;
 			_cancelBt = addChild(new ButtonKube(Label.getLabel("toolConfig-selector-cancel"))) as ButtonKube;
-			_depth = addChild(new InputKube("", false, true, 1, Config.getNumVariable("mapSizeHeight")-1)) as InputKube;
+			
 			_depthLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
+			_depth = addChild(new InputKube("", false, true, 1, Config.getNumVariable("mapSizeHeight")-1)) as InputKube;
+			
+			_rotationLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
 			_rCwBt = addChild(new GraphicButtonKube(new RotationCWIcon())) as GraphicButtonKube;
 			_rCcwBt = addChild(new GraphicButtonKube(new RotationCCWIcon())) as GraphicButtonKube;
-			_rotationLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
 			
-			_rotationLabel.text = Label.getLabel("toolConfig-sandKube-rotate");
+			_flipLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
+			_hFlipBt = addChild(new GraphicButtonKube(new FLipHorizontalIcon())) as GraphicButtonKube;
+			_vFlipBt = addChild(new GraphicButtonKube(new FLipVerticalIcon())) as GraphicButtonKube;
+			
+			_flipLabel.text = Label.getLabel("toolConfig-selector-flip");
+			_rotationLabel.text = Label.getLabel("toolConfig-selector-rotate");
 			
 			_depth.text = Config.getVariable("mapSizeHeight");
 			_depthLabel.text = Label.getLabel("toolConfig-selector-depth");
@@ -240,10 +270,16 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_cancelBt.x = _copyBt.width + 5;
 			_depth.x = _depthLabel.width + 5;
 			_depth.y = _depthLabel.y  = _copyBt.height + 5;
+			
 			_rotationLabel.y = Math.round(_depth.y + _depth.height + 5);
-			_rCcwBt.x = _rotationLabel.x + _rotationLabel.width + 10;
+			_rCcwBt.x = _rotationLabel.x + Math.max(_flipLabel.width, _rotationLabel.width) + 10;
 			_rCwBt.x = _rCcwBt.x + _rCcwBt.width + 10;
 			_rCwBt.y = _rCcwBt.y = _rotationLabel.y;
+			
+			_flipLabel.y = Math.round(_rCwBt.y + _rCwBt.height + 5);
+			_hFlipBt.x = _rCcwBt.x;
+			_vFlipBt.x = _hFlipBt.x + _hFlipBt.width + 10;
+			_vFlipBt.y = _hFlipBt.y = _flipLabel.y;
 			
 			var i:int, len:int = numChildren;
 			for(i = 0; i < len; ++i) {
@@ -277,15 +313,27 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private function drawLandMark():void {
 			if(_bmd == null) return;
 			
+			var w:int, h:int;
+			if(_rotation == 90 || _rotation == 270) {
+				w = _bmd.height;
+				h = _bmd.width;
+			}else{
+				w = _bmd.width;
+				h = _bmd.height;
+			}
+			
 			var m:Matrix = new Matrix();
 			m.rotate(_rotation * MathUtils.DEG2RAD);
-			if(_rotation == 90) m.translate(_bmd.width, 0);
-			if(_rotation == 180) m.translate(_bmd.width, _bmd.height);
-			if(_rotation == 270) m.translate(0, _bmd.height);
+			if(_rotation == 90) m.translate(w, 0);
+			if(_rotation == 180) m.translate(w, h);
+			if(_rotation == 270) m.translate(0, h);
+			
+			if(_hflipState) m.scale(-1, 1);
+			if(_vflipState) m.scale(1, -1);
 			
 			_landMark.graphics.clear();
 			_landMark.graphics.beginBitmapFill(_bmd, m);
-			_landMark.graphics.drawRect(0, 0, _bmd.width, _bmd.height);
+			_landMark.graphics.drawRect(0, 0, w, h);
 		}
 		
 		
@@ -303,8 +351,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				_fixedLandmark = false;
 				_copyBt.enabled = false;
 				_copyBt.mouseEnabled = true;
-				_depth.enabled = _rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = true;
-				_depthLabel.alpha = _rotationLabel.alpha = 1;
+				_depth.enabled = _rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
+				_depthLabel.alpha = _rotationLabel.alpha = _flipLabel.alpha = 1;
 
 				depth = Math.min(parseInt(_depth.text), _lastOrigin.z+1);
 				_copyData = new ByteArray();
@@ -341,11 +389,18 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				
 			}else if(event.target == _rCwBt){
 				_rotation += 90;
+				
+			}else if(event.target == _hFlipBt){
+				_hflipState = !_hflipState;
+				
+			}else if(event.target == _vFlipBt){
+				_vflipState = !_vflipState;
 			}
 			
 			if(_rotation < 0) _rotation = 360 + _rotation;
 			if(_rotation > 360) _rotation -= 360;
-			if(event.target == _rCcwBt || event.target == _rCwBt) {
+			if(event.target == _rCcwBt || event.target == _rCwBt
+			|| event.target == _hFlipBt || event.target == _vFlipBt) {
 				drawLandMark();
 			}
 		}
@@ -361,11 +416,14 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Stops copying
 		 */
 		private function cancel():void {
+			_rotation = 0;
+			_hflipState = false;
+			_vflipState = false;
 			_fixedLandmark = true;
 			_copyData = null;
 			_landMark.graphics.clear();
-			_depth.enabled = _rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = false;
-			_depthLabel.alpha = _rotationLabel.alpha = .4;
+			_depth.enabled = _rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = false;
+			_depthLabel.alpha = _rotationLabel.alpha = _flipLabel.alpha = .4;
 		}
 		
 		/**

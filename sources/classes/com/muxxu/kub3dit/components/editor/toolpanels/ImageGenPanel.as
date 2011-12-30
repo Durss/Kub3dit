@@ -164,8 +164,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private function initialize():void {
 			_selectorView = ViewLocator.getInstance().locateViewByType(KubeSelectorView) as KubeSelectorView;
 			_landMark = new Shape();
-//			_colorsBmd = Textures.getInstance().colorsBmd;
-//			_colorsPixels = _colorsBmd.getPixels(_colorsBmd.rect);
 			_colorsArray = Textures.getInstance().genColors;
 			
 			_loadBt = addChild(new ButtonKube(Label.getLabel("toolConfig-imageGen-load"))) as ButtonKube;

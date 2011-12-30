@@ -40,7 +40,14 @@ com.muxxu.kub3dit.engin3d.molehill{
 				"mul ft5, ft4.x, ft1.xyz \n" +
 				"mov ft5.w, ft1.w \n";
 			}else{
-				src += "mov ft5 ft1\n";
+				//Alpha
+				src += "mul ft1.w, ft3.x, ft1.w \n" +
+				
+				//Brightness
+				"mul ft5, ft4.x, ft1.xyz \n" +
+				"mov ft5.w, ft1.w \n";
+				
+//				src += "mov ft5 ft1\n";
 			}
 			
 			src += "mov oc, ft5 \n";

@@ -64,17 +64,6 @@ package com.muxxu.kub3dit.views {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 		/**
-		 * Called on model's update
-		 */
-		override public function update(event:IModelEvent):void {
-			var model:Model = event.model as Model;
-			if(!_ready)  {
-				_ready = true;
-				_selectedKubeId = model.currentKubeId;
-				updateList();
-			}
-		}
-		/**
 		 * Sets the width of the component without simply scaling it.
 		 */
 		override public function set width(value:Number):void {
@@ -120,12 +109,25 @@ package com.muxxu.kub3dit.views {
 			}
 			return ret;
 		}
+		
+		public function get currentKubeId():int { return parseInt(_selectedKubeId); }
 
 
 
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Called on model's update
+		 */
+		override public function update(event:IModelEvent):void {
+			var model:Model = event.model as Model;
+			if(!_ready)  {
+				_ready = true;
+				_selectedKubeId = model.currentKubeId;
+				updateList();
+			}
+		}
 
 
 		
@@ -233,8 +235,8 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function changeSelectionHandler(event:FormComponentGroupEvent):void {
 			if(_selectMode) return;
-			
-			FrontControler.getInstance().changeKubeId(KubeSelectorButton(event.selectedItem).id);
+			_selectedKubeId = KubeSelectorButton(event.selectedItem).id;
+			FrontControler.getInstance().changeKubeId(_selectedKubeId);
 		}
 		
 	}

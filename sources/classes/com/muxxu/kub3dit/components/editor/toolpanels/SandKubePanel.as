@@ -4,6 +4,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.graphics.FLipHorizontalIcon;
+	import com.muxxu.kub3dit.graphics.FLipVerticalIcon;
 	import com.muxxu.kub3dit.graphics.RotationCCWIcon;
 	import com.muxxu.kub3dit.graphics.RotationCWIcon;
 	import com.nurun.components.invalidator.Validable;
@@ -41,6 +43,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _rCcwBt:GraphicButtonKube;
 		private var _rotation:int;
 		private var _eraseMode:Boolean;
+		private var _flipLabel:CssTextField;
+		private var _hFlipBt:GraphicButtonKube;
+		private var _vFlipBt:GraphicButtonKube;
+		private var _hflipState:Boolean;
+		private var _vflipState:Boolean;
 		
 		
 		
@@ -127,28 +134,36 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					pz = oz + Math.floor(i/(_size*_size));
 					if(_rotation == 90) {
 						reg = px;
-						px = _size - 1 - py;
-						py = reg;
+						px = _size - py;
+						py = reg + 1;
 					}else
 					if(_rotation == 180) {
 						reg = px;
 						px = _size - 1 - px;
-						py = _size - 1 - py;
+						py = _size + 1 - py;
 					}else
 					if(_rotation == 270) {
 						reg = px;
-						px = py;
-						py = _size - 1 - reg;
+						px = py - 1;
+						py = _size - reg;
+					}
+					
+					if(_hflipState) {
+						px = _size - 1 - px;
+					}
+					if(_vflipState) {
+						py = _size + 1 - py;
 					}
 					
 					px += ox - Math.floor(_size * .5);
 					py += oy - Math.floor(_size * .5) - 1;
 					
-					_chunksManager.update(px, py, pz, tile);
+					_chunksManager.addInvalidableCube(px, py, pz, tile);
 				}
 				
 				i++;
 			}
+			_chunksManager.invalidate();
 		}
 
 
@@ -172,48 +187,61 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_rCcwBt = addChild(new GraphicButtonKube(new RotationCCWIcon())) as GraphicButtonKube;
 			_rotationLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
 			
+			_flipLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
+			_hFlipBt = addChild(new GraphicButtonKube(new FLipHorizontalIcon())) as GraphicButtonKube;
+			_vFlipBt = addChild(new GraphicButtonKube(new FLipVerticalIcon())) as GraphicButtonKube;
+			
 			_rotationLabel.text = Label.getLabel("toolConfig-sandKube-rotate");
+			_flipLabel.text = Label.getLabel("toolConfig-sandKube-flip");
 			
 			_clearBt.x = Math.round(_loadBt.x + _loadBt.width + 5);
 			_rotationLabel.y = Math.round(_clearBt.y + _clearBt.height + 5);
-			_rCcwBt.x = _rotationLabel.x + _rotationLabel.width + 10;
+			_rCcwBt.x = _rotationLabel.x + Math.max(_flipLabel.width, _rotationLabel.width) + 10;
 			_rCwBt.x = _rCcwBt.x + _rCcwBt.width + 10;
 			_rCwBt.y = _rCcwBt.y = _rotationLabel.y;
+			
+			_flipLabel.y = Math.round(_rCwBt.y + _rCwBt.height + 5);
+			_hFlipBt.x = _rCcwBt.x;
+			_vFlipBt.x = _hFlipBt.x + _hFlipBt.width + 10;
+			_vFlipBt.y = _hFlipBt.y = _flipLabel.y;
 			
 			var i:int, len:int = numChildren;
 			for(i = 0; i < len; ++i) {
 				if(getChildAt(i) is Validable) Validable(getChildAt(i)).validate();
 			}
 			
-			_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = false;
-			_rotationLabel.alpha = .4;
+			_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = false;
+			_rotationLabel.alpha = _flipLabel.alpha = .4;
 			
 			_cmd = new BrowseForFileCmd("Sandkube image", "*.png;*.jpg");
 			_cmd.addEventListener(CommandEvent.COMPLETE, loadImageCompleteHandler);
-			_rCwBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			_rCcwBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			_clearBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			_loadBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
+			addEventListener(MouseEvent.CLICK, clickButtonHandler);
 		}
 		
 		/**
 		 * Called when a button is clicked
 		 */
 		private function clickButtonHandler(event:MouseEvent):void {
-			if(event.currentTarget == _loadBt ){
+			if(event.target == _loadBt ){
 				_cmd.execute();
 				
-			}else if(event.currentTarget == _clearBt){
+			}else if(event.target == _clearBt){
 				_data = null;
 				_landMark.graphics.clear();
-				_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = false;
-				_rotationLabel.alpha = .4;
+				_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = false;
+				_rotationLabel.alpha = _flipLabel.alpha = .4;
 				
-			}else if(event.currentTarget == _rCcwBt){
+			}else if(event.target == _rCcwBt){
 				_rotation -= 90;
 				
-			}else if(event.currentTarget == _rCwBt){
+			}else if(event.target == _rCwBt){
 				_rotation += 90;
+				
+			}else if(event.target == _hFlipBt){
+				_hflipState = !_hflipState;
+				
+			}else if(event.target == _vFlipBt){
+				_vflipState = !_vflipState;
 			}
 			
 			if(_rotation < 0) _rotation = 360 + _rotation;
@@ -250,10 +278,14 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				}
 			}
 			
+			_rotation = 0;
+			_hflipState = false;
+			_vflipState = false;
+			
 			drawLandMark();
 			
-			_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = true;
-			_rotationLabel.alpha = 1;
+			_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
+			_rotationLabel.alpha = _flipLabel.alpha = 1;
 		}
 		
 		/**
@@ -267,6 +299,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			if(_rotation == 90) m.translate(_size, 0);
 			if(_rotation == 180) m.translate(_size, _size);
 			if(_rotation == 270) m.translate(0, _size);
+			
+			if(_hflipState) m.scale(-1, 1);
+			if(_vflipState) m.scale(1, -1);
 			
 			_landMark.graphics.clear();
 			_landMark.graphics.beginBitmapFill(_bmd, m);

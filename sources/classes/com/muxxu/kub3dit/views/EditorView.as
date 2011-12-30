@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.components.editor.ConfigToolPanel;
 	import com.muxxu.kub3dit.components.editor.Grid;
 	import com.muxxu.kub3dit.components.editor.ToolsPanel;
@@ -29,6 +30,7 @@ package com.muxxu.kub3dit.views {
 		private var _eraseMode:Boolean;
 		private var _kubeSelector:KubeSelectorView;
 		private var _over:Boolean;
+		private var _mousePos:Point3D;
 		
 		
 		
@@ -40,7 +42,7 @@ package com.muxxu.kub3dit.views {
 		 * Creates an instance of <code>EditorView</code>.
 		 */
 		public function EditorView() {
-			
+			_kubeSelector = new KubeSelectorView();
 		}
 
 		
@@ -66,6 +68,13 @@ package com.muxxu.kub3dit.views {
 		override public function get width():Number {
 			return _background.width;
 		}
+		
+		/**
+		 * Gets the current mouse edition pos.
+		 */
+		public function get mousePos():Point3D {
+			return _mousePos;
+		}
 
 
 
@@ -83,11 +92,13 @@ package com.muxxu.kub3dit.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
+			_mousePos = new Point3D();
+			
 			_background = addChild(new EditorBackgroundGraphic()) as EditorBackgroundGraphic;
-			_grid = addChild(new Grid()) as Grid;
+			_grid = addChild(new Grid(_mousePos)) as Grid;
 			_config = addChild(new ConfigToolPanel()) as ConfigToolPanel;
 			_tools = addChild(new ToolsPanel()) as ToolsPanel;
-			_kubeSelector = addChild(new KubeSelectorView()) as KubeSelectorView;
+			addChild(_kubeSelector);
 			
 			stage.addEventListener(Event.RESIZE, computePositions);
 			_tools.addEventListener(ToolsPanelEvent.OPEN_PANEL, openConfigPanelHandler);

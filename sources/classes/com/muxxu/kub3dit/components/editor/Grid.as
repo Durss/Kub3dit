@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
@@ -64,6 +65,10 @@ package com.muxxu.kub3dit.components.editor {
 		private var _radarBt:ButtonKube;
 		private var _lastOrigin:Point;
 		private var _radarMode:Boolean;
+		private var _globalMousePos:Point3D;
+		private var _mousePos:Point;
+		private var _scaleMatrix:Matrix;
+		private var _tmpPoint:Point;
 		
 		
 		
@@ -74,7 +79,8 @@ package com.muxxu.kub3dit.components.editor {
 		/**
 		 * Creates an instance of <code>Grid</code>.
 		 */
-		public function Grid() {
+		public function Grid(mousePos:Point3D) {
+			_globalMousePos = mousePos;
 			addEventListener(Event.ADDED_TO_STAGE, initialize);
 		}
 
@@ -134,6 +140,10 @@ package com.muxxu.kub3dit.components.editor {
 			_oldCamPos = new Point(-1,-1);
 			_offset = new Point(0,0);
 			_lastOrigin = new Point();
+			_mousePos = new Point();
+			_tmpPoint = new Point();
+			_scaleMatrix = new Matrix();
+			_scaleMatrix.scale(_cellSize, _cellSize);
 			
 			_3dView = ViewLocator.getInstance().locateViewByType(Stage3DView) as Stage3DView;
 			
@@ -208,9 +218,10 @@ package com.muxxu.kub3dit.components.editor {
 			_gridHolder.graphics.endFill();
 			
 			//Sub levels drawing management
-			var camPos:Point = new Point(Camera3D.locX / ChunkData.CUBE_SIZE_RATIO, Camera3D.locY / ChunkData.CUBE_SIZE_RATIO);
-			if(!camPos.equals(_oldCamPos) || _dragMode) {
-				_oldCamPos = camPos;
+			_tmpPoint.x = Camera3D.locX / ChunkData.CUBE_SIZE_RATIO;
+			_tmpPoint.y = Camera3D.locY / ChunkData.CUBE_SIZE_RATIO;
+			if(!_tmpPoint.equals(_oldCamPos) || _dragMode) {
+				_oldCamPos = _tmpPoint.clone();
 				_radarMode = false;
 				_subLevelsDrawn = false;
 				_lastStartTime = getTimer();
@@ -237,22 +248,27 @@ package com.muxxu.kub3dit.components.editor {
 			_lookAt.rotation = Camera3D.rotationX;
 			
 			//Drawing management
-			if(_pressed && !_dragMode) {
-				var mousePos:Point = new Point(Math.floor(mouseX/_cellSize), Math.floor(mouseY/_cellSize));
-				if(mouseX >= 0 && mouseY >= 0 &&
-				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {// && !mousePos.equals(_lastPos)) {
-					_lastPos = mousePos;
-					_panel.draw(ox+mousePos.x, oy+mousePos.y, _z, parseInt(_currentKube), _size, new Point(ox, oy));
-					if(_panel.eraseMode) {
-						_lastStartTime = getTimer();
-						_subLevelsDrawn = false;
-					}
-					_radarMode = false;
-				}
+			if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
+				_mousePos.x = Math.floor(mouseX/_cellSize);
+				_mousePos.y = Math.floor(mouseY/_cellSize);
+			}else{
+				_mousePos.x = _mousePos.y = -1;
 			}
 			
-			var m:Matrix = new Matrix();
-			m.scale(_cellSize, _cellSize);
+			_globalMousePos.x = ox + _mousePos.x;
+			_globalMousePos.y = oy + _mousePos.y;
+			_globalMousePos.z = _z;
+			if(_pressed && !_dragMode && _mousePos.x > -1) {
+				_lastPos = _mousePos;
+				_tmpPoint.x = ox;
+				_tmpPoint.y = oy;
+				_panel.draw(ox+_mousePos.x, oy+_mousePos.y, _z, parseInt(_currentKube), _size, _tmpPoint);
+				if(_panel.eraseMode) {
+					_lastStartTime = getTimer();
+					_subLevelsDrawn = false;
+				}
+				_radarMode = false;
+			}
 			
 			//Draw the grid
 			//If we didn't moved from Xms and if the sublevels aren't drawn, then draw them
@@ -269,7 +285,7 @@ package com.muxxu.kub3dit.components.editor {
 				drawLevel(ox, oy, _z, 1);
 			}
 			
-			_gridHolder.graphics.beginBitmapFill(_bmdGrid, m);
+			_gridHolder.graphics.beginBitmapFill(_bmdGrid, _scaleMatrix);
 			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
 			_gridHolder.graphics.endFill();
 			
