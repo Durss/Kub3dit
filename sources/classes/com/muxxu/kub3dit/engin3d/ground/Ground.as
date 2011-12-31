@@ -151,8 +151,8 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_shaderProgram.upload(vs.agalcode, fs.agalcode);
 
 			var index:int = 0;
-			var bmd:BitmapData				= Textures.getInstance().spriteSheet;
-			var tileTop:Point = Textures.getInstance().cubesFrames[2][0];
+			var bmd:BitmapData	= Textures.getInstance().spriteSheet;
+			var tileTop:Point	= Textures.getInstance().cubesFrames[2][0];
 			
 			_bmd = new BitmapData(16, 16);
 			var rect:Rectangle = new Rectangle(tileTop.x, tileTop.y, 16, 16);

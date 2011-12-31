@@ -58,7 +58,10 @@
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
 	
-	if(date("d.m.Y") == "30.12.2011") $authorized = true;
+	if (date("d.m.Y") == "30.12.2011") {
+		$lang = "fr";
+		$authorized = true;
+	}
 	
 	if ($authorized) {
 		//if (!isset($_SESSION["uname"])) {
@@ -115,7 +118,7 @@
 		<script type="text/javascript" src="js/swfobject.js"></script>
 		<script type="text/javascript" src="js/SWFAddress.js"></script>
 		<script type="text/javascript" src="js/swfwheel.js"></script>
-		<script type="text/javascript" src="js/swffit.js" />
+		<script type="text/javascript" src="js/swffit.js"></script>
 		<script type="text/javascript">
 			
 		  var _gaq = _gaq || [];

@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.preview {
+	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
@@ -401,7 +402,14 @@ package com.muxxu.kub3dit.engin3d.preview {
 			_shaderProgram = _context3D.createProgram();
 			_shaderProgram.upload(vs.agalcode, fs.agalcode);
 
-			//init texture
+			Textures.getInstance().addEventListener(TextureEvent.CHANGE_SPRITESHEET, updateTexture);
+			updateTexture();
+		}
+		
+		/**
+		 * Updates the texture.
+		 */
+		private function updateTexture(event:TextureEvent = null):void {
 			var bitmapData:BitmapData = Textures.getInstance().spriteSheet;
 			_texture = _context3D.createTexture(bitmapData.width, bitmapData.height, Context3DTextureFormat.BGRA, false);
 			_texture.uploadFromBitmapData(bitmapData);

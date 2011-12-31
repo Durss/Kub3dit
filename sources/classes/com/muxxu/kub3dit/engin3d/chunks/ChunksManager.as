@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.chunks {
+	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.events.MapEvent;
@@ -132,13 +133,14 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			} else {
 				throw new Error("ChunksManager is already initialized!");
 			}
+			Textures.getInstance().addEventListener(TextureEvent.CHANGE_SPRITESHEET, updateTexture);
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_ADD_COMPLETE, updateTexture);
 		}
 
 		/**
 		 * Updates the texture.
 		 */
-		private function updateTexture(event:LightModelEvent = null):void {
+		private function updateTexture(event:Event = null):void {
 			var bitmapData:BitmapData = Textures.getInstance().spriteSheet;
 			_textureCubes = _context3D.createTexture(bitmapData.width, bitmapData.height, Context3DTextureFormat.BGRA, false);
 			_textureCubes.uploadFromBitmapData(bitmapData);

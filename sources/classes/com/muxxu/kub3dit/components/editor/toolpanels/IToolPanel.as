@@ -1,10 +1,9 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
-	import com.muxxu.kub3dit.vo.CubeSize;
-	import flash.events.IEventDispatcher;
-	import flash.geom.Point;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 
 	import flash.display.Shape;
+	import flash.events.IEventDispatcher;
+	import flash.geom.Point;
 	/**
 	 * @author Francois
 	 */

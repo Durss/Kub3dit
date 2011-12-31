@@ -110,6 +110,7 @@ package com.muxxu.kub3dit.views {
 			_background.filters = [new DropShadowFilter(2, 135, 0, .2, 2, 2, 1, 2)];
 			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
+			_kubeSelector.addEventListener(Event.RESIZE, computePositions);
 		}
 		
 		/**
