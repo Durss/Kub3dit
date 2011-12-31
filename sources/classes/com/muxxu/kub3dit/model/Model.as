@@ -307,6 +307,7 @@ package com.muxxu.kub3dit.model {
 					break;
 				
 				case Constants.MAP_FILE_TYPE_2:
+					Textures.getInstance().removeCustomKubes();
 					var customs:uint = data.readUnsignedByte();
 					var i:int, len:int, cube:CubeData;
 					for(i = 0; i < customs; ++i) {

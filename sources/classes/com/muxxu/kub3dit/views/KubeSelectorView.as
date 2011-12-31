@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.buttons.KubeSelectorButton;
 	import com.muxxu.kub3dit.components.form.AddKubeForm;
@@ -24,7 +25,7 @@ package com.muxxu.kub3dit.views {
 	import mx.effects.easing.Sine;
 
 
-
+	[Event(name="resize", type="flash.events.Event")]
 
 
 	/**
@@ -152,6 +153,7 @@ package com.muxxu.kub3dit.views {
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
 			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
+			Textures.getInstance().addEventListener(TextureEvent.CHANGE_SPRITESHEET, updateList);
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_ADD_COMPLETE, updateList);
 		}
 		
@@ -228,6 +230,7 @@ package com.muxxu.kub3dit.views {
 			}
 			computePositions();
 			_group.addEventListener(FormComponentGroupEvent.CHANGE, changeSelectionHandler);
+			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
 		/**

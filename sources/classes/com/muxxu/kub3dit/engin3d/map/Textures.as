@@ -1,4 +1,8 @@
 package com.muxxu.kub3dit.engin3d.map {
+	import com.muxxu.kub3dit.events.TextureEvent;
+	import com.nurun.components.invalidator.Validable;
+	import com.nurun.components.invalidator.Invalidator;
+	import flash.events.EventDispatcher;
 	import mx.utils.ColorUtil;
 	import com.nurun.utils.color.ColorFunctions;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
@@ -14,13 +18,16 @@ package com.muxxu.kub3dit.engin3d.map {
 	import flash.geom.Rectangle;
 	
 	
+	[Event(name="CHANGE_SPRITESHEET", type="com.muxxu.kub3dit.events.TextureEvent")]
+	
+	
 	/**
 	 * Singleton Textures
 	 * 
 	 * @author Francois
 	 * @date 4 sept. 2011;
 	 */
-	public class Textures {
+	public class Textures extends EventDispatcher implements Validable {
 		
 		private static var _instance:Textures;
 		public static const PADDING:int = 1;
@@ -34,6 +41,8 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _customKubes:Vector.<CubeData>;
 		private var _colorsBmd:BitmapData;
 		private var _genColors:Array;//used for image generation. Provides a quick way to get only different colors of different kubes
+		private var _invalidator:Invalidator;
+		private var _baseSpriteSheet : BitmapData;
 		
 		
 		
@@ -173,9 +182,12 @@ package com.muxxu.kub3dit.engin3d.map {
 			_genColors		= [];
 			_customKubes	= new Vector.<CubeData>();
 			
+			_invalidator	= new Invalidator(this);
+			
 			//Read sprite sheet map to define kube textures by their ID.
 			_spriteSheet = new BitmapData(1024, 1024, true, 0x55ff0000);
 			_spriteSheet.copyPixels(bitmapData, bitmapData.rect, new Point());
+			_baseSpriteSheet = _spriteSheet.clone();
 			
 			var i:int, len:int, lines:Array, chunks:Array, id:int, type:String, w:int, h:int;
 			w = _spriteSheet.width;
@@ -303,6 +315,30 @@ package com.muxxu.kub3dit.engin3d.map {
 		}
 		
 		/**
+		 * Removes all the customed kubes.
+		 */
+		public function removeCustomKubes():void {
+			var i:int, len:int, id:int;
+			len = _customKubes.length;
+			for(i = 0; i < len; ++i) {
+				id = 256 - i - 1;
+				_levelColors[id] = null;
+				_bitmapDatas[id] = null;
+				_cubesFramesCoos[id] = null;
+				delete _levelColors[id];
+				delete _bitmapDatas[id];
+				delete _cubesFramesCoos[id];
+			}
+			
+			_spriteSheet = _baseSpriteSheet.clone();
+			_customKubes = new Vector.<CubeData>();
+			
+			if(len > 0) {
+				_invalidator.invalidate();
+			}
+		}
+		
+		/**
 		 * Adds a custom kube
 		 */
 		public function addKube(data:CubeData):void {
@@ -376,6 +412,15 @@ package com.muxxu.kub3dit.engin3d.map {
 				}
 				frame ++;
 			}
+			_invalidator.invalidate();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function validate():void {
+			_invalidator.flagAsValidated();
+			dispatchEvent(new TextureEvent(TextureEvent.CHANGE_SPRITESHEET));
 		}
 
 
