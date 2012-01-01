@@ -66,7 +66,7 @@ package com.muxxu.kub3dit.engin3d.preview {
 			var py:int = _editorView.mousePos.y * cubeSizeRatio;//Camera3D.locY;
 			var pz:int = _editorView.mousePos.z * cubeSizeRatio;//Camera3D.locZ;
 			
-			if(px == -1) return;//mouse out of grid in this case
+			if(pz == -1 * cubeSizeRatio) return;//mouse out of grid in this case
 			
 			var bmd:BitmapData			= Textures.getInstance().spriteSheet;
 			var translucide:Array		= Textures.getInstance().translucide;

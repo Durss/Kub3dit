@@ -28,6 +28,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		private static var _mapDepth:Number;
 		private static var _mapHeight:int;
 		private static var _map:Map;
+		private static var _configured:Boolean;
 		
 		private var _stage:Stage;
 		private var _lookOffset:Point = new Point();
@@ -61,6 +62,7 @@ com.muxxu.kub3dit.engin3d.camera {
 			_mapDepth = data.readShort();
 			_mapHeight = data.readShort();
 			data.position -= 6;//map reads those data after camera
+			_configured = true;
 		}
 		
 		private function enterFrameHandler(e:Event):void {
@@ -185,6 +187,11 @@ com.muxxu.kub3dit.engin3d.camera {
 			_mapWidth = _map.mapSizeX;
 			_mapDepth = _map.mapSizeY;
 			_mapHeight = _map.mapSizeZ;
+			
+			if(!_configured) {
+				setPosition(new Vector3D(-_map.mapSizeX*.5 * ChunkData.CUBE_SIZE_RATIO,_map.mapSizeY*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
+				rotationX = 0;
+			}
 		}
 
 		public static function moveZTo(level:Number):void {
