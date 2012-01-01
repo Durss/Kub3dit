@@ -251,13 +251,16 @@ package com.muxxu.kub3dit.components.editor {
 			if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
 				_mousePos.x = Math.floor(mouseX/_cellSize);
 				_mousePos.y = Math.floor(mouseY/_cellSize);
+				_globalMousePos.x = ox + _mousePos.x;
+				_globalMousePos.y = oy + _mousePos.y;
+				_globalMousePos.z = _z;
 			}else{
 				_mousePos.x = _mousePos.y = -1;
+				_globalMousePos.x = -1;
+				_globalMousePos.y = -1;
+				_globalMousePos.z = -1;
 			}
 			
-			_globalMousePos.x = ox + _mousePos.x;
-			_globalMousePos.y = oy + _mousePos.y;
-			_globalMousePos.z = _z;
 			if(_pressed && !_dragMode && _mousePos.x > -1) {
 				_lastPos = _mousePos;
 				_tmpPoint.x = ox;

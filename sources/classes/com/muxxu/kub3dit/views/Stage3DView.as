@@ -159,8 +159,6 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function initChunksManager():void {
 			Camera3D.setMap(_map);
-			Camera3D.setPosition(new Vector3D(-_map.mapSizeX*.5 * ChunkData.CUBE_SIZE_RATIO,_map.mapSizeY*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
-			Camera3D.rotationX = 0;
 			
 			//Inits the camera correctly to be sure the chunks loading priority
 			//based on the z-sorting will be done correctly

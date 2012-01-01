@@ -92,7 +92,6 @@
 		header("Cache-Control: no-cache, must-revalidate");
 		header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
 	}
-	
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:fb="http://www.facebook.com/2008/fbml">
@@ -167,7 +166,7 @@
 			
 			swfobject.embedSWF("swf/application.swf?v=<?php echo $version; ?>", "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
 			
-			swffit.fit("externalDynamicContent", 800, 600, 2000, 2000, true, true);
+			swffit.fit("externalDynamicContent", 800, 700, 2000, 2000, true, true);
 		</script>
 	</body>
 </html>
