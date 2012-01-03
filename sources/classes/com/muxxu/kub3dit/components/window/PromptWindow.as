@@ -46,7 +46,7 @@ package com.muxxu.kub3dit.components.window {
 		 * Updates the sizes of the window.
 		 * Call this method if the content's sizes change.
 		 */
-		public function udapteSizes():void {
+		public function updateSizes():void {
 			computePositions();
 		}
 

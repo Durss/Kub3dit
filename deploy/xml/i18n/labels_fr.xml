@@ -161,14 +161,23 @@
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>
 		
 		
-		<!-- Save/upload -->
+		<!-- Save/upload/load -->
 		<label code="prompt-save"><![CDATA[Enregistrement]]></label>
 		<label code="prompt-mapDownload"><![CDATA[Télécharger]]></label>
 		<label code="prompt-mapUpload"><![CDATA[Uploader]]></label>
+		<label code="prompt-mapUpdate"><![CDATA[Mettre à jour]]></label>
 		<label code="prompt-mapUploadInfo"><![CDATA[Cette option n'est disponible que pour<br />les cartes pesant moins de {SIZE_MAX}Ko<br />La carte actuelle pèse {SIZE}Ko.]]></label>
 		<label code="prompt-mapDownloadLevels"><![CDATA[Télécharger plans]]></label>
 		<label code="prompt-mapSave"><![CDATA[Enregistrement]]></label>
 		<label code="prompt-mapUploadCopyLink"><![CDATA[Copier l'URL]]></label>
+		<label code="prompt-mapUploadModify"><![CDATA[Modifiable]]></label>
+		<label code="prompt-mapUploadProtect"><![CDATA[Protéger]]></label>
+		<label code="prompt-mapUploadProtectPass"><![CDATA[Pass :]]></label>
+		<label code="prompt-mapLoadPassTitle"><![CDATA[Mot de passe]]></label>
+		<label code="prompt-mapLoadPassDescription"><![CDATA[Ce plan est protégé. Entrez le mot de passe pour y accéder.]]></label>
+		<label code="prompt-mapLoadPassSubmit"><![CDATA[Valider]]></label>
+		<label code="prompt-mapLoadPassCancel"><![CDATA[Annuler]]></label>
+		<label code="prompt-mapLoadPassError"><![CDATA[Mot de passe invalide !]]></label>
 	</labels>
 	
 </root>

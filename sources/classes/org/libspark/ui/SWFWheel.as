@@ -82,8 +82,6 @@ package org.libspark.ui
             }
             catch (e:Error)
             {
-                //  FIXME: should show full stack trace?
-                //trace(e.getStackTrace());
                 trace("Warning: turn off SWFWheel because can't access external interface.");
             }
             return f;

@@ -13,7 +13,7 @@
 	</labels>
 	
 	<vars>
-		<var code="root"><![CDATA[]]></var>
+		<var code="root"><![CDATA[http://localhost/kub3dit/]]></var>
 		<var code="shareUrl"><![CDATA[http://fevermap.org/kub3dit/#{ID}]]></var>
 		<var code="mapSizeHeight">31</var>
 	</vars>

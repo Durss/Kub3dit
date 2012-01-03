@@ -62,7 +62,7 @@ package com.muxxu.kub3dit.commands {
 		/**
 		 * @inheritDoc
 		 */
-		public function get done():Number { return _i/(_map.mapSizeX * _map.mapSizeY) * .5 + (_encoded/_levels.length) * .5; }
+		public function get done():Number { return _i/(_map.mapSizeX * _map.mapSizeY) * .2 + (_encoded/_levels.length) * .8; }
 
 		/**
 		 * @inheritDoc

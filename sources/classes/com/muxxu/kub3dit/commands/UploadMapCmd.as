@@ -29,7 +29,7 @@ package com.muxxu.kub3dit.commands {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function  UploadMapCmd(data:ByteArray) {
+		public function  UploadMapCmd(data:ByteArray, modify:Boolean, pass:String, idToUpdate:String = "") {
 			super();
 			_loader = new URLLoader();
 			_loader.addEventListener( Event.COMPLETE, uploadCompleteHandler);
@@ -37,7 +37,7 @@ package com.muxxu.kub3dit.commands {
 			
 			var header:URLRequestHeader = new URLRequestHeader ("Content-type", "application/octet-stream");
 			
-			_request = new URLRequest(Config.getPath("uploadMapPath"));
+			_request = new URLRequest(Config.getPath("uploadMapPath")+"?mod="+(modify?"1":"0")+"&pass="+pass+"&uid="+idToUpdate);
 			_request.requestHeaders.push(header);
 			_request.method = URLRequestMethod.POST;
 			_request.data = data;
