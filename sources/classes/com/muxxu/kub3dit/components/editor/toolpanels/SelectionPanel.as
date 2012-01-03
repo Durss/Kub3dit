@@ -162,6 +162,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					_landMark.graphics.drawRect(_selectRect.x+1, _selectRect.y+1, Math.max(0, _selectRect.width-2), Math.max(0, _selectRect.height-2));
 					
 					_copyBt.enabled = _selectRect.width > 0 && _selectRect.height > 0;
+					_depth.enabled = _copyBt.enabled;
+					_depthLabel.alpha = _copyBt.enabled? 1 : .4
 					_copyBt.mouseEnabled = true;
 				}
 			}else{
@@ -351,8 +353,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				_fixedLandmark = false;
 				_copyBt.enabled = false;
 				_copyBt.mouseEnabled = true;
-				_depth.enabled = _rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
-				_depthLabel.alpha = _rotationLabel.alpha = _flipLabel.alpha = 1;
+				_rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
+				_rotationLabel.alpha = _flipLabel.alpha = 1;
 
 				depth = Math.min(parseInt(_depth.text), _lastOrigin.z+1);
 				_copyData = new ByteArray();

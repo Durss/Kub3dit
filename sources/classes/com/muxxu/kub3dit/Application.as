@@ -1,7 +1,8 @@
 package com.muxxu.kub3dit {
+	import com.muxxu.kub3dit.views.MapPasswordView;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
-	import com.muxxu.kub3dit.views.DownloadView;
+	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.views.EditorView;
 	import com.muxxu.kub3dit.views.LockView;
 	import com.muxxu.kub3dit.views.MainMenuView;
@@ -79,7 +80,8 @@ package com.muxxu.kub3dit {
 			addChild(new SplashScreenView());
 			addChild(new LockView());
 			addChild(new ProgressView());
-			addChild(new DownloadView());
+			addChild(new SaveView());
+			addChild(new MapPasswordView());
 			addChild(new ToolTipView());
 //			addChild(new Stats()).y = 50;
 			

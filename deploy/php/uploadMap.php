@@ -8,14 +8,16 @@
 
 	0 - success.
 	1 - POST var missing.
+	2 - not editable map.
 
 	*/
 
 	$dir = '../maps/';
 	$result = 0;
 	$extra = "";
+	$updateMode = false;
 	
-	if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
+	if (isset($GLOBALS['HTTP_RAW_POST_DATA'], $_GET["mod"], $_GET["pass"])) {
 		$filepath = $dir."index.txt";
 		if (!file_exists($filepath)) {
 			$handler = fopen($filepath, "w");
@@ -23,15 +25,48 @@
 			fclose($handler);
 		}
 		
+		//Get last index
 		$handler = fopen($filepath, "r+");
 		$index = intval(fread($handler, filesize($filepath))) + 1;
 		file_put_contents($filepath, $index);
 		fclose($handler);
 		
-		if(@$fp = fopen($dir.$index.".png", 'wb')) {
-			fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
-			fclose($fp);
-			$extra = "\t<fileName><![CDATA[".Base62::convert($index, 10, 62)."]]></fileName>\r\n";
+		//Update mode management
+		if (isset($_GET["uid"])) { 
+			$index = Base62::convert($_GET["uid"], 62, 10);
+			$updateMode = true;
+			
+			$fileName	= $dir.$index.".props";
+			if (file_exists($fileName)) {
+				$handler	= fopen($fileName, 'rb');
+				$content	= fread($handler, filesize($fileName));
+				$chunks		= explode("\r", $content);
+				$editable	= $chunks[0] == "1";
+			}else {
+				$editable	= false;
+			}
+			
+			if (!$editable) {
+				$result = 2;
+			}
+		}
+		
+		if($result == 0) {
+		
+			//Create props file
+			$propsPath = $dir.$index.".props";
+			if (!$updateMode && !file_exists($propsPath)) {//do not override the .props file in case of update.
+				$handler = fopen($propsPath, "w");
+				fwrite($handler, $_GET["mod"]."\r".$_GET["pass"]);
+				fclose($handler);
+			}
+			
+			//create map
+			if(@$fp = fopen($dir.$index.".png", 'wb')) {
+				fwrite($fp, $GLOBALS[ 'HTTP_RAW_POST_DATA' ]);
+				fclose($fp);
+				$extra = "\t<fileName><![CDATA[".Base62::convert($index, 10, 62)."]]></fileName>\r\n";
+			}
 		}
 	}else {
 		$result = 1;

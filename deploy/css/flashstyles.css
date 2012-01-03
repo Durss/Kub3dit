@@ -57,3 +57,5 @@
 .tool-imageGenProcessing { font-family:Verdana; font-weight:bold; font-size:20; color:#ffffff; }
 
 .promptWindowTitle { font-family:Verdana; font-weight:bold; font-size:18; color:#ffffff; flash-charcase:upper; text-align:center; }
+.promptWindowContent { font-family:Verdana; font-size:14; color:#ffffff; }
+.promptWindowContentError { font-family:Verdana; font-size:12; color:#cc0000; }

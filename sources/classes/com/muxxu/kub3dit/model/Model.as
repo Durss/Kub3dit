@@ -188,9 +188,20 @@ package com.muxxu.kub3dit.model {
 		/**
 		 * Downloads the map
 		 */
-		public function uploadMap():void {
+		public function uploadMap(modify:Boolean, pass:String):void {
 			lock();
-			_uploadCmd = new UploadMapCmd(_saveData);
+			_uploadCmd = new UploadMapCmd(_saveData, modify, pass);
+			_uploadCmd.addEventListener(CommandEvent.COMPLETE, uploadCompleteHandler);
+			_uploadCmd.addEventListener(CommandEvent.ERROR, uploadErrorHandler);
+			_uploadCmd.execute();
+		}
+		
+		/**
+		 * Updates the uploaded map
+		 */
+		public function updateUploadedMap(id:String):void {
+			lock();
+			_uploadCmd = new UploadMapCmd(_saveData, false, "", id);
 			_uploadCmd.addEventListener(CommandEvent.COMPLETE, uploadCompleteHandler);
 			_uploadCmd.addEventListener(CommandEvent.ERROR, uploadErrorHandler);
 			_uploadCmd.execute();
@@ -222,8 +233,9 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function changeAddressHandler(event:SWFAddressEvent):void {
 			var id:String = SWFAddress.getValue().replace(/[^A-Za-z0-9]/g, "");
+			id="p";//TODO remove
 			if(id.length > 0 && _ignoreLoadId != id) {
-				lock();
+//				lock();
 				_loadMapCmd = new LoadMapCmd(id);
 				_loadMapCmd.addEventListener(CommandEvent.COMPLETE, loadMapCompleteHandler);
 				_loadMapCmd.addEventListener(CommandEvent.ERROR, loadMapErrorHandler);
@@ -271,6 +283,10 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function loadMapCompleteHandler(event:CommandEvent):void {
 			unlock();
+			
+			if(event.currentTarget is LoadMapCmd) {
+				LoadMapCmd(event.currentTarget).editable;
+			}
 			
 			var data:ByteArray = event.data as ByteArray;
 			//Search for PNG signature
