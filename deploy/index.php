@@ -7,7 +7,7 @@
 		die;
 	}
 	
-	$lang = isset($_GET["lang"])? $_GET["lang"] : isset($_SESSION["lang"])? $_SESSION["lang"] : "en";
+	$lang = isset($_GET["lang"])? $_GET["lang"] : (isset($_SESSION["lang"])? $_SESSION["lang"] : "en");
 	
 	//header('Content-type: text/html; charset=iso-8859-1');
 	$pseudo = isset($_SESSION["uname"])? $_SESSION["uname"] : "";
@@ -53,15 +53,17 @@
 	$authorized = $authorized || isAuthorizedUser($pseudo, "ebene");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "mllenolwenn");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "musaran");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
+	
+	$dateEnd = DateTime::createFromFormat('d/m/Y', '18/02/2012');
+	if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
+		$authorized = $authorized || isAuthorizedUser($pseudo, "steampirate");
+	}
 	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
-	
-	if (date("d.m.Y") == "30.12.2011") {
-		$lang = "fr";
-		$authorized = true;
-	}
 	
 	if ($authorized) {
 		//if (!isset($_SESSION["uname"])) {
@@ -148,7 +150,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "14.3";
+	$version= "15.1";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";
