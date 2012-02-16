@@ -25,14 +25,9 @@
 			fclose($handler);
 		}
 		
-		//Get last index
-		$handler = fopen($filepath, "r+");
-		$index = intval(fread($handler, filesize($filepath))) + 1;
-		file_put_contents($filepath, $index);
-		fclose($handler);
-		
 		//Update mode management
-		if (isset($_GET["uid"])) { 
+		if (isset($_GET["uid"]) && strlen($_GET["uid"])) {
+			//TODO add password protection
 			$index = Base62::convert($_GET["uid"], 62, 10);
 			$updateMode = true;
 			
@@ -49,6 +44,12 @@
 			if (!$editable) {
 				$result = 2;
 			}
+		}else{
+			//Get last index
+			$handler = fopen($filepath, "r+");
+			$index = intval(fread($handler, filesize($filepath))) + 1;
+			file_put_contents($filepath, $index);
+			fclose($handler);
 		}
 		
 		if($result == 0) {
@@ -57,7 +58,7 @@
 			$propsPath = $dir.$index.".props";
 			if (!$updateMode && !file_exists($propsPath)) {//do not override the .props file in case of update.
 				$handler = fopen($propsPath, "w");
-				fwrite($handler, $_GET["mod"]."\r".$_GET["pass"]);
+				fwrite($handler, $_GET["mod"]."\r".(strlen($_GET["pass"]) > 0? md5($_GET["pass"]) : ""));
 				fclose($handler);
 			}
 			
