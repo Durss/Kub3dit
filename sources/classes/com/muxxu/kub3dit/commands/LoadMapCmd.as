@@ -144,7 +144,10 @@ package com.muxxu.kub3dit.commands {
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, data));
 			}
 		}
-
+		
+		/**
+		 * Called if map's loading fails.
+		 */
 		private function loadErrorHandler(event:IOErrorEvent):void {
 			dispatchEvent(new CommandEvent(CommandEvent.ERROR, event.text));
 		}

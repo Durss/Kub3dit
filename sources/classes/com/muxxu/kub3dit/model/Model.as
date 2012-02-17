@@ -49,6 +49,7 @@ package com.muxxu.kub3dit.model {
 		private var _uploadCmd:UploadMapCmd;
 		private var _loadMapCmd:LoadMapCmd;
 		private var _ignoreLoadId:String;
+		private var _ignoreNextURLChange:Boolean;
 		
 		
 		
@@ -232,8 +233,12 @@ package com.muxxu.kub3dit.model {
 		 * Called when URL changes
 		 */
 		private function changeAddressHandler(event:SWFAddressEvent):void {
+			if(_ignoreNextURLChange) {
+				_ignoreNextURLChange = false;
+				return;
+			}
 			var id:String = SWFAddress.getValue().replace(/[^A-Za-z0-9]/g, "");
-			id="p";//TODO remove
+//			id="C";//TODO remove
 			if(id.length > 0 && _ignoreLoadId != id) {
 //				lock();
 				_loadMapCmd = new LoadMapCmd(id);
@@ -447,6 +452,7 @@ package com.muxxu.kub3dit.model {
 			_ignoreLoadId = event.data as String;
 			dispatchEvent(new LightModelEvent(LightModelEvent.MAP_UPLOAD_COMPLETE, _ignoreLoadId));
 			SWFAddress.setValue(_ignoreLoadId);//let this at last! Callback SWFAddress callback sets this var to null
+			_ignoreNextURLChange = true;
 		}
 
 		/**

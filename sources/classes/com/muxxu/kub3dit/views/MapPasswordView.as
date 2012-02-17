@@ -163,7 +163,9 @@ package com.muxxu.kub3dit.views {
 		 * Called when form is sbmitted
 		 */
 		private function submitHandler(event:Event):void {
+			_error.visible = false;
 			_loadMethod(_input.text);
+			computePositions();
 		}
 		
 		/**

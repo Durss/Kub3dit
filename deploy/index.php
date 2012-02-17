@@ -55,6 +55,7 @@
 	$authorized = $authorized || isAuthorizedUser($pseudo, "mllenolwenn");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "musaran");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "oshyso");
 	
 	$dateEnd = DateTime::createFromFormat('d/m/Y', '18/02/2012');
 	if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
@@ -150,7 +151,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "15.1";
+	$version= "15.3.2";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";

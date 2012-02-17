@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <root>
 	<labels>
+		<!-- Errors -->
+		<label code="loadKubeError"><![CDATA[Kube's loading has failed.<br />Make sure the ID is valid.]]></label>
+		<label code="uploadMapError"><![CDATA[An error has occured during loading.<br />Please try again.<br /><br />If problem persists, contact <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
+		<label code="maxCustomKubesError"><![CDATA[You can't add more than ${VALUE} custom kubes.]]></label>
+		
+		
+		<!-- Splash screen -->
 		<label code="splashDefault"><![CDATA[Map ${X}x${Y}]]></label>
 		<label code="splashCreate"><![CDATA[Custom...]]></label>
 		<label code="splashLoad"><![CDATA[Load]]></label>
@@ -9,9 +16,9 @@
 		<label code="inputMapSize"><![CDATA[Zones :]]></label>
 		<label code="defaultHelp"><![CDATA[Use the mouse wheel to change the sizes.<br />To get more customed sizes use<br />the button right under.]]></label>
 		<label code="titleMapSize"><![CDATA[Enter the number of zones<br />you want the map to be.]]></label>
-		
 		<label code="unkownSaveFileType"><![CDATA[Invalid file type.]]></label>
 		
+		<!-- Editor -->
 		<label code="kube1"><![CDATA[Béton]]></label>
 		<label code="kube2"><![CDATA[Eau]]></label>
 		<label code="kube3"><![CDATA[Terre brune]]></label>
@@ -91,18 +98,23 @@
 		<label code="kube77"><![CDATA[Kube de Noël]]></label>
 		
 		<label code="kubesList"><![CDATA[Kube's list]]></label>
+		<label code="addKubeButton"><![CDATA[Add a kube]]></label>
+		<label code="submitKube"><![CDATA[Add a kube]]></label>
+		<label code="addKubeDescription"><![CDATA[You can add custom kubes to the list. To do that, please use the <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> to create some then specify the IDs in the input below.<br />The ID can be found on it's details window.]]></label>
+		<label code="invalidKubeId"><![CDATA[Invalid ID]]></label>
 		
 		<label code="helpTools"><![CDATA[Keep space bar pressed<br />to be able to drag the grid.]]></label>
-		<label code="helpToolsRubber"><![CDATA[Toggle the current tool to rubber (E)]]></label>
+		<label code="helpToolsRubber"><![CDATA[Toggles the current tool to rubber (E)]]></label>
 		<label code="helpTools1"><![CDATA[Pencil (1)]]></label>
 		<label code="helpTools2"><![CDATA[Paint bucket (2)]]></label>
 		<label code="helpTools3"><![CDATA[Circle (3)]]></label>
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphere (6)]]></label>
-		<label code="helpTools9"><![CDATA[Load Sandkube image]]></label>
-		<label code="helpSyncCam"><![CDATA[Moving in the 3D environment<br />will automatically change the<br />grid's level.]]></label>
-		<label code="helpMoveCam"><![CDATA[Moves the camera at the<br />current grid's level.]]></label>
+		<label code="helpToolsSk"><![CDATA[Load Sandkube image]]></label>
+		<label code="helpToolsImg"><![CDATA[Generate from bitmap]]></label>
+		<label code="helpToolsSelect"><![CDATA[Selection (m)]]></label>
+		<label code="helpSyncCam"><![CDATA[Synch the grid's level<br />and the camera's postion]]></label>
 		
 		<label code="axisSelector"><![CDATA[Axe :]]></label>
 		
@@ -114,7 +126,7 @@
 		<label code="toolConfig-diskShape-fill"><![CDATA[Fill]]></label>
 		
 		<label code="toolConfig-circleShape-inputRadius"><![CDATA[Radius]]></label>
-		<label code="toolConfig-circleShape-inputThick"><![CDATA[Epaisseur]]></label>
+		<label code="toolConfig-circleShape-inputThick"><![CDATA[Thickness]]></label>
 		
 		<label code="toolConfig-rectShape-inputWidth"><![CDATA[Width]]></label>
 		<label code="toolConfig-rectShape-inputHeight"><![CDATA[height]]></label>
@@ -131,9 +143,44 @@
 		<label code="toolConfig-sphereShape-fill"><![CDATA[Fill]]></label>
 		
 		<label code="toolConfig-sandKube-load"><![CDATA[Load]]></label>
+		<label code="toolConfig-sandKube-clear"><![CDATA[Clear]]></label>
+		<label code="toolConfig-sandKube-rotate"><![CDATA[Rotation]]></label>
+		<label code="toolConfig-sandKube-flip"><![CDATA[Flip]]></label>
 		
-		<label code="syncLevels"><![CDATA[Synchronise with camera]]></label>
-		<label code="moveCamToLevel"><![CDATA[Move camera]]></label>
+		<label code="toolConfig-imageGen-load"><![CDATA[Load]]></label>
+		<label code="toolConfig-imageGen-clear"><![CDATA[Clear]]></label>
+		<label code="toolConfig-imageGen-levels"><![CDATA[Multiple levels]]></label>
+		
+		<label code="toolConfig-selector-copyHelp"><![CDATA[Draw a rectangle on the map<br />to define the zone to copy/cut.]]></label>
+		<label code="toolConfig-selector-depthHelp"><![CDATA[Number of levels to copy down side<br />starting from the current map's level.]]></label>
+		<label code="toolConfig-selector-copy"><![CDATA[Copy]]></label>
+		<label code="toolConfig-selector-cut"><![CDATA[Cut]]></label>
+		<label code="toolConfig-selector-cancel"><![CDATA[Cancel]]></label>
+		<label code="toolConfig-selector-depth"><![CDATA[Depth]]></label>
+		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
+		<label code="toolConfig-selector-flip"><![CDATA[Flip]]></label>
+		
+		<label code="syncLevels"><![CDATA[Synch with cam]]></label>
+		<label code="drawFullRadar"><![CDATA[Draw full radar]]></label>
+		
+		
+		<!-- Save/upload/load -->
+		<label code="prompt-save"><![CDATA[Save]]></label>
+		<label code="prompt-mapDownload"><![CDATA[Download]]></label>
+		<label code="prompt-mapUpload"><![CDATA[Upload]]></label>
+		<label code="prompt-mapUpdate"><![CDATA[Update]]></label>
+		<label code="prompt-mapUploadInfo"><![CDATA[This option is available only<br />for maps smaller than {SIZE_MAX}Ko<br />The current map is {SIZE}Ko.]]></label>
+		<label code="prompt-mapDownloadLevels"><![CDATA[Download levels]]></label>
+		<label code="prompt-mapSave"><![CDATA[Save]]></label>
+		<label code="prompt-mapUploadCopyLink"><![CDATA[Copy l'URL]]></label>
+		<label code="prompt-mapUploadModify"><![CDATA[Editable]]></label>
+		<label code="prompt-mapUploadProtect"><![CDATA[Protect]]></label>
+		<label code="prompt-mapUploadProtectPass"><![CDATA[Pass :]]></label>
+		<label code="prompt-mapLoadPassTitle"><![CDATA[Password]]></label>
+		<label code="prompt-mapLoadPassDescription"><![CDATA[This map is protected. Please enter the password to access it.]]></label>
+		<label code="prompt-mapLoadPassSubmit"><![CDATA[Submit]]></label>
+		<label code="prompt-mapLoadPassCancel"><![CDATA[Cancel]]></label>
+		<label code="prompt-mapLoadPassError"><![CDATA[Invalid password !]]></label>
 	</labels>
 	
 </root>
