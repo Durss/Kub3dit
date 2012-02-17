@@ -35,6 +35,8 @@ com.muxxu.kub3dit.engin3d.camera {
 		private var _mouseView:Boolean = true;
 		private var _forward:int;
 		private var _strafe:int;
+		private var _ctrl:Boolean;
+		private var _shift:Boolean;
 		
 		public function Camera3D(stage:Stage) 
 		{
@@ -66,18 +68,19 @@ com.muxxu.kub3dit.engin3d.camera {
 		}
 		
 		private function enterFrameHandler(e:Event):void {
-			var offx:Number = _strafe * 15;
+			var coeff:int = _shift? 20 : _ctrl? 10 : 1;
+			var offx:Number = _strafe * 15 * coeff;
 			if(!_mouseView) {
 				offx = 0;
-				rotationX -= _strafe * 4;
+				rotationX -= _strafe * 4 * coeff;
 			}
-			var offy:Number = _forward * 15;
+			var offy:Number = _forward * 15 * coeff;
 			var dist:Number = (Math.sqrt(offx * offx + offy * offy));
 			if (rotationX<0)	rotationX+=360;
 			if (rotationX>360)	rotationX-=360;
 			
 			var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
-			var moveZ:Number = Math.cos((Camera3D.rotationY+90)*Math.PI/180) * 15 * _forward;
+			var moveZ:Number = Math.cos((Camera3D.rotationY+90)*Math.PI/180) * 15 * _forward * coeff;
 			dist -= Math.abs(moveZ);
 			moveZ *= .01;
 			var radians1:Number = rotationX / 180 * Math.PI;
@@ -109,17 +112,18 @@ com.muxxu.kub3dit.engin3d.camera {
 		private function onKeyDown(e:KeyboardEvent):void {
 			if(e.target is TextField) return;
 			
-			var coeff:int = e.ctrlKey? 5 : 1;
+			_ctrl = e.ctrlKey;
+			_shift = e.shiftKey;
 			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.W) {
-				_forward = 1 * coeff;
+				_forward = 1;
 			}
 			if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
-				_forward = -1 * coeff;
+				_forward = -1;
 			}
 			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
-				_strafe = -1 * coeff;
+				_strafe = -1;
 			} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.A) {
-				_strafe = 1 * coeff;
+				_strafe = 1;
 			}
 		}
 		

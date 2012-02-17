@@ -45,6 +45,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		function get eraseMode():Boolean;
 		
 		/**
+		 * Sets the current edition level.
+		 */
+		function set level(value:int):void;
+		
+		/**
 		 * Gets if the landmark should be fixed.
 		 * If this getter returns true, then the landmark will be fixed at the
 		 * top left of the editor's grid.

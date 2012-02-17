@@ -30,7 +30,7 @@
 			$password	= $chunks[1];
 			$protected	= strlen($password) > "0";
 		}
-		if ($protected && (!isset($_GET["pass"]) || $_GET["pass"] != $password)) {
+		if ($protected && (!isset($_GET["pass"]) ||md5($_GET["pass"]) != $password)) {
 			$result = isset($_GET["pass"])? 3 : 1;
 		}else if(file_exists($dir.$index.".png")) {
 			//header("Status: 301 Moved Permanently", false, 301);

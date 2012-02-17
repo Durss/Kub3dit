@@ -85,7 +85,7 @@ package com.muxxu.kub3dit.components.form {
 		public function set editableMap(value:Boolean):void {
 			_editableMap = value;
 			addChild(_updateBt);
-			if(!_editableMap) removeChild(_updateBt);
+			if(!value) removeChild(_updateBt);
 			computePositions();
 		}
 		

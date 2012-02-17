@@ -114,6 +114,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function get fixedLandmark():Boolean {
 			return false;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set level(value:int):void { }
 
 
 

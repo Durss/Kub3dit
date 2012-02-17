@@ -104,6 +104,7 @@ package com.muxxu.kub3dit.components.editor {
 		public function set currentPanel(value:IToolPanel):void {
 			_panel = value;
 			_panel.chunksManager = _3dView.manager;
+			_panel.level = _z;
 		}
 
 
@@ -383,6 +384,7 @@ package com.muxxu.kub3dit.components.editor {
 			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
 			_lastPos.x = _lastPos.y = -1;
 			_levelSlider.level = _z;
+			if(_panel != null) _panel.level = _z;
 		}
 		
 		/**
@@ -423,6 +425,7 @@ package com.muxxu.kub3dit.components.editor {
 			_z = _levelSlider.level;
 			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
 			_lastPos.x = _lastPos.y = -1;
+			if(_panel != null) _panel.level = _z;
 		}
 		
 	}

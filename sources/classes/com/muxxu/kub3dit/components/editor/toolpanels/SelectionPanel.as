@@ -1,6 +1,4 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
-	import com.muxxu.kub3dit.graphics.FLipVerticalIcon;
-	import com.muxxu.kub3dit.graphics.FLipHorizontalIcon;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
@@ -8,6 +6,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.events.ToolTipEvent;
+	import com.muxxu.kub3dit.graphics.FLipHorizontalIcon;
+	import com.muxxu.kub3dit.graphics.FLipVerticalIcon;
 	import com.muxxu.kub3dit.graphics.RotationCCWIcon;
 	import com.muxxu.kub3dit.graphics.RotationCWIcon;
 	import com.muxxu.kub3dit.vo.ToolTipAlign;
@@ -63,6 +63,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _flipLabel:CssTextField;
 		private var _hflipState:Boolean;
 		private var _vflipState:Boolean;
+		private var _currentLevel:int;
+		private var _cutBt:ButtonKube;
 		
 		
 		
@@ -115,6 +117,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		public function get fixedLandmark():Boolean {
 			return _fixedLandmark;
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function set level(value:int):void {
+			_currentLevel = value;
+		}
 
 
 
@@ -161,10 +170,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					_landMark.graphics.drawRect(_selectRect.x, _selectRect.y, _selectRect.width, _selectRect.height);
 					_landMark.graphics.drawRect(_selectRect.x+1, _selectRect.y+1, Math.max(0, _selectRect.width-2), Math.max(0, _selectRect.height-2));
 					
-					_copyBt.enabled = _selectRect.width > 0 && _selectRect.height > 0;
+					_copyBt.enabled = _cutBt.enabled = _selectRect.width > 0 && _selectRect.height > 0;
 					_depth.enabled = _copyBt.enabled;
-					_depthLabel.alpha = _copyBt.enabled? 1 : .4
-					_copyBt.mouseEnabled = true;
+					_depthLabel.alpha = _copyBt.enabled? 1 : .4;
+					_copyBt.mouseEnabled = _cutBt.mouseEnabled = true;
 				}
 			}else{
 //				_fixedLandmark = true;
@@ -248,6 +257,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_levelToColor = Textures.getInstance().levelColors;
 			
 			_copyBt = addChild(new ButtonKube(Label.getLabel("toolConfig-selector-copy"))) as ButtonKube;
+			_cutBt = addChild(new ButtonKube(Label.getLabel("toolConfig-selector-cut"))) as ButtonKube;
 			_cancelBt = addChild(new ButtonKube(Label.getLabel("toolConfig-selector-cancel"))) as ButtonKube;
 			
 			_depthLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
@@ -264,12 +274,15 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_flipLabel.text = Label.getLabel("toolConfig-selector-flip");
 			_rotationLabel.text = Label.getLabel("toolConfig-selector-rotate");
 			
-			_depth.text = Config.getVariable("mapSizeHeight");
+			_depth.text = (Config.getNumVariable("mapSizeHeight")-1).toString();
 			_depthLabel.text = Label.getLabel("toolConfig-selector-depth");
 			_copyBt.enabled = false;
 			_copyBt.mouseEnabled = true;
+			_cutBt.enabled = false;
+			_cutBt.mouseEnabled = true;
 			
-			_cancelBt.x = _copyBt.width + 5;
+			_cutBt.x = _copyBt.width + 5;
+			_cancelBt.x = _cutBt.x + _cutBt.width + 5;
 			_depth.x = _depthLabel.width + 5;
 			_depth.y = _depthLabel.y  = _copyBt.height + 5;
 			
@@ -295,6 +308,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
 			_copyBt.addEventListener(MouseEvent.ROLL_OVER, rollOverCopyHandler);
+			_cutBt.addEventListener(MouseEvent.ROLL_OVER, rollOverCopyHandler);
+			_depth.addEventListener(MouseEvent.ROLL_OVER, rollOverDepthHandler);
 			
 			cancel();
 		}
@@ -347,16 +362,19 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Called when a button is clicked
 		 */
 		private function clickHandler(event:MouseEvent):void {
-			var i:int, len:int, px:int, py:int, pz:int, depth:int, tile:int, pixelsDone:Array;
-			if(event.target == _copyBt && _copyBt.enabled) {
+			var i:int, len:int, px:int, py:int, pz:int, depth:int, tile:int, pixelsDone:Array, clear:Boolean;
+			if((event.target == _copyBt && _copyBt.enabled) || event.target == _cutBt && _cutBt.enabled) {
+				clear = event.target == _cutBt;
 				pixelsDone = [];
 				_fixedLandmark = false;
-				_copyBt.enabled = false;
-				_copyBt.mouseEnabled = true;
+				_copyBt.enabled = _cutBt.enabled = false;
+				_copyBt.mouseEnabled = _cutBt.mouseEnabled = true;
 				_rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
 				_rotationLabel.alpha = _flipLabel.alpha = 1;
 
-				depth = Math.min(parseInt(_depth.text), _lastOrigin.z+1);
+				depth = parseInt(_depth.text);
+				if (_currentLevel + 1 - depth < 0) depth = _currentLevel + 1;
+				
 				_copyData = new ByteArray();
 				_copyData.writeUnsignedInt(_selectRect.width);
 				_copyData.writeUnsignedInt(_selectRect.height);
@@ -369,10 +387,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				for(i = 0; i < len; ++i) {
 					px = i%_selectRect.width;
 					py = Math.floor(i/_selectRect.width)%_selectRect.height;
-					pz = depth - Math.floor(i/(_selectRect.width*_selectRect.height)) - 1;
+					pz = _currentLevel - Math.floor(i/(_selectRect.width*_selectRect.height));
 					
 					if(pz < 0) break;
 					tile = _chunksManager.map.getTile(_lastOrigin.x + px, _lastOrigin.y + py, pz);
+					if(clear) {
+						_chunksManager.addInvalidableCube(_lastOrigin.x + px, _lastOrigin.y + py, pz, 0);
+					}
 					
 					if (tile > 0 && pixelsDone[px+"_"+py] == undefined) {
 						pixelsDone[px+"_"+py] = true;
@@ -382,6 +403,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					_copyData.writeShort( tile );
 					drawLandMark();
 				}
+				if(clear) _chunksManager.invalidate();
 				
 			}else if(event.target == _cancelBt) {
 				cancel();
@@ -450,6 +472,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			if(!_copyBt.enabled) {
 				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-copyHelp"), ToolTipAlign.BOTTOM));
 			}
+		}
+		
+		/**
+		 * Called when depth input is rolled over
+		 */
+		private function rollOverDepthHandler(event:MouseEvent):void {
+			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-depthHelp"), ToolTipAlign.BOTTOM));
 		}
 		
 	}
