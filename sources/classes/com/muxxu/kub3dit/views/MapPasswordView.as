@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.commands.IPassView;
 	import com.nurun.components.vo.Margin;
 	import com.muxxu.kub3dit.graphics.CancelIcon;
 	import com.muxxu.kub3dit.graphics.SubmitIcon;
@@ -24,7 +25,7 @@ package com.muxxu.kub3dit.views {
 	 * @author Francois
 	 * @date 2 janv. 2012;
 	 */
-	public class MapPasswordView extends AbstractView {
+	public class MapPasswordView extends AbstractView implements IPassView {
 		private var _disableLayer:Sprite;
 		private var _content:Sprite;
 		private var _window:PromptWindow;

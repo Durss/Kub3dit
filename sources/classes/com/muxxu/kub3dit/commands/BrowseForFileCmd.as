@@ -10,6 +10,9 @@ package com.muxxu.kub3dit.commands {
 	import flash.events.EventDispatcher;
 	import flash.net.FileReference;
 	
+	[Event(name="onCommandComplete", type="com.nurun.core.commands.events.CommandEvent")]
+	[Event(name="onCommandError", type="com.nurun.core.commands.events.CommandEvent")]
+	
 	/**
 	 * The  LoadMapCmd is a concrete implementation of the ICommand interface.
 	 * Its responsability is to browse for a file and load it

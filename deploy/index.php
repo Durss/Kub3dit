@@ -75,19 +75,24 @@
 		unset( $_SESSION["uname"] );
 	}
 	
+	$redirectWithMap = false;
 	//Redirect the user
 	if (!$authorized && !isset($_SESSION["uname"])) {
 		if (isset($_GET['uid'], $_GET['pubkey'])) {
 			header("location: ./closed");
+			die;
 		}else {
-			header("location: http://muxxu.com/a/kub3dit");
+			$redirectWithMap = true;
 		}
-		die;
 	}else if (isset($_GET['uid'], $_GET['pubkey'])) {// && !isset($_GET['s']) ) {
 		if ($_SERVER["SERVER_NAME"] == "localhost") {
 			$url = "http://localhost/kub3dit/";
 		}else {
-			$url = "http://fevermap.org/kub3dit/";
+			if (isset($_GET["act"])) {
+				$url = "http://fevermap.org/kub3dit/%23".$_GET["act"];
+			}else {
+				$url = "http://fevermap.org/kub3dit/test";
+			}
 		}
 		header("location: redirect.php?url=".$url);//."&pubkey=".$_GET["pubkey"]."&uid=".$_GET["uid"]);
 		die;
@@ -138,6 +143,16 @@
     </head>
     <body>
 <?php
+		if($redirectWithMap) {
+			echo "		<script type=\"text/javascript\">
+				var anchor = self.document.location.hash.substring(1);
+				window.location = \"http://muxxu.com/a/kub3dit?act=\"+anchor;
+			</script>\n";
+			echo "	</body>\n";
+			echo "</html>";
+			die;
+		}
+
 		if (isset($lang) && !file_exists("xml/i18n/labels_".strtolower($lang).".xml")) {
 			$lang = "en";
 		}
@@ -151,7 +166,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "15.3.2";
+	$version= "15.3.3";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";
