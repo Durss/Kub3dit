@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.commands.ISaveView;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
@@ -24,7 +25,7 @@ package com.muxxu.kub3dit.views {
 	 * @author Francois
 	 * @date 11 déc. 2011;
 	 */
-	public class SaveView extends AbstractView {
+	public class SaveView extends AbstractView implements ISaveView {
 		
 		private var _window:PromptWindow;
 		private var _content:Sprite;

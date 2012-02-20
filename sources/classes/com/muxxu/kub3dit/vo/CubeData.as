@@ -1,7 +1,6 @@
 package com.muxxu.kub3dit.vo {
+	import by.blooddy.crypto.Base64;
 	import com.nurun.core.lang.vo.XMLValueObject;
-
-	import mx.utils.Base64Decoder;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -77,10 +76,7 @@ package com.muxxu.kub3dit.vo {
 			_pseudo = xml.@pseudo;
 			_date = parseInt(xml.@date);
 			_kub = new KUBData();
-			var decoder:Base64Decoder = new Base64Decoder();
-			decoder.decode(xml[0]);
-			_kub.fromByteArray(decoder.drain());
-			decoder.reset();
+			_kub.fromByteArray(Base64.decode(xml[0]));
 			
 			dispatchEvent(new Event(Event.CHANGE));
 		}

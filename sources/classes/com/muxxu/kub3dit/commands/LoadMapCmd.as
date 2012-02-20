@@ -1,11 +1,8 @@
 package com.muxxu.kub3dit.commands {
-	import com.muxxu.kub3dit.views.SaveView;
-	import com.muxxu.kub3dit.views.MapPasswordView;
 	import com.nurun.core.commands.AbstractCommand;
 	import com.nurun.core.commands.Command;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.structure.environnement.configuration.Config;
-	import com.nurun.structure.mvc.views.ViewLocator;
 
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
@@ -29,6 +26,9 @@ package com.muxxu.kub3dit.commands {
 		private var _request:URLRequest;
 		private var _editable:Boolean;
 		private var _id:String;
+		private var _passView:IPassView;
+		private var _saveView:ISaveView;
+		private var _password:String;
 		
 		
 		
@@ -36,8 +36,10 @@ package com.muxxu.kub3dit.commands {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function  LoadMapCmd(id:String) {
+		public function  LoadMapCmd(id:String, passView:IPassView, saveView:ISaveView = null) {
 			_id = id;
+			_passView = passView;
+			_saveView = saveView;
 			super();
 			_loader = new URLLoader();
 			_loader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -46,9 +48,7 @@ package com.muxxu.kub3dit.commands {
 			
 			_request = new URLRequest(Config.getPath("loadMapPath"));
 			_request.method = URLRequestMethod.GET;
-			var vars:URLVariables = new URLVariables();
-			vars["id"] = id;
-			_request.data = vars;
+			_request.data = new URLVariables();
 		}
 
 			
@@ -60,6 +60,16 @@ package com.muxxu.kub3dit.commands {
 		 * Gets if the map is editable
 		 */
 		public function get editable():Boolean { return _editable; }
+		
+		/**
+		 * Sets the map's ID.
+		 */
+		public function set id(value:String):void { _id = value; }
+		
+		/**
+		 * Sets the map's password.
+		 */
+		public function set password(value:String):void { _password = value; }
 
 
 
@@ -71,6 +81,10 @@ package com.muxxu.kub3dit.commands {
 		 * Must dispatch the CommandEvent.COMPLETE event when done.
 		 */
 		public override function execute():void {
+			_request.data["id"] = _id;
+			if(_password != null && _password.length > 0) {
+				_request.data["pass"] = _password;
+			}
 			_loader.load(_request);
 		}
 
@@ -83,8 +97,6 @@ package com.muxxu.kub3dit.commands {
 
 		private function loadCompleteHandler(event:Event):void {
 			var data:ByteArray = _loader.data as ByteArray;
-			var passView:MapPasswordView = ViewLocator.getInstance().locateViewByType(MapPasswordView) as MapPasswordView;
-			var saveView:SaveView = ViewLocator.getInstance().locateViewByType(SaveView) as SaveView;
 			
 			//Detect if the "EDIT" tag is specified
 			if(data.readUnsignedInt() == 0x45444954) {
@@ -117,7 +129,7 @@ package com.muxxu.kub3dit.commands {
 				switch(code){
 					//Protected
 					case "1":
-						passView.open(onSetPassword);
+						_passView.open(onSetPassword);
 						break;
 					
 					//var missing
@@ -126,7 +138,7 @@ package com.muxxu.kub3dit.commands {
 						break;
 					//Invalid password
 					case "3":
-						passView.error();
+						_passView.error();
 						break;
 					
 					//Map not found
@@ -137,9 +149,11 @@ package com.muxxu.kub3dit.commands {
 				}
 				
 			}else{
-				saveView.mapId = _id;
-				saveView.editableMap = _editable;
-				passView.close();
+				if(_saveView != null) {
+					_saveView.mapId = _id;
+					_saveView.editableMap = _editable;
+				}
+				_passView.close();
 				data.position = 0;
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, data));
 			}
@@ -160,7 +174,7 @@ package com.muxxu.kub3dit.commands {
 				//Dirty but this unlocks the model
 				dispatchEvent(new CommandEvent(CommandEvent.ERROR));
 			}else{
-				URLVariables(_request.data)["pass"] = password;
+				_request.data["pass"] = password;
 				execute();
 			}
 		}

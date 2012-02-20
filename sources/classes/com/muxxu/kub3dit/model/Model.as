@@ -18,6 +18,8 @@ package com.muxxu.kub3dit.model {
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.muxxu.kub3dit.exceptions.Kub3ditException;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
+	import com.muxxu.kub3dit.views.MapPasswordView;
+	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.vo.Constants;
 	import com.muxxu.kub3dit.vo.CubeData;
 	import com.nurun.core.commands.ProgressiveCommand;
@@ -241,7 +243,10 @@ package com.muxxu.kub3dit.model {
 //			id="C";//TODO remove
 			if(id.length > 0 && _ignoreLoadId != id) {
 //				lock();
-				_loadMapCmd = new LoadMapCmd(id);
+
+				var passView:MapPasswordView = ViewLocator.getInstance().locateViewByType(MapPasswordView) as MapPasswordView;
+				var saveView:SaveView = ViewLocator.getInstance().locateViewByType(SaveView) as SaveView;
+				_loadMapCmd = new LoadMapCmd(id, passView, saveView);
 				_loadMapCmd.addEventListener(CommandEvent.COMPLETE, loadMapCompleteHandler);
 				_loadMapCmd.addEventListener(CommandEvent.ERROR, loadMapErrorHandler);
 				_loadMapCmd.execute();
