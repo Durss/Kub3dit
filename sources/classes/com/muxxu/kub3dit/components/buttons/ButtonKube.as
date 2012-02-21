@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.buttons {
+	import com.muxxu.kub3dit.graphics.Build3rButtonSkin;
 	import flash.utils.Dictionary;
 	import com.muxxu.kub3dit.graphics.ButtonSkin;
 	import com.nurun.components.button.BaseButton;
@@ -30,8 +31,8 @@ package com.muxxu.kub3dit.components.buttons {
 		/**
 		 * Creates an instance of <code>KBButton</code>.
 		 */
-		public function ButtonKube(label:String, big:Boolean = false, icon:DisplayObject = null) {
-			super(label, big? "buttonBig" : "button", new ButtonSkin(), icon);
+		public function ButtonKube(label:String, big:Boolean = false, icon:DisplayObject = null, build3r:Boolean = false) {
+			super(label, big? "buttonBig" : build3r? "b-button" : "button", build3r? new Build3rButtonSkin() : new ButtonSkin(), icon);
 			if(icon is Validable) Validable(icon).validate();
 			contentMargin = big? new Margin(5, 5, 5, 5) : new Margin(2, 1, 2, 1);
 			textBoundsMode = false;

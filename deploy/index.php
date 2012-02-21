@@ -57,9 +57,10 @@
 	$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "oshyso");
 	
-	$dateEnd = DateTime::createFromFormat('d/m/Y', '18/02/2012');
-	if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
-		$authorized = $authorized || isAuthorizedUser($pseudo, "steampirate");
+	$dateEnd = DateTime::createFromFormat('d/m/Y', '05/03/2012');
+	$dateStart = DateTime::createFromFormat('d/m/Y', '27/02/2012');
+	if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) >= $dateStart && DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
+		$authorized = $authorized || isAuthorizedUser($pseudo, "concours_ES");
 	}
 	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");

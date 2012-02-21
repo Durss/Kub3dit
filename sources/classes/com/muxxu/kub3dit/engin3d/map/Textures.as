@@ -170,8 +170,9 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Initialize the class.
 		 * 
 		 * @param spritesMap	file that defines the textures coordinates and relations
-		 * @param bitmapData	bitmapData containing the textures
 		 * @param additionals	contains the additional informations (transparencies, translucides, etc..)
+		 * @param bitmapData	bitmapData containing the textures
+		 * @param colors		bitmapData containing the levels colors
 		 */
 		public function initialize(spritesMap:String, additionals:String, bitmapData:BitmapData, colors:BitmapData):void {
 			_cubesFramesCoos= [];
