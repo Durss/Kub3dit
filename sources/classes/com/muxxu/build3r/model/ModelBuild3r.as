@@ -189,7 +189,7 @@ package com.muxxu.build3r.model {
 			if(text != _lastText && /return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/.test(text)) {
 				_lastText = text;
 				var matches:Array = text.match(/-?[0-9]+/gi);
-				_position = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3]));
+				_position = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3])-1);
 				update();
 			}
 		}

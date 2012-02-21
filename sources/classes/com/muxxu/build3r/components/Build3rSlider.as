@@ -19,14 +19,15 @@ package com.muxxu.build3r.components {
 	 * @author Francois
 	 * @date 20 feb. 2012;
 	 */
-	public class LevelSlider extends Sprite {
+	public class Build3rSlider extends Sprite {
 		
 		private var _width:Number;
 		private var _button:ButtonKube;
 		private var _bar:Sprite;
 		private var _pressed:Boolean;
 		private var _offsetDrag:int;
-		private var _levels:Number;
+		private var _max:Number;
+		private var _min:int;
 		
 		
 		
@@ -35,9 +36,11 @@ package com.muxxu.build3r.components {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>LevelsSlider</code>.
+		 * Creates an instance of <code>Build3rSlider</code>.
 		 */
-		public function LevelSlider() {
+		public function Build3rSlider(min:int = 0, max:int = 31) {
+			_min = min;
+			_max = max;
 			initialize();
 		}
 
@@ -55,16 +58,16 @@ package com.muxxu.build3r.components {
 		}
 		
 		/**
-		 * Gets the current level
+		 * Gets the current's value
 		 */
-		public function get level():Number {
-			return parseInt(_button.text)-1;
+		public function get value():Number {
+			return parseInt(_button.text);
 		}
 		
 		/**
 		 * Sets the current level
 		 */
-		public function set level(value:Number):void {
+		public function set value(value:Number):void {
 			updateButtonState(value);
 		}
 
@@ -94,9 +97,6 @@ package com.muxxu.build3r.components {
 			_button.style = "levelSliderButton";
 			_button.validate();
 			
-			_levels = 31;
-			_button.validate();
-			
 			_width = 100;
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
@@ -105,7 +105,7 @@ package com.muxxu.build3r.components {
 			_button.addEventListener(NurunButtonEvent.RELEASE_OUTSIDE, releaseHandler);
 			_bar.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			
-			level = 0;
+			value = _min;
 		}
 		
 		/**
@@ -114,7 +114,7 @@ package com.muxxu.build3r.components {
 		private function computePositions():void {
 			_bar.graphics.clear();
 			var i:int, len:int, inc:Number;
-			len = _levels;
+			len = _max - _min + 1;
 			inc = _width / len;
 			_bar.graphics.beginFill(0xff0000, .1);
 			_bar.graphics.drawRect(0, 0, _width, 5);
@@ -130,10 +130,11 @@ package com.muxxu.build3r.components {
 		/**
 		 * Updates the button's state.
 		 */
-		private function updateButtonState(value:Number):void {
-			value = MathUtils.restrict(value, 0, _levels-1);
-			_button.text = (value+1).toString();
-			_button.x = Math.round(value/30 * (_width - _button.width));
+		private function updateButtonState(v:Number):void {
+			v = MathUtils.restrict(v, _min, _max);
+			_button.text = v.toString();
+			_button.validate();
+			_button.x = Math.round((v-_min)/(_max-_min) * (_width - _button.width));
 			
 			computePositions();
 		}
@@ -141,11 +142,11 @@ package com.muxxu.build3r.components {
 		/**
 		 * Update sthe current level and fires an update if it has changed
 		 */
-		private function updateLevel(value:int):void {
-			value = MathUtils.restrict(value, 0, _levels-1);
-			var oldL:Number = level;
-			if(value != oldL) {
-				_button.text = (value+1).toString();
+		private function updateLevel(v:int):void {
+			v = MathUtils.restrict(v, _min, _max);
+			var oldL:Number = value;
+			if(v != oldL) {
+				_button.text = v.toString();
 				dispatchEvent(new Event(Event.CHANGE));
 			}
 		}
@@ -160,7 +161,7 @@ package com.muxxu.build3r.components {
 				if(_button.x > Math.round(_width - _button.width)) _button.x = Math.round(_width - _button.width);
 				roundPos(_button);
 
-				var lvl:Number = Math.round(_button.x / (_width - _button.width) * ((_levels - 1)));
+				var lvl:Number = Math.round(_button.x / (_width - _button.width) * ((_max - 1))) + _min;
 				updateLevel( lvl );
 			}
 		}
@@ -190,9 +191,9 @@ package com.muxxu.build3r.components {
 		 * Called when move cam button is clicked
 		 */
 		private function clickButtonHandler(event:MouseEvent):void {
-			var lvl:Number = Math.floor((_bar.mouseX / _width) * _levels);
+			var lvl:Number = Math.floor((_bar.mouseX / _width) * _max) + _min;
 			updateLevel( lvl );
-			updateButtonState(level);
+			updateButtonState( lvl );
 		}
 		
 	}

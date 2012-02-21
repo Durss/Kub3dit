@@ -1,5 +1,5 @@
 package com.muxxu.build3r.views {
-	import com.muxxu.build3r.components.LevelSlider;
+	import com.muxxu.build3r.components.Build3rSlider;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
 	import com.muxxu.build3r.vo.LightMapData;
@@ -45,7 +45,7 @@ package com.muxxu.build3r.views {
 		private var _cursor:Shape;
 		private var _holder:Sprite;
 		private var _mapLabel:CssTextField;
-		private var _slider:LevelSlider;
+		private var _slider:Build3rSlider;
 		private var _kubeLabel:CssTextField;
 		private var _kube:Shape;
 		private var _kubeCoos:CssTextField;
@@ -134,7 +134,7 @@ package com.muxxu.build3r.views {
 			_bmp = _holder.addChild(new Bitmap(_bmd)) as Bitmap;
 			_cursor = _holder.addChild(new Shape()) as Shape;
 			_grid = _holder.addChild(new Sprite()) as Sprite;
-			_slider = _holder.addChild(new LevelSlider()) as LevelSlider;
+			_slider = _holder.addChild(new Build3rSlider(1, 31)) as Build3rSlider;
 			_kube = addChild(drawIsoKube(Textures.getInstance().bitmapDatas[70][0], Textures.getInstance().bitmapDatas[70][1], true, .5)) as Shape;
 			
 			_kubeLabel = addChild(new CssTextField("b-label")) as CssTextField;
@@ -193,6 +193,9 @@ package com.muxxu.build3r.views {
 			_offset.x = MathUtils.restrict(_offset.x, 0, _map.width - _MAP_SIZE);
 			_offset.y = MathUtils.restrict(_offset.y, 0, _map.height - _MAP_SIZE);
 			
+			if(_map.width < _MAP_SIZE) _offset.x = (_map.width - _MAP_SIZE)*.5;
+			if(_map.height < _MAP_SIZE) _offset.y = (_map.height - _MAP_SIZE)*.5;
+			
 			var i:int, len:int, tile:int, px:int, py:int;
 			len = _MAP_SIZE * _MAP_SIZE;
 			_bmd.fillRect(_bmd.rect, 0xff80c7db);
@@ -214,7 +217,7 @@ package com.muxxu.build3r.views {
 		 * Called when slider's value is modified
 		 */
 		private function changeLevelHandler(event:Event):void {
-			_level = _slider.level;
+			_level = _slider.value - 1;
 			drawLevel();
 		}
 		
@@ -251,7 +254,7 @@ package com.muxxu.build3r.views {
 			}else if(event.type == MouseEvent.MOUSE_WHEEL) {
 				_level += event.delta > 0? 1 : -1;
 				_level = MathUtils.restrict(_level, 0, 30);
-				_slider.level = _level;
+				_slider.value = _level + 1;
 				drawLevel();
 			}
 		}
