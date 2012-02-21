@@ -113,9 +113,9 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Copies a specific part of the data
 		 */
 		public function copyData(chunkSize:int, startx:int, starty:int):ChunkData {
-			var voxelData:ChunkData=new ChunkData(chunkSize, chunkSize, _mapSizeZ, this);
-			voxelData._x=startx;
-			voxelData._y=starty;
+			var chunk:ChunkData=new ChunkData(chunkSize, chunkSize, _mapSizeZ, this);
+			chunk._x=startx;
+			chunk._y=starty;
 			var xloc:int=0;
 			var yloc:int=0;
 			var xmaploc:int;
@@ -129,17 +129,17 @@ package com.muxxu.kub3dit.engin3d.map {
 			if (endY > _mapSizeY) {
 				endY=_mapSizeY;
 			}
-			voxelData._data=[];
+			chunk._data=[];
 			for (zloc=0; zloc < _mapSizeZ; zloc++) {
-				if (!voxelData._data[zloc]) {
-					voxelData._data[zloc]=[];
+				if (!chunk._data[zloc]) {
+					chunk._data[zloc]=[];
 				}
 				for (ymaploc=starty; ymaploc < endY; ymaploc++) {
-					if (!voxelData._data[zloc][yloc]) {
-						voxelData._data[zloc][yloc]=[];
+					if (!chunk._data[zloc][yloc]) {
+						chunk._data[zloc][yloc]=[];
 					}
 					for (xmaploc=startx; xmaploc < endX; xmaploc++) {
-						voxelData._data[zloc][yloc][xloc] = getTile(xmaploc, ymaploc, zloc);
+						chunk._data[zloc][yloc][xloc] = getTile(xmaploc, ymaploc, zloc);
 						xloc++;
 						if (xloc >= chunkSize) {
 							xloc=0;
@@ -151,7 +151,7 @@ package com.muxxu.kub3dit.engin3d.map {
 					}
 				}
 			}
-			return voxelData;
+			return chunk;
 		}
 		
 		/**

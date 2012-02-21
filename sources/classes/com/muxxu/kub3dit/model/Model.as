@@ -32,6 +32,7 @@ package com.muxxu.kub3dit.model {
 
 	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
+	import flash.geom.Point;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 	
@@ -299,8 +300,8 @@ package com.muxxu.kub3dit.model {
 			}
 			
 			var data:ByteArray = event.data as ByteArray;
-			//Search for PNG signature
 			data.position = 0;
+			//Search for PNG signature
 			if(data.readUnsignedInt() == 0x89504e47) {
 				data.position = data.length - 4;
 				//search for ".K3D" signature at the end

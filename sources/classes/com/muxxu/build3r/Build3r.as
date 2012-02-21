@@ -1,4 +1,6 @@
 package com.muxxu.build3r {
+	import com.muxxu.build3r.views.BuildView;
+	import com.muxxu.build3r.views.SynchView;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
 	import com.muxxu.build3r.views.LoadView;
@@ -21,7 +23,7 @@ package com.muxxu.build3r {
 	 * @date 19 févr. 2012;
 	 */
 	 
-	[SWF(width="191", height="310", backgroundColor="0xFFFFFF", frameRate="31")]
+	[SWF(width="191", height="271", backgroundColor="0xFFFFFF", frameRate="31")]
 	[Frame(factoryClass="com.muxxu.build3r.Build3rLoader")]
 	public class Build3r extends MovieClip {
 		
@@ -75,6 +77,8 @@ package com.muxxu.build3r {
 			ViewLocator.getInstance().initialise(_model);
 			
 			addChild(new LoadView());
+			addChild(new SynchView());
+			addChild(new BuildView());
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}

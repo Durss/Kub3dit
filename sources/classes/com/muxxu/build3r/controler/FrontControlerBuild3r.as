@@ -1,7 +1,9 @@
 package com.muxxu.build3r.controler {
-	
 	import com.muxxu.build3r.model.ModelBuild3r;
+
 	import flash.errors.IllegalOperationError;
+	import flash.geom.Point;
+	
 	
 	/**
 	 * Singleton FrontControlerBuild3r
@@ -64,6 +66,14 @@ package com.muxxu.build3r.controler {
 		 */
 		public function loadMapById(id:String, password:String):void {
 			_model.loadMapById(id, password);
+		}
+		
+		/**
+		 * Sets the map's reference point.
+		 * The reference point in-game is already stored in the model. (last kube touched)
+		 */
+		public function setReferencePoint(reference:Point):void {
+			_model.setReferencePoint(reference);
 		}
 
 

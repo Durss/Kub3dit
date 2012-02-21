@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.form.input {
+	import com.muxxu.kub3dit.graphics.Build3rInputSkin;
 	import com.muxxu.kub3dit.graphics.InputSkinBig;
 	import com.nurun.utils.text.CssManager;
 	import flash.events.MouseEvent;
@@ -27,12 +28,12 @@ package com.muxxu.kub3dit.components.form.input {
 		/**
 		 * Creates an instance of <code>KBInput</code>.
 		 */
-		public function InputKube(defaultLabel:String = "", big:Boolean = false, isNumeric:Boolean = false, minNumValue:int = 0, maxNumValue:int = 100) {
+		public function InputKube(defaultLabel:String = "", big:Boolean = false, isNumeric:Boolean = false, minNumValue:int = 0, maxNumValue:int = 100, build3r:Boolean=false) {
 			_maxNumValue = maxNumValue;
 			_minNumValue = minNumValue;
 			_isNumeric = isNumeric;
 			var locMargins:Margin = new Margin(4, 2, 4, 0);
-			super(big? "inputBig" : "input", big? new InputSkinBig() : new InputSkin(), defaultLabel, big? "inputBigDefault" : "inputDefault", locMargins);
+			super(big? "inputBig" : build3r? "b-input" : "input", big? new InputSkinBig() : build3r? new Build3rInputSkin() : new InputSkin(), defaultLabel, big? "inputBigDefault" : "inputDefault", locMargins);
 			
 			if(isNumeric) {
 				textfield.restrict = "[0-9]";

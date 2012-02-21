@@ -26,9 +26,16 @@ package com.muxxu.build3r.views {
 		private var _browseBt:ButtonKube;
 		private var _idInput:InputKube;
 		private var _idBt:ButtonKube;
-		private var _label:CssTextField;
+		private var _labelBrowse:CssTextField;
 		private var _passInput:InputKube;
 		private var _emptyCt:ColorTransform;
+		
+		[Embed(source="../../../../../assets/bitmaps/icon_browse.gif")]
+		private var _browseIcon:Class;
+		[Embed(source="../../../../../assets/bitmaps/cube.gif")]
+		private var _idIcon:Class;
+		private var _error:CssTextField;
+		private var _labelID:CssTextField;
 		
 		
 		
@@ -53,7 +60,7 @@ package com.muxxu.build3r.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:ModelBuild3r = event.model as ModelBuild3r;
-			visible = model.currentMap == null;
+			visible = model.map == null;
 		}
 
 
@@ -68,8 +75,11 @@ package com.muxxu.build3r.views {
 			mouseEnabled = mouseChildren = true;
 			visible = true;
 			stage.focus = _passInput;
+			_passInput.textfield.setSelection(0, _passInput.text.length);
 			_passInput.transform.colorTransform = _emptyCt;
 			TweenLite.from(_passInput, .5, {tint:0xff0000});
+			
+			_error.text = "Carte protégée.<br />Entrez le mot de passe.";
 		}
 
 		/**
@@ -78,8 +88,31 @@ package com.muxxu.build3r.views {
 		public function error():void {
 			mouseEnabled = mouseChildren = true;
 			stage.focus = _passInput;
+			_passInput.textfield.setSelection(0, _passInput.text.length);
 			_passInput.transform.colorTransform = _emptyCt;
 			TweenLite.from(_passInput, .5, {tint:0xff0000});
+			if(String(_passInput.value).length == 0) {
+				_error.text = "Carte protégée, entrez le mot de passe.";
+			}else{
+				_error.text = "Mot de passe invalide";
+			}
+		}
+		
+		/**
+		 * Called if loaded map's type isn't good.
+		 */
+		public function typeError():void {
+			mouseEnabled = mouseChildren = true;
+			_error.text = "Fichier invalide";
+		}
+		
+		/**
+		 * Called if th emap isn't found
+		 */
+		public function mapNotFound():void {
+			mouseEnabled = mouseChildren = true;
+			_error.text = "Cette carte n'existe pas.";
+			_idInput.textfield.setSelection(0, _idInput.text.length);
 		}
 
 		/**
@@ -99,16 +132,25 @@ package com.muxxu.build3r.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_label = addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_browseBt = addChild(new ButtonKube("Parcourir...")) as ButtonKube;
+			_labelBrowse = addChild(new CssTextField("b-label")) as CssTextField;
+			_labelID= addChild(new CssTextField("b-label")) as CssTextField;
+			_error = addChild(new CssTextField("b-error")) as CssTextField;
+			_browseBt = addChild(new ButtonKube("Parcourir...", false, null, true)) as ButtonKube;
 			
-			_idInput = addChild(new InputKube("id...")) as InputKube;
-			_passInput = addChild(new InputKube("pass...")) as InputKube;
-			_idBt = addChild(new ButtonKube("Charger")) as ButtonKube;
+			_browseBt.icon = new _browseIcon();
+			_browseBt.contentMargin.left = 15;
+			
+			_idInput = addChild(new InputKube("id...", false, false, 0, 0, true)) as InputKube;
+			_passInput = addChild(new InputKube("pass...", false, false, 0, 0, true)) as InputKube;
+			_idBt = addChild(new ButtonKube("Charger", false, null, true)) as ButtonKube;
+			
+			_idBt.icon = new _idIcon();
+			_idBt.contentMargin.left = 15;
 			
 			_emptyCt = new ColorTransform();
 			
-			_label.text = "Charger une carte depuis votre ordinateur ou depuis son ID kub3dit :";
+			_labelBrowse.text = "Charger une carte depuis votre ordinateur :";
+			_labelID.text = "Charger une carte par son ID Kub3dit :";
 			_idInput.textfield.restrict = '[0-9][a-z][A-Z]';
 			_idInput.textfield.maxChars = 15;
 			
@@ -132,11 +174,13 @@ package com.muxxu.build3r.views {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_label.width = _idInput.width = _browseBt.width = _passInput.width = _idBt.width = stage.stageWidth;
+			_labelBrowse.width = _idInput.width = _browseBt.width = _passInput.width =
+			_idBt.width = _error.width = _labelID.width = stage.stageWidth;
 			
-			PosUtils.vPlaceNext(20, _label, _browseBt);
-			PosUtils.vPlaceNext(20, _browseBt, _idInput);
-			PosUtils.vPlaceNext(5, _idInput, _passInput, _idBt);
+			PosUtils.vPlaceNext(5, _labelBrowse, _browseBt);
+			PosUtils.vPlaceNext(30, _browseBt, _labelID);
+			PosUtils.vPlaceNext(5, _labelID, _idInput, _passInput, _idBt, _error);
+			_error.y += 10;
 		}
 		
 		/**
@@ -144,6 +188,8 @@ package com.muxxu.build3r.views {
 		 */
 		private function submitHandler(event:Event):void {
 			if(!mouseEnabled) return;
+			
+			_error.text = "";
 			
 			if(event.target == _browseBt) {
 				FrontControlerBuild3r.getInstance().browseForMap();
