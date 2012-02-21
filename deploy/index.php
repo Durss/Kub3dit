@@ -57,11 +57,12 @@
 	$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "oshyso");
 	
+	/*
 	$dateEnd = DateTime::createFromFormat('d/m/Y', '05/03/2012');
 	$dateStart = DateTime::createFromFormat('d/m/Y', '27/02/2012');
 	if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) >= $dateStart && DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
 		$authorized = $authorized || isAuthorizedUser($pseudo, "concours_ES");
-	}
+	}*/
 	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
 	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
@@ -92,7 +93,7 @@
 			if (isset($_GET["act"])) {
 				$url = "http://fevermap.org/kub3dit/%23".$_GET["act"];
 			}else {
-				$url = "http://fevermap.org/kub3dit/test";
+				$url = "http://fevermap.org/kub3dit/";
 			}
 		}
 		header("location: redirect.php?url=".$url);//."&pubkey=".$_GET["pubkey"]."&uid=".$_GET["uid"]);
