@@ -75,6 +75,14 @@ package com.muxxu.build3r.controler {
 		public function setReferencePoint(reference:Point):void {
 			_model.setReferencePoint(reference);
 		}
+		
+		/**
+		 * Moves the la position.
+		 * For debug purpose
+		 */
+		public function move(x:int=0, y:int=0, z:int=0):void {
+			_model.move(x, y, z);
+		}
 
 
 		

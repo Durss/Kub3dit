@@ -10,6 +10,7 @@ package com.muxxu.build3r.model {
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
+	import com.nurun.utils.math.MathUtils;
 
 	import flash.display.Bitmap;
 	import flash.events.EventDispatcher;
@@ -117,6 +118,18 @@ package com.muxxu.build3r.model {
 		public function setReferencePoint(reference:Point):void {
 			_positionReference = _position.clone();
 			_mapReferencePoint = reference;
+			update();
+		}
+		
+		/**
+		 * Moves the la position.
+		 * For debug purpose
+		 */
+		public function move(x:int, y:int, z:int):void {
+			_position.x += x;
+			_position.y += y;
+			_position.z += z;
+			_position.z = MathUtils.restrict(_position.z, 0, 31);
 			update();
 		}
 
