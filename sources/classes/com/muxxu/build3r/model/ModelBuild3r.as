@@ -16,7 +16,6 @@ package com.muxxu.build3r.model {
 	import flash.events.EventDispatcher;
 	import flash.events.TimerEvent;
 	import flash.external.ExternalInterface;
-	import flash.geom.Point;
 	import flash.utils.ByteArray;
 	import flash.utils.Timer;
 	
@@ -37,13 +36,13 @@ package com.muxxu.build3r.model {
 		private var _spritesheet:Class;
 		
 		private var _timer:Timer;
-		private var _lastText:String;
 		private var _position:Point3D;
 		private var _browseCmd:BrowseForFileCmd;
 		private var _loadMapCmd:LoadMapCmd;
 		private var _map:LightMapData;
-		private var _mapReferencePoint:Point;
+		private var _mapReferencePoint:Point3D;
 		private var _positionReference:Point3D;
+		private var _wasForum:Boolean;
 		
 		
 		
@@ -76,7 +75,7 @@ package com.muxxu.build3r.model {
 		/**
 		 * Gets the map's reference point.
 		 */
-		public function get mapReferencePoint():Point { return _mapReferencePoint == null? null : _mapReferencePoint.clone(); }
+		public function get mapReferencePoint():Point3D { return _mapReferencePoint == null? null : _mapReferencePoint.clone(); }
 		
 		/**
 		 * Gets the in game's position reference
@@ -115,7 +114,7 @@ package com.muxxu.build3r.model {
 		/**
 		 * Sets the map's reference point.
 		 */
-		public function setReferencePoint(reference:Point):void {
+		public function setReferencePoint(reference:Point3D):void {
 			_positionReference = _position.clone();
 			_mapReferencePoint = reference;
 			update();
@@ -131,6 +130,22 @@ package com.muxxu.build3r.model {
 			_position.z += z;
 			_position.z = MathUtils.restrict(_position.z, 0, 31);
 			update();
+		}
+		
+		/**
+		 * Closes the application's window
+		 */
+		public function closeWindow():void {
+			if(ExternalInterface.available) {
+				var closeApp:XML = 
+			    <script><![CDATA[
+			            function(){ 
+							document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.width = "0px";
+							document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.height = "0px";
+						}
+			        ]]></script>;
+		     ExternalInterface.call(closeApp.toString());
+			}
 		}
 
 
@@ -160,7 +175,7 @@ package com.muxxu.build3r.model {
 			Textures.getInstance().initialize(map.readUTFBytes(map.length), add.readUTFBytes(add.length), (new _textures() as Bitmap).bitmapData, (new _colors() as Bitmap).bitmapData);
 			
 			if(!ExternalInterface.available) {
-				_position = new Point3D(0,0,1);
+				_position = new Point3D(0,0,3);
 			}
 		}
 		
@@ -186,11 +201,15 @@ package com.muxxu.build3r.model {
 	        var text:String = ExternalInterface.call(getZoneInfos.toString()); 
 		    
 			//check if getting a forum
-			if(text != _lastText && /return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/.test(text)) {
-				_lastText = text;
-				var matches:Array = text.match(/-?[0-9]+/gi);
-				_position = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3])-1);
-				update();
+			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/.test(text)) {
+				if(!_wasForum) {
+					_wasForum = true;
+					var matches:Array = text.match(/-?[0-9]+/gi);
+					_position = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3])-1);
+					update();
+				}
+			}else{
+				_wasForum = false;
 			}
 		}
 		

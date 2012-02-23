@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.utils {
+	import flash.display.Graphics;
 	import com.nurun.utils.math.MathUtils;
 	import flash.display.BitmapData;
 	import flash.display.Shape;
@@ -18,19 +19,19 @@ package com.muxxu.kub3dit.utils {
 	 *  
 	 * @author Francois
 	 */
-	public function drawIsoKube(top:BitmapData, side:BitmapData, smooth:Boolean = false, scaleCoeff:Number = 1, asBitmapData:Boolean = false):* {
+	public function drawIsoKube(top:BitmapData, side:BitmapData, smooth:Boolean = false, scaleCoeff:Number = 1, asBitmapData:Boolean = false, lineColor:int = -1):* {
 			var vertices:Vector.<Number> = Vector.<Number>([
-        							//TOP FACE
+        							//TOP FACE 0
         							scaleCoeff*19, 0,
         							scaleCoeff*39, scaleCoeff*10,
         							scaleCoeff*19, scaleCoeff*19,
         							0, scaleCoeff*10,
-        							//LEFT FACE
+        							//LEFT FACE 8
         							0, scaleCoeff*10,
         							scaleCoeff*19, scaleCoeff*19,
         							scaleCoeff*19, scaleCoeff*41,
         							0, scaleCoeff*32,
-        							//RIGHT FACE
+        							//RIGHT FACE 16
         							scaleCoeff*19, scaleCoeff*19,
         							scaleCoeff*39, scaleCoeff*10,
         							scaleCoeff*39, scaleCoeff*32,
@@ -76,15 +77,31 @@ package com.muxxu.kub3dit.utils {
 			left.applyFilter(left, left.rect, new Point(0,0), new ColorMatrixFilter([1,0,0,0,shadow, 0,1,0,0,shadow, 0,0,1,0,shadow, 0,0,0,1,0]));
 
 			var shape:Shape = new Shape();
+			var g:Graphics = shape.graphics;
+			g.clear();
+			g.beginBitmapFill(top, null, false, smooth);
+			g.drawTriangles(vertices, indicesTop, UVData);
+			g.beginBitmapFill(left, null, false, smooth);
+			g.drawTriangles(vertices, indicesLeft, UVData);
+			g.beginBitmapFill(right, null, false, smooth);
+			g.drawTriangles(vertices, indicesRight, UVData);
+			g.endFill();
 			
-			shape.graphics.clear();
-			shape.graphics.beginBitmapFill(top, null, false, smooth);
-			shape.graphics.drawTriangles(vertices, indicesTop, UVData);
-			shape.graphics.beginBitmapFill(left, null, false, smooth);
-			shape.graphics.drawTriangles(vertices, indicesLeft, UVData);
-			shape.graphics.beginBitmapFill(right, null, false, smooth);
-			shape.graphics.drawTriangles(vertices, indicesRight, UVData);
-			shape.graphics.endFill();
+			if(lineColor > -1) {
+				g.lineStyle(0, lineColor&0xffffff, ((lineColor>>24)&0xff) / 0xff);
+				g.moveTo(vertices[6], vertices[7]);
+				g.lineTo(vertices[0], vertices[1]);
+				g.lineTo(vertices[2]-1, vertices[3]);
+				g.lineTo(vertices[18]-1, vertices[19]);
+				g.lineTo(vertices[20], vertices[21]);
+				g.lineTo(vertices[22], vertices[23]);
+				g.lineTo(vertices[14], vertices[15]);
+				g.lineTo(vertices[6], vertices[7]);
+				g.lineTo(vertices[16], vertices[17]);
+				g.lineTo(vertices[2]-1, vertices[3]);
+				g.moveTo(vertices[16], vertices[17]);
+				g.lineTo(vertices[22], vertices[23]);
+			}
 			
 			if(asBitmapData) {
 				var bmd:BitmapData = new BitmapData(shape.width, shape.height, true, 0);

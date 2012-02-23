@@ -1,16 +1,18 @@
 package com.muxxu.build3r.views {
 	import com.muxxu.build3r.components.Build3rSlider;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
+	import com.muxxu.build3r.i18n.LabelBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
 	import com.muxxu.build3r.vo.LightMapData;
+	import com.muxxu.build3r.vo.Metrics;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.utils.drawIsoKube;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.utils.math.MathUtils;
-	import com.nurun.utils.pos.PosUtils;
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -49,7 +51,7 @@ package com.muxxu.build3r.views {
 		private var _kubeLabel:CssTextField;
 		private var _kube:Shape;
 		private var _kubeCoos:CssTextField;
-		private var _reference:Point;
+		private var _reference:Point3D;
 		private var _submit:ButtonKube;
 		
 		[Embed(source="../../../../../assets/check.mp3")]
@@ -92,7 +94,7 @@ package com.muxxu.build3r.views {
 				_offset = new Point(Math.round((_map.width -  _MAP_SIZE) * .5), Math.round((_map.height -  _MAP_SIZE) * .5));
 				_colors = Textures.getInstance().levelColors;
 				_kubeCoos.style = "b-kubeCoosBig";
-				_kubeCoos.text = "[--][--]";
+				_kubeCoos.text = "[--][--][--]";
 				
 				_submit.enabled = false;
 				
@@ -102,7 +104,7 @@ package com.muxxu.build3r.views {
 			if(model.position != null) {
 				_forumTouched = true;
 				_kubeCoos.style = "b-kubeCoos";
-				_kubeCoos.text = "["+model.position.x+"]["+model.position.y+"]";
+				_kubeCoos.text = "["+model.position.x+"]["+model.position.y+"]["+model.position.z+"]";
 				checkComplete();
 			}
 			_kubeCoos.y = _kube.y + Math.round((_kube.height - _kubeCoos.height) * .5);
@@ -127,7 +129,7 @@ package com.muxxu.build3r.views {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
 			visible = false;
-			_reference = new Point(-1,-1);
+			_reference = new Point3D(-1,-1,-1);
 			_bmd = new BitmapData(_MAP_SIZE, _MAP_SIZE, false, 0);
 			_mapLabel = addChild(new CssTextField("b-label")) as CssTextField;
 			_holder = addChild(new Sprite()) as Sprite;
@@ -139,12 +141,12 @@ package com.muxxu.build3r.views {
 			
 			_kubeLabel = addChild(new CssTextField("b-label")) as CssTextField;
 			_kubeCoos = addChild(new CssTextField("b-kubeCoosBig")) as CssTextField;
-			_submit = addChild(new ButtonKube("OK", false, null, true)) as ButtonKube;
+			_submit = addChild(new ButtonKube(LabelBuild3r.getl("synch-submit"), false, null, true)) as ButtonKube;
 			
-			_mapLabel.text = "Cliquez sur la carte pour<br />définir le point de référence :";
-			_kubeLabel.text = "Touchez un kube forum dans le jeu pour situer le point de référence :";
-			_mapLabel.width = stage.stageWidth;
-			_kubeLabel.width = stage.stageWidth;
+			_mapLabel.text = LabelBuild3r.getl("synch-titleMap");
+			_kubeLabel.text = LabelBuild3r.getl("synch-titleKube");
+			_mapLabel.width = Metrics.STAGE_WIDTH;
+			_kubeLabel.width = Metrics.STAGE_WIDTH;
 
 			var pattern:BitmapData = new BitmapData(_CELL_SIZE, _CELL_SIZE, true, 0);
 			var i:int;
@@ -162,14 +164,15 @@ package com.muxxu.build3r.views {
 			_grid.graphics.endFill();
 			
 			_bmp.scaleX = _bmp.scaleY = _CELL_SIZE;
-			_holder.x = Math.round((stage.stageWidth - _bmp.width) * .5);
+			_holder.x = Math.round((Metrics.STAGE_WIDTH - _bmp.width) * .5);
 			_holder.y = Math.round(_mapLabel.height);
 			_slider.y = _CELL_SIZE * _MAP_SIZE + 5;
 			_slider.width = _CELL_SIZE * _MAP_SIZE;
 			_kubeLabel.y = _holder.y + _holder.height + 5;
 			_kube.y = _kubeLabel.y + _kubeLabel.height;
 			_kubeCoos.x = _kube.width + 10;
-			PosUtils.alignToBottomRightOf(_submit, stage);
+			_submit.x = Math.round(Metrics.STAGE_WIDTH - _submit.width);
+			_submit.y = Math.round(Metrics.STAGE_HEIGHT - _submit.height);
 			
 			addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
@@ -183,6 +186,7 @@ package com.muxxu.build3r.views {
 		 * Called when form is submitted.
 		 */
 		private function submitHandler(event:MouseEvent):void {
+			stage.focus = null;
 			FrontControlerBuild3r.getInstance().setReferencePoint(_reference);
 		}
 		
@@ -203,7 +207,7 @@ package com.muxxu.build3r.views {
 				px = i%_MAP_SIZE;
 				py = Math.floor(i/_MAP_SIZE);
 				tile = _map.getTile(px + _offset.x, py + _offset.y, _level);
-				if(_reference.x == px+_offset.x && _reference.y == py+_offset.y) {
+				if(_reference.x > -1 && _reference.x == px+_offset.x && _reference.y == py+_offset.y && _reference.z == _level) {
 					_bmd.setPixel32(px, py, 0xffff0000);
 				}else{
 					if(tile > 0) {
@@ -248,6 +252,7 @@ package com.muxxu.build3r.views {
 					var pos:Point = new Point(Math.floor(_holder.mouseX / _CELL_SIZE), Math.floor(_holder.mouseY / _CELL_SIZE));
 					_reference.x = pos.x + _offset.x;
 					_reference.y = pos.y + _offset.y;
+					_reference.z = _level;
 					drawLevel();
 					checkComplete();
 				}

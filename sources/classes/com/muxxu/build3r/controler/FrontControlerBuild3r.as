@@ -1,8 +1,8 @@
 package com.muxxu.build3r.controler {
 	import com.muxxu.build3r.model.ModelBuild3r;
+	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 
 	import flash.errors.IllegalOperationError;
-	import flash.geom.Point;
 	
 	
 	/**
@@ -72,7 +72,7 @@ package com.muxxu.build3r.controler {
 		 * Sets the map's reference point.
 		 * The reference point in-game is already stored in the model. (last kube touched)
 		 */
-		public function setReferencePoint(reference:Point):void {
+		public function setReferencePoint(reference:Point3D):void {
 			_model.setReferencePoint(reference);
 		}
 		
@@ -82,6 +82,13 @@ package com.muxxu.build3r.controler {
 		 */
 		public function move(x:int=0, y:int=0, z:int=0):void {
 			_model.move(x, y, z);
+		}
+		
+		/**
+		 * Closes the application's window
+		 */
+		public function closeWindow():void {
+			_model.closeWindow();
 		}
 
 
