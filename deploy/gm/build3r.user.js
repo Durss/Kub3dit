@@ -25,7 +25,9 @@ if (document.getElementById('swf_kube') != null) {
 		return false;
 	}
 	
-	function hideBuild3r() {
+	//Due to a security shit this can't be called by flash even if the method is defin on the unsafeWindow object.
+	//So flash does the exact same thing internally.
+	function hideBuild3r () {
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.width = "0px";
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.height = "0px";
 		return false;
@@ -48,9 +50,10 @@ if (document.getElementById('swf_kube') != null) {
 	
 	
 	//Application's panel
-	appRef.innerHTML = '<embed type="application/x-shockwave-flash" src="http://fevermap.org/kub3dit/swf/builder.swf" wmode="opaque" width="191" height="310" allowScriptAccess="always" bgcolor="#44526f" id="build3rSWF" style="z-index:0; width:0px; height:0px;" />';
+	appRef.innerHTML = '<embed type="application/x-shockwave-flash" src="http://fevermap.org/kub3dit/swf/builder.swf" width="191" height="310" allowScriptAccess="always" bgcolor="#44526f" id="build3rSWF" style="z-index:0; width:0px; height:0px;" />';
 		
 		//close button
+		/*
 		closeBt = unsafeWindow.document.createElement('a');
 		closeBt.setAttribute("href", "javascript:void(0);");
 		closeBt.setAttribute("class", "button");
@@ -65,6 +68,7 @@ if (document.getElementById('swf_kube') != null) {
 		closeBt.innerHTML = "X";
 		closeBt.addEventListener("click", hideBuild3r, true);
 		appRef.appendChild(closeBt);
+		*/
 		
 		//application
 		appRef.setAttribute("id", "build3rApp");

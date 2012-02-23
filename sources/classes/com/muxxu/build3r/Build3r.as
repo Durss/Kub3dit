@@ -1,9 +1,10 @@
 package com.muxxu.build3r {
-	import com.muxxu.build3r.views.BuildView;
-	import com.muxxu.build3r.views.SynchView;
+	import com.muxxu.build3r.views.CloseView;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
+	import com.muxxu.build3r.views.BuildView;
 	import com.muxxu.build3r.views.LoadView;
+	import com.muxxu.build3r.views.SynchView;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.structure.environnement.configuration.Config;
 	import com.nurun.structure.mvc.views.ViewLocator;
@@ -79,6 +80,7 @@ package com.muxxu.build3r {
 			addChild(new LoadView());
 			addChild(new SynchView());
 			addChild(new BuildView());
+			addChild(new CloseView());
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 		}

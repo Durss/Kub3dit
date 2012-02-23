@@ -1,4 +1,6 @@
 package com.muxxu.build3r.views {
+	import com.muxxu.build3r.vo.Metrics;
+	import com.muxxu.build3r.i18n.LabelBuild3r;
 	import gs.TweenLite;
 
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
@@ -79,7 +81,7 @@ package com.muxxu.build3r.views {
 			_passInput.transform.colorTransform = _emptyCt;
 			TweenLite.from(_passInput, .5, {tint:0xff0000});
 			
-			_error.text = "Carte protégée.<br />Entrez le mot de passe.";
+			_error.text = LabelBuild3r.getl("load-mapProtected");
 		}
 
 		/**
@@ -92,9 +94,9 @@ package com.muxxu.build3r.views {
 			_passInput.transform.colorTransform = _emptyCt;
 			TweenLite.from(_passInput, .5, {tint:0xff0000});
 			if(String(_passInput.value).length == 0) {
-				_error.text = "Carte protégée, entrez le mot de passe.";
+				_error.text = LabelBuild3r.getl("load-mapProtected");
 			}else{
-				_error.text = "Mot de passe invalide";
+				_error.text = LabelBuild3r.getl("load-wrongPass");
 			}
 		}
 		
@@ -103,7 +105,7 @@ package com.muxxu.build3r.views {
 		 */
 		public function typeError():void {
 			mouseEnabled = mouseChildren = true;
-			_error.text = "Fichier invalide";
+			_error.text = LabelBuild3r.getl("load-invalidFile");
 		}
 		
 		/**
@@ -111,7 +113,7 @@ package com.muxxu.build3r.views {
 		 */
 		public function mapNotFound():void {
 			mouseEnabled = mouseChildren = true;
-			_error.text = "Cette carte n'existe pas.";
+			_error.text = LabelBuild3r.getl("load-notFound");
 			_idInput.textfield.setSelection(0, _idInput.text.length);
 		}
 
@@ -135,22 +137,22 @@ package com.muxxu.build3r.views {
 			_labelBrowse = addChild(new CssTextField("b-label")) as CssTextField;
 			_labelID= addChild(new CssTextField("b-label")) as CssTextField;
 			_error = addChild(new CssTextField("b-error")) as CssTextField;
-			_browseBt = addChild(new ButtonKube("Parcourir...", false, null, true)) as ButtonKube;
+			_browseBt = addChild(new ButtonKube(LabelBuild3r.getl("load-browse"), false, null, true)) as ButtonKube;
 			
 			_browseBt.icon = new _browseIcon();
 			_browseBt.contentMargin.left = 15;
 			
-			_idInput = addChild(new InputKube("id...", false, false, 0, 0, true)) as InputKube;
-			_passInput = addChild(new InputKube("pass...", false, false, 0, 0, true)) as InputKube;
-			_idBt = addChild(new ButtonKube("Charger", false, null, true)) as ButtonKube;
+			_idInput = addChild(new InputKube(LabelBuild3r.getl("load-id"), false, false, 0, 0, true)) as InputKube;
+			_passInput = addChild(new InputKube(LabelBuild3r.getl("load-pass"), false, false, 0, 0, true)) as InputKube;
+			_idBt = addChild(new ButtonKube(LabelBuild3r.getl("load-submit"), false, null, true)) as ButtonKube;
 			
 			_idBt.icon = new _idIcon();
 			_idBt.contentMargin.left = 15;
 			
 			_emptyCt = new ColorTransform();
 			
-			_labelBrowse.text = "Charger une carte depuis votre ordinateur :";
-			_labelID.text = "Charger une carte par son ID Kub3dit :";
+			_labelBrowse.text = LabelBuild3r.getl("load-titleBrowse");
+			_labelID.text = LabelBuild3r.getl("load-titleId");
 			_idInput.textfield.restrict = '[0-9][a-z][A-Z]';
 			_idInput.textfield.maxChars = 15;
 			
@@ -175,7 +177,7 @@ package com.muxxu.build3r.views {
 		 */
 		private function computePositions(event:Event = null):void {
 			_labelBrowse.width = _idInput.width = _browseBt.width = _passInput.width =
-			_idBt.width = _error.width = _labelID.width = stage.stageWidth;
+			_idBt.width = _error.width = _labelID.width = Metrics.STAGE_WIDTH;
 			
 			PosUtils.vPlaceNext(5, _labelBrowse, _browseBt);
 			PosUtils.vPlaceNext(30, _browseBt, _labelID);
