@@ -30,6 +30,8 @@ package com.muxxu.build3r.i18n {
 			_LABELS["fr"]["synch-titleKube"] = "Touchez un kube forum dans le jeu pour situer le point de référence :";
 			
 			_LABELS["fr"]["build-title"] = "Touchez un kube forum pour savoir quel kube doit se trouver à son emplacement.";
+			_LABELS["fr"]["build-keys"] = "espace entrée";
+			_LABELS["fr"]["build-getKube"] = "Ramasser le kube";
 			
 			//======= EN =======
 			_LABELS["en"] = {};
@@ -49,6 +51,8 @@ package com.muxxu.build3r.i18n {
 			_LABELS["en"]["synch-titleKube"] = "Touch a forum kube in the game to locate the reference point :";
 			
 			_LABELS["en"]["build-title"] = "Touch a forum kube in the game to know which kube should be put at its place.";
+			_LABELS["en"]["build-keys"] = "space enter";
+			_LABELS["en"]["build-getKube"] = "Pick up kube";
 			
 			_LABELS["es"] = {};
 		}

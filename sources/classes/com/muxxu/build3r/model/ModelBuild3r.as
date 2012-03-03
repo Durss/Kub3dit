@@ -144,7 +144,16 @@ package com.muxxu.build3r.model {
 							document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.height = "0px";
 						}
 			        ]]></script>;
-		     ExternalInterface.call(closeApp.toString());
+				ExternalInterface.call(closeApp.toString());
+			}
+		}
+		
+		/**
+		 * Picks up the kube forum
+		 */
+		public function pickUpKube():void {
+			if(ExternalInterface.available) {
+				ExternalInterface.call("removeKube", _position.x, _position.y, _position.z+1);
 			}
 		}
 
@@ -194,13 +203,13 @@ package com.muxxu.build3r.model {
 			if(!ExternalInterface.available) return;
 			
 			var getZoneInfos:XML = 
-		    <script><![CDATA[
+		 	   <script><![CDATA[
 		            function(){ return document.getElementById('infos').innerHTML; }
 		        ]]></script>;
 		    
 	        var text:String = ExternalInterface.call(getZoneInfos.toString()); 
 		    
-			//check if getting a forum
+			//check if picking up a forum
 			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/.test(text)) {
 				if(!_wasForum) {
 					_wasForum = true;

@@ -1,9 +1,12 @@
 package com.muxxu.build3r.views {
+	import com.muxxu.build3r.graphics.NorthArrowGraphic;
 	import com.muxxu.build3r.components.Build3rSlider;
+	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.i18n.LabelBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
 	import com.muxxu.build3r.vo.LightMapData;
 	import com.muxxu.build3r.vo.Metrics;
+	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.utils.drawIsoKube;
@@ -52,6 +55,9 @@ package com.muxxu.build3r.views {
 		private var _lastCheck:Point;
 		private var _markerCube:*;
 		private var _localOffsetSave:Point3D;
+		private var _rotation:int;
+		private var _pickupKube:ButtonKube;
+		private var _northArrow:NorthArrowGraphic;
 		
 		
 		
@@ -77,6 +83,10 @@ package com.muxxu.build3r.views {
 		override public function update(event:IModelEvent):void {
 			var model:ModelBuild3r = event.model as ModelBuild3r;
 			if(model.mapReferencePoint != null) {
+				if(_forumPosition != null){// && !_forumPosition.equals(model.position)) {
+					_pickupKube.visible = true;
+					setTimeout(_pickupKube.hide, 5000);
+				}
 				visible = true;
 				_refPoint = model.mapReferencePoint;
 				_forumPositionReference = model.positionReference;
@@ -84,8 +94,8 @@ package com.muxxu.build3r.views {
 				_map = model.map;
 				_localOffset.x = _localOffset.y = _localOffset.z = 0;
 				
-				render();
 				timeoutRendering();
+				render();
 			}
 		}
 
@@ -109,6 +119,7 @@ package com.muxxu.build3r.views {
 			
 			_cache =  [];
 			visible = false;
+			_rotation = 0;
 			_lastCheck = new Point();
 			_localOffset = new Point3D();
 			
@@ -122,21 +133,35 @@ package com.muxxu.build3r.views {
 			_label = addChild(new CssTextField("b-label")) as CssTextField;
 			_help = addChild(new CssTextField("b-label")) as CssTextField;
 			_slider = addChild(new Build3rSlider(1, 10)) as Build3rSlider;
+			_pickupKube = addChild(new ButtonKube(LabelBuild3r.getl("build-getKube"), false, null, true)) as ButtonKube;
+			_northArrow = addChild(new NorthArrowGraphic()) as NorthArrowGraphic;
 			
+			_northArrow.stop();
+			_pickupKube.visible = false;
 			_label.width = _slider.width = Metrics.STAGE_WIDTH;
 			_label.text = LabelBuild3r.getl("build-title");
-			_help.text = "(← ↑ → ↓ ▲ ▼ + - <font face='Arial'>˽</font> )";
+			_help.text = "(← ↑ → ↓ ▲ ▼ + - <font size='9'>"+LabelBuild3r.getl("build-keys")+"</font> )";
 			_slider.y = Math.round(_label.height) + 5;
 			_slider.value = _width;
 			_slider.x = Math.round((Metrics.STAGE_WIDTH - _slider.width) * .5);
 			_help.x = Math.round((Metrics.STAGE_WIDTH - _help.width) * .5);
 			_help.y = Math.round(Metrics.STAGE_HEIGHT - _help.height);
+			_pickupKube.x = Math.round((Metrics.STAGE_WIDTH - _pickupKube.width) * .5);
+			_pickupKube.y = Math.round(_help.y - _pickupKube.height - 5);
 			
 			_slider.addEventListener(Event.CHANGE, changeSizeHandler);
 			stage.addEventListener(KeyboardEvent.KEY_DOWN, keyDownHandler);
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
+			_pickupKube.addEventListener(MouseEvent.CLICK, clickHandler);
+		}
+		
+		/**
+		 * Picks up the kube
+		 */
+		private function clickHandler(event:MouseEvent):void {
+			FrontControlerBuild3r.getInstance().pickUpKube();
 		}
 		
 		/**
@@ -145,6 +170,8 @@ package com.muxxu.build3r.views {
 		 * Used to drag the map.
 		 */
 		private function mouseEventHandler(event:MouseEvent):void {
+			if(!visible) return;
+			
 			//Mouse down
 			if(event.type == MouseEvent.MOUSE_DOWN) {
 				if(mouseY < _holder.y || mouseY > _help.y) return;
@@ -167,13 +194,13 @@ package com.muxxu.build3r.views {
 					var a:Number = Math.atan2(dy, dx)+Math.PI;
 					_lastCheck.x = mouseX;
 					_lastCheck.y = mouseY;
-					if(a > 0 && a <= Math.PI*.4) _localOffset.y -= 1;
+					if(a > 0 && a <= Math.PI*.4) _localOffset.y += _rotation==0? 1 : -1;
 					if(a > Math.PI*.4 && a < Math.PI * .6) _localOffset.z += 1;
-					if(a > Math.PI*.6 && a <= Math.PI) _localOffset.x += 1;
+					if(a > Math.PI*.6 && a <= Math.PI) _localOffset.x += _rotation==0? -1 : 1;
 					
-					if(a > Math.PI && a <= Math.PI*1.4) _localOffset.y += 1;
+					if(a > Math.PI && a <= Math.PI*1.4) _localOffset.y += _rotation==0? -1 : 1;
 					if(a > Math.PI*1.4 && a <= Math.PI * 1.6) _localOffset.z -= 1;
-					if(a <= 0 || a > Math.PI*1.6) _localOffset.x -= 1;
+					if(a <= 0 || a > Math.PI*1.6) _localOffset.x += _rotation==0? 1 : -1;
 				}
 				render();
 			}
@@ -187,7 +214,10 @@ package com.muxxu.build3r.views {
 			_width = _height = _depth = _slider.value;
 			render();
 		}
-
+		
+		/**
+		 * Defines a rendering timout to update the rendering after a delay.
+		 */
 		private function timeoutRendering():void {
 			_saveSize = _width;
 			_width = _height = _depth = 1;
@@ -199,12 +229,20 @@ package com.muxxu.build3r.views {
 		 * Called when a key is released
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
+			if(!visible) return;
+			
 			if(event.keyCode == Keyboard.SPACE) {
 				if(_spacePressed) {
 					_localOffset = _localOffsetSave.clone();
 					_spacePressed = false;
 					renderMore();
 				}
+			}
+			
+			if(event.keyCode == Keyboard.ENTER) {
+				_rotation = (_rotation+180)%360;
+				_northArrow.gotoAndStop(_rotation==0? 1 : 2);
+				render();
 			}
 		}
 		
@@ -248,10 +286,12 @@ package com.muxxu.build3r.views {
 			if(event.keyCode == Keyboard.PAGE_UP) pz = 1;
 			if(event.keyCode == Keyboard.PAGE_DOWN) pz = -1;
 			
-			_localOffset.x += px;
-			_localOffset.y += py;
-			_localOffset.z += pz;
-			render();
+			if(px != 0 || py != 0 || pz != 0) {
+				_localOffset.x += px;
+				_localOffset.y += py;
+				_localOffset.z += pz;
+				render();
+			}
 		}
 		
 		/**
@@ -267,16 +307,17 @@ package com.muxxu.build3r.views {
 		 * Renders the grid.
 		 */
 		private function render():void {
-			var i:int, len:int, w:int, h:int, bmd:BitmapData, textures:Array, pos:Point3D;
-			var margin:int, tile:int, ratio:Number, m:Matrix, pos2:Point, offsetedPos:Point3D;
-			ratio = _width>5? 1-(_width-5)*.1 : 1;
+			var i:int, len:int, w:int, h:int, bmd:BitmapData, textures:Array, pos:Point3D, drawMark:Boolean;
+			var margin:int, tile:int, ratio:Number, m:Matrix, pos2:Point, offsetedPos:Point3D,tmpPos:Point3D;
+			ratio = Math.min(1, Metrics.STAGE_WIDTH/(39*_width));
 			margin = 0;
 			textures = Textures.getInstance().bitmapDatas;
 			pos = new Point3D();
 			pos2 = new Point();
+			tmpPos = new Point3D();
 			offsetedPos = _forumPosition.clone();
-			offsetedPos.x -= _forumPositionReference.x - _refPoint.x + _localOffset.x;
-			offsetedPos.y -= _forumPositionReference.y - _refPoint.y + _localOffset.y;
+			offsetedPos.x -= _forumPositionReference.x - _refPoint.x - _localOffset.x;
+			offsetedPos.y -= _forumPositionReference.y - _refPoint.y - _localOffset.y;
 			offsetedPos.z -= _forumPositionReference.z - _refPoint.z;
 			if(offsetedPos.z-_localOffset.z < 0) _localOffset.z += offsetedPos.z-_localOffset.z;
 			if(offsetedPos.z-_localOffset.z > 30) _localOffset.z = offsetedPos.z-30;
@@ -288,16 +329,30 @@ package com.muxxu.build3r.views {
 			m = new Matrix();
 			_holder.graphics.clear();
 			for(i = 0; i < len; ++i) {
-				pos.x = _width-1 - i % _width - Math.floor(_width*.5); 
-				pos.y = Math.floor(i / _height)%_height - Math.floor(_height*.5);
-				pos.z =  Math.floor(i / (_height*_width));
+				pos.x = _width-1 - i % _width; 
+				pos.y = Math.floor(i / _height)%_height;
+				pos.z = Math.floor(i / (_height*_width));
 				
-				tile = _map.getTile(pos.x + offsetedPos.x, pos.y + offsetedPos.y, pos.z + offsetedPos.z - Math.floor(_depth*.5));
+				if (_rotation == 180) {
+					tmpPos.x = _width-1-pos.x;
+					tmpPos.y = _height-1-pos.y;
+				}else{
+					tmpPos.x = pos.x;
+					tmpPos.y = pos.y;
+				}
+				tmpPos.x += offsetedPos.x - Math.floor(_width*.5);
+				tmpPos.y += offsetedPos.y - Math.floor(_height*.5);
+				tmpPos.z = pos.z + offsetedPos.z - Math.floor(_depth*.5);
+				
+				drawMark = tmpPos.x == _forumPosition.x-_forumPositionReference.x + _refPoint.x
+							&& tmpPos.y == _forumPosition.y-_forumPositionReference.y + _refPoint.y
+							&& tmpPos.z == _forumPosition.z-_forumPositionReference.z + _refPoint.z;
+				
+				tile = _map.getTile(tmpPos.x, tmpPos.y, tmpPos.z);
 				
 //				pos.z -= Math.floor(_depth*.5);
-				pos2.x  = ((pos.x+Math.floor(_width*.5)) * w + pos.y * w *.5 - pos.x*w*.5);
+				pos2.x  = ((pos.x) * w + pos.y * w *.5 - pos.x*w*.5);
 				pos2.y = (_depth * h * .75 + pos.y * h*.25 - pos.z * h * .5 - pos.x*h*.25 - h);
-				if(tile == 15) trace(pos, pos2)
 				
 				m.identity();
 				m.scale(ratio, ratio);
@@ -311,10 +366,10 @@ package com.muxxu.build3r.views {
 						bmd = _cache[tile];
 					}
 				}else{
-					if(pos.x == -Math.floor(_width*.5) || pos.y == Math.ceil(_height*.5)-1 || pos.z == _depth-1) {
+					if(pos.x == 0 || pos.y == _height-1 || pos.z == _depth-1) {
 						bmd = _emptyCube;
 					}else{
-						drawMarker(pos, offsetedPos, pos2, w, h, margin, m, ratio);
+						if(drawMark) drawMarker(pos2, w, h, margin, m, ratio);
 						continue;
 					}
 				}
@@ -322,24 +377,32 @@ package com.muxxu.build3r.views {
 				_holder.graphics.beginBitmapFill(bmd, m, false, ratio < 1);
 				_holder.graphics.drawRect(pos2.x, pos2.y, w-margin, h-margin);
 				_holder.graphics.endFill();
-				drawMarker(pos, offsetedPos, pos2, w, h, margin, m, ratio);
+				if(drawMark) drawMarker(pos2, w, h, margin, m, ratio);
 			}
 			
+			//Center the holder
 			var py:int = _slider.y + _slider.height + 10;
 			_holder.y = Math.round((Metrics.STAGE_HEIGHT-_help.height-py - _holder.height) * .5) + py;
 			_holder.x = Math.round((Metrics.STAGE_WIDTH - _holder.width) * .5);
 			var bounds:Rectangle = _holder.getBounds(_holder);
 			_holder.x -= bounds.x;
 			_holder.y -= bounds.y;
+			if(_rotation == 0) {
+				_northArrow.x = _holder.x - bounds.x + bounds.width * .5 - w * _width * .275;
+				_northArrow.y = _holder.y - bounds.y + bounds.height * .5 - h * (_depth+1) * .45;
+			}else{
+				_northArrow.x = _holder.x - bounds.x + bounds.width * .5 + w * _width * .275;
+				_northArrow.y = _holder.y - bounds.y + bounds.height * .5 + h * (_depth-1) * .35;
+			}
 		}
-
-		private function drawMarker(pos:Point3D, offsetedPos:Point3D, pos2:Point, w:int, h:int, margin:int, m:Matrix, ratio:Number):void {
-			if(!_spacePressed
-			&& pos.x + offsetedPos.x == _forumPosition.x-_forumPositionReference.x + _refPoint.x
-			&& pos.y + offsetedPos.y == _forumPosition.y-_forumPositionReference.y + _refPoint.y
-			&& pos.z + offsetedPos.z - Math.floor(_depth*.5) == _forumPosition.z-_forumPositionReference.z + _refPoint.z) {
+		
+		/**
+		 * Draws the marker
+		 */
+		private function drawMarker(pos:Point, w:int, h:int, margin:int, m:Matrix, ratio:Number):void {
+			if(!_spacePressed) {
 				_holder.graphics.beginBitmapFill(_markerCube, m, false, ratio < 1);
-				_holder.graphics.drawRect(pos2.x, pos2.y, w-margin, h-margin);
+				_holder.graphics.drawRect(pos.x, pos.y, w-margin, h-margin);
 				_holder.graphics.endFill();
 			}
 		}

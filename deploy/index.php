@@ -56,6 +56,7 @@
 	$authorized = $authorized || isAuthorizedUser($pseudo, "musaran");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
 	$authorized = $authorized || isAuthorizedUser($pseudo, "oshyso");
+	$authorized = $authorized || isAuthorizedUser($pseudo, "metylene");
 	
 	/*
 	$dateEnd = DateTime::createFromFormat('d/m/Y', '05/03/2012');
