@@ -66,6 +66,13 @@ package com.muxxu.kub3dit.components.buttons {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
+		/**
+		 * Simply hides the button.
+		 * Used for easy timeout callbacks.
+		 */
+		public function hide():void {
+			visible = false;
+		}
 
 
 		

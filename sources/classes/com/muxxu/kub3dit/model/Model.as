@@ -32,7 +32,6 @@ package com.muxxu.kub3dit.model {
 
 	import flash.display.BitmapData;
 	import flash.events.EventDispatcher;
-	import flash.geom.Point;
 	import flash.net.FileReference;
 	import flash.utils.ByteArray;
 	

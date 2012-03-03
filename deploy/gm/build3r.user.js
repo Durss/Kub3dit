@@ -13,9 +13,9 @@ if (document.getElementById('swf_kube') != null) {
 	panelRef = unsafeWindow.document.getElementById('panel');
 	
 	var mapRef = unsafeWindow.document.getElementById('swf_minimap');
-	if(mapRef.getElementsByTagName("embed")[0].getAttribute("wmode") != "direct") {
+	var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	if(isChrome && mapRef.getElementsByTagName("embed")[0].getAttribute("wmode") != "direct") {
 		mapRef.getElementsByTagName("embed")[0].setAttribute("wmode", "opaque");
-		mapRef.style.zIndex = "0";
 		with (mapRef.parentNode) appendChild(removeChild(mapRef));
 	}
 	
@@ -50,7 +50,7 @@ if (document.getElementById('swf_kube') != null) {
 	
 	
 	//Application's panel
-	appRef.innerHTML = '<embed type="application/x-shockwave-flash" src="http://fevermap.org/kub3dit/swf/builder.swf" width="191" height="310" allowScriptAccess="always" bgcolor="#44526f" id="build3rSWF" style="z-index:0; width:0px; height:0px;" />';
+	appRef.innerHTML = '<embed type="application/x-shockwave-flash" src="http://fevermap.org/kub3dit/swf/builder.swf" width="0" height="0" allowScriptAccess="always" bgcolor="#44526f" id="build3rSWF" />';
 		
 		//close button
 		/*
@@ -72,7 +72,7 @@ if (document.getElementById('swf_kube') != null) {
 		
 		//application
 		appRef.setAttribute("id", "build3rApp");
-		appRef.style.zIndex = "1";
+		appRef.style.zIndex = "10";
 		appRef.style.position = "relative";
 		appRef.style.left = "0px";
 		appRef.style.top = "-300px";

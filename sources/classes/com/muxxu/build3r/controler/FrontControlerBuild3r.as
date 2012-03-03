@@ -90,6 +90,13 @@ package com.muxxu.build3r.controler {
 		public function closeWindow():void {
 			_model.closeWindow();
 		}
+		
+		/**
+		 * Picks up the kube forum
+		 */
+		public function pickUpKube():void {
+			_model.pickUpKube();
+		}
 
 
 		
