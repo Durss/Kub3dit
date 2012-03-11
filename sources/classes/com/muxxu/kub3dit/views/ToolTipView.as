@@ -23,6 +23,7 @@ package com.muxxu.kub3dit.views {
 		private var _margin:int;
 		private var _content:TTTextContent;
 		private var _message:ToolTipMessage;
+		private var _build3rSkin:Boolean;
 		
 		
 		
@@ -33,7 +34,8 @@ package com.muxxu.kub3dit.views {
 		/**
 		 * Creates an instance of <code>ToolTipView</code>.
 		 */
-		public function ToolTipView() {
+		public function ToolTipView(build3rSkin:Boolean = false) {
+			_build3rSkin = build3rSkin;
 			initialize();
 		}
 
@@ -59,7 +61,7 @@ package com.muxxu.kub3dit.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_toolTip = addChild(new ToolTip()) as ToolTip;
+			_toolTip = addChild(new ToolTip(_build3rSkin)) as ToolTip;
 			_toolTip.addEventListener(Event.CLOSE, closeHandler);
 			
 			_content = new TTTextContent(false);

@@ -1,10 +1,12 @@
 package com.muxxu.build3r.views {
-	import com.muxxu.build3r.vo.Metrics;
-	import com.muxxu.build3r.i18n.LabelBuild3r;
+	import com.muxxu.kub3dit.components.LoaderSpinning;
+	import flash.display.Sprite;
 	import gs.TweenLite;
 
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
+	import com.muxxu.build3r.i18n.LabelBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
+	import com.muxxu.build3r.vo.Metrics;
 	import com.muxxu.kub3dit.commands.IPassView;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
@@ -38,6 +40,8 @@ package com.muxxu.build3r.views {
 		private var _idIcon:Class;
 		private var _error:CssTextField;
 		private var _labelID:CssTextField;
+		private var _formHolder:Sprite;
+		private var _spin:LoaderSpinning;
 		
 		
 		
@@ -63,6 +67,11 @@ package com.muxxu.build3r.views {
 		override public function update(event:IModelEvent):void {
 			var model:ModelBuild3r = event.model as ModelBuild3r;
 			visible = model.map == null;
+			if(model.autoLoading)
+				_spin.open();
+			else
+				_spin.close();
+			_formHolder.visible = !model.autoLoading;
 		}
 
 
@@ -74,7 +83,11 @@ package com.muxxu.build3r.views {
 		 * @inheritDoc
 		 */
 		public function open(passwordCallback:Function):void {
+			_spin.close();
 			mouseEnabled = mouseChildren = true;
+			_formHolder.visible = true;
+			_idBt.enabled = true;
+			_browseBt.enabled = true;
 			visible = true;
 			stage.focus = _passInput;
 			_passInput.textfield.setSelection(0, _passInput.text.length);
@@ -88,7 +101,11 @@ package com.muxxu.build3r.views {
 		 * @inheritDoc
 		 */
 		public function error():void {
+			_spin.close();
+			_idBt.enabled = true;
+			_browseBt.enabled = true;
 			mouseEnabled = mouseChildren = true;
+			_formHolder.visible = true;
 			stage.focus = _passInput;
 			_passInput.textfield.setSelection(0, _passInput.text.length);
 			_passInput.transform.colorTransform = _emptyCt;
@@ -104,7 +121,11 @@ package com.muxxu.build3r.views {
 		 * Called if loaded map's type isn't good.
 		 */
 		public function typeError():void {
+			_spin.close();
 			mouseEnabled = mouseChildren = true;
+			_formHolder.visible = true;
+			_idBt.enabled = true;
+			_browseBt.enabled = true;
 			_error.text = LabelBuild3r.getl("load-invalidFile");
 		}
 		
@@ -112,7 +133,10 @@ package com.muxxu.build3r.views {
 		 * Called if th emap isn't found
 		 */
 		public function mapNotFound():void {
+			_spin.close();
 			mouseEnabled = mouseChildren = true;
+			_idBt.enabled = true;
+			_browseBt.enabled = true;
 			_error.text = LabelBuild3r.getl("load-notFound");
 			_idInput.textfield.setSelection(0, _idInput.text.length);
 		}
@@ -134,17 +158,19 @@ package com.muxxu.build3r.views {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_labelBrowse = addChild(new CssTextField("b-label")) as CssTextField;
-			_labelID= addChild(new CssTextField("b-label")) as CssTextField;
-			_error = addChild(new CssTextField("b-error")) as CssTextField;
-			_browseBt = addChild(new ButtonKube(LabelBuild3r.getl("load-browse"), false, null, true)) as ButtonKube;
+			_formHolder = addChild(new Sprite()) as Sprite;
+			_labelBrowse = _formHolder.addChild(new CssTextField("b-label")) as CssTextField;
+			_labelID= _formHolder.addChild(new CssTextField("b-label")) as CssTextField;
+			_error = _formHolder.addChild(new CssTextField("b-error")) as CssTextField;
+			_browseBt = _formHolder.addChild(new ButtonKube(LabelBuild3r.getl("load-browse"), false, null, true)) as ButtonKube;
+			_spin = addChild(new LoaderSpinning()) as LoaderSpinning;
 			
 			_browseBt.icon = new _browseIcon();
 			_browseBt.contentMargin.left = 15;
 			
-			_idInput = addChild(new InputKube(LabelBuild3r.getl("load-id"), false, false, 0, 0, true)) as InputKube;
-			_passInput = addChild(new InputKube(LabelBuild3r.getl("load-pass"), false, false, 0, 0, true)) as InputKube;
-			_idBt = addChild(new ButtonKube(LabelBuild3r.getl("load-submit"), false, null, true)) as ButtonKube;
+			_idInput = _formHolder.addChild(new InputKube(LabelBuild3r.getl("load-id"), false, false, 0, 0, true)) as InputKube;
+			_passInput = _formHolder.addChild(new InputKube(LabelBuild3r.getl("load-pass"), false, false, 0, 0, true)) as InputKube;
+			_idBt = _formHolder.addChild(new ButtonKube(LabelBuild3r.getl("load-submit"), false, null, true)) as ButtonKube;
 			
 			_idBt.icon = new _idIcon();
 			_idBt.contentMargin.left = 15;
@@ -155,6 +181,9 @@ package com.muxxu.build3r.views {
 			_labelID.text = LabelBuild3r.getl("load-titleId");
 			_idInput.textfield.restrict = '[0-9][a-z][A-Z]';
 			_idInput.textfield.maxChars = 15;
+			_passInput.textfield.displayAsPassword = true;
+			_spin.x = Metrics.STAGE_WIDTH * .5;
+			_spin.y = Metrics.STAGE_HEIGHT * .5;
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			_browseBt.addEventListener(MouseEvent.CLICK, submitHandler);
@@ -192,6 +221,8 @@ package com.muxxu.build3r.views {
 			if(!mouseEnabled) return;
 			
 			_error.text = "";
+			_idBt.enabled = false;
+			_browseBt.enabled = false;
 			
 			if(event.target == _browseBt) {
 				FrontControlerBuild3r.getInstance().browseForMap();
@@ -203,6 +234,9 @@ package com.muxxu.build3r.views {
 				}else{
 					mouseEnabled = mouseChildren = false;
 					FrontControlerBuild3r.getInstance().loadMapById(_idInput.value as String, _passInput.value as String);
+					_spin.open();
+					_spin.x = _idBt.x + _idBt.width * .5;
+					_spin.y = _idBt.y + _idBt.height * .5;
 				}
 			}
 		}

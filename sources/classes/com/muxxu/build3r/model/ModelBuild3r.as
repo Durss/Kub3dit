@@ -1,4 +1,5 @@
 package com.muxxu.build3r.model {
+	import flash.net.SharedObject;
 	import com.muxxu.build3r.views.LoadView;
 	import com.muxxu.build3r.vo.LightMapData;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
@@ -42,7 +43,8 @@ package com.muxxu.build3r.model {
 		private var _map:LightMapData;
 		private var _mapReferencePoint:Point3D;
 		private var _positionReference:Point3D;
-		private var _wasForum:Boolean;
+		private var _so:SharedObject;
+		private var _autoLoading:Boolean;
 		
 		
 		
@@ -62,6 +64,11 @@ package com.muxxu.build3r.model {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Gets iff a map is auto loading
+		 */
+		public function get autoLoading():Boolean { return _autoLoading; }
+		
 		/**
 		 * Gets the last forum's position.
 		 */
@@ -93,6 +100,15 @@ package com.muxxu.build3r.model {
 		 */
 		public function start():void {
 			initialize();
+			if(_so.data["id"] != undefined && _so.data["pass"] != undefined
+			&& _so.data["worldRef"] != undefined && _so.data["mapRef"] != undefined && _so.data["position"] != undefined) {
+				_positionReference = new Point3D(_so.data["worldRef"]["x"], _so.data["worldRef"]["y"], _so.data["worldRef"]["z"]);
+				_mapReferencePoint = new Point3D(_so.data["mapRef"]["x"], _so.data["mapRef"]["y"], _so.data["mapRef"]["z"]);
+				_position = new Point3D(_so.data["position"]["x"], _so.data["position"]["y"], _so.data["position"]["z"]);
+				loadMapById(_so.data["id"], _so.data["pass"]);
+				_autoLoading = true;
+			}
+			update();
 		}
 		
 		/**
@@ -109,6 +125,8 @@ package com.muxxu.build3r.model {
 			_loadMapCmd.id = id;
 			_loadMapCmd.password = password;
 			_loadMapCmd.execute();
+			_so.data["id"] = id;
+			_so.data["pass"] = password;
 		}
 		
 		/**
@@ -117,6 +135,8 @@ package com.muxxu.build3r.model {
 		public function setReferencePoint(reference:Point3D):void {
 			_positionReference = _position.clone();
 			_mapReferencePoint = reference;
+			_so.data["worldRef"] = {x:_positionReference.x, y:_positionReference.y, z:_positionReference.z};
+			_so.data["mapRef"] = {x:reference.x, y:reference.y, z:reference.z};
 			update();
 		}
 		
@@ -142,6 +162,7 @@ package com.muxxu.build3r.model {
 			            function(){ 
 							document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.width = "0px";
 							document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.height = "0px";
+							document.getElementById('swf_minimap').style.visibility = '';
 						}
 			        ]]></script>;
 				ExternalInterface.call(closeApp.toString());
@@ -155,6 +176,22 @@ package com.muxxu.build3r.model {
 			if(ExternalInterface.available) {
 				ExternalInterface.call("removeKube", _position.x, _position.y, _position.z+1);
 			}
+		}
+		
+		/**
+		 * Clears the current map and goes back to load view
+		 */
+		public function clearMap():void {
+			_map = null;
+			_position = null;
+			_positionReference = null;
+			_mapReferencePoint = null;
+			_autoLoading = false;
+			delete _so.data["id"];
+			delete _so.data["pass"];
+			delete _so.data["worldRef"];
+			delete _so.data["mapRef"];
+			update();
 		}
 
 
@@ -170,6 +207,8 @@ package com.muxxu.build3r.model {
 			_timer = new Timer(70);
 			_timer.addEventListener(TimerEvent.TIMER, ticTimerHandler);
 			_timer.start();
+			
+			_so = SharedObject.getLocal("build3r", "/");
 			
 			_browseCmd = new BrowseForFileCmd("Kub3dit map", "*.png;*.map;");
 			_browseCmd.addEventListener(CommandEvent.COMPLETE, loadMapCompleteHandler);
@@ -211,14 +250,13 @@ package com.muxxu.build3r.model {
 		    
 			//check if picking up a forum
 			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/.test(text)) {
-				if(!_wasForum) {
-					_wasForum = true;
-					var matches:Array = text.match(/-?[0-9]+/gi);
-					_position = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3])-1);
+				var matches:Array = text.match(/-?[0-9]+/gi);
+				var p:Point3D = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3])-1);
+				if(_position == null || !p.equals(_position)) {
+					_position = p;
+					_so.data["position"] = {x:_position.x, y:_position.y, z:_position.z};
 					update();
 				}
-			}else{
-				_wasForum = false;
 			}
 		}
 		
@@ -263,7 +301,6 @@ package com.muxxu.build3r.model {
 					var customsLen:uint = data.readUnsignedByte();
 					for(var i:int = 0; i < customsLen; ++i) data.readUTFBytes(data.readShort());
 					data.position += 2+2+2+4+4;
-					
 					_map = new LightMapData(data.readShort(), data.readShort(), data.readShort(), data);
 					break;
 				

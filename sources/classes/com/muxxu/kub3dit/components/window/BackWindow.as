@@ -11,11 +11,12 @@ package com.muxxu.kub3dit.components.window {
 	public class BackWindow extends Sprite {
 		
 		public static const CELL_WIDTH:int	= 4;
-		protected const SHADOW_ALPHA:Number	= .2;
-		protected const BORDER_COLORS:Array	= [randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor()];
-		protected const CELL_SIZES:Array	= [randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize()];
+		protected var SHADOW_ALPHA:Number	= .2;
+		protected var BORDER_COLORS:Array;
+		protected var CELL_SIZES:Array;
 		protected var _width:int;
 		protected var _height:int;
+		private var _build3rSkin:Boolean;
 
 		
 		
@@ -25,7 +26,11 @@ package com.muxxu.kub3dit.components.window {
 		/**
 		 * Creates an instance of <code>BackWindow</code>.
 		 */
-		public function BackWindow() { }
+		public function BackWindow(build3rSkin:Boolean) {
+			_build3rSkin = build3rSkin;
+			BORDER_COLORS = [randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor(), randColor()];
+			CELL_SIZES = [randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize(), randSize()];
+		}
 
 		
 		
@@ -167,7 +172,7 @@ package com.muxxu.kub3dit.components.window {
 				offset = 0;
 			}while(px > CELL_WIDTH);
 			
-			graphics.beginFill(0x4CA5CD,1);
+			graphics.beginFill(_build3rSkin? 0x18578b : 0x4CA5CD,1);
 			graphics.drawRect(CELL_WIDTH, CELL_WIDTH, _width-(CELL_WIDTH*2), _height-(CELL_WIDTH*2));
 			
 			graphics.lineStyle(0,0,0);
@@ -191,7 +196,7 @@ package com.muxxu.kub3dit.components.window {
 		 * Gets a random color in a palette.
 		 */
 		private function randColor():Number {
-			var c:Array = [0x87DBEF, 0xB3E4F5, 0xA4D9EE, 0x96BFD2, 0xCBF3F8, 0x9CE3EB, 0x76ADC5];
+			var c:Array = _build3rSkin? [0x094077, 0x0A447E, 0x07345F, 0x033A75, 0x03426B, 0x05407A, 0x2F4E6A] : [0x87DBEF, 0xB3E4F5, 0xA4D9EE, 0x96BFD2, 0xCBF3F8, 0x9CE3EB, 0x76ADC5];
 			return c[Math.floor(Math.random() * c.length)];
 		}
 		

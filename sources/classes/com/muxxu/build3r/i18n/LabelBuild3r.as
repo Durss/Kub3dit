@@ -29,9 +29,12 @@ package com.muxxu.build3r.i18n {
 			_LABELS["fr"]["synch-titleMap"] = "Cliquez sur la carte pour<br />définir le point de référence :";
 			_LABELS["fr"]["synch-titleKube"] = "Touchez un kube forum dans le jeu pour situer le point de référence :";
 			
-			_LABELS["fr"]["build-title"] = "Touchez un kube forum pour savoir quel kube doit se trouver à son emplacement.";
 			_LABELS["fr"]["build-keys"] = "espace entrée";
 			_LABELS["fr"]["build-getKube"] = "Ramasser le kube";
+			_LABELS["fr"]["build-helpBt"] = "Aide";
+			_LABELS["fr"]["build-helpTT"] = "Touchez un kube forum dans<br />le jeu pour savoir quel kube<br />doit se trouver à son<br />emplacement.";
+			_LABELS["fr"]["build-changeHelpBt"] = "Changer";
+			_LABELS["fr"]["build-changeHelpTT"] = "Charger une<br />nouvelle carte.";
 			
 			//======= EN =======
 			_LABELS["en"] = {};

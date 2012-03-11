@@ -456,7 +456,7 @@ package com.muxxu.kub3dit.model {
 			unlock();
 			_ignoreLoadId = event.data as String;
 			dispatchEvent(new LightModelEvent(LightModelEvent.MAP_UPLOAD_COMPLETE, _ignoreLoadId));
-			SWFAddress.setValue(_ignoreLoadId);//let this at last! Callback SWFAddress callback sets this var to null
+			SWFAddress.setValue(_ignoreLoadId);//let this at last! SWFAddress callback sets this var to null
 			_ignoreNextURLChange = true;
 		}
 
