@@ -78,7 +78,7 @@ package com.muxxu.build3r {
 				nextFrame();
 				launch();
 			} else {
-				var w:int = 300; 
+				var w:int = 150; 
 				var h:int = 6; 
 				var percent:Number = (root.loaderInfo.bytesLoaded / root.loaderInfo.bytesTotal);
 				if(isNaN(percent)) percent = 0;

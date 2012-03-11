@@ -81,7 +81,7 @@ package com.muxxu.build3r.views {
 		 */
 		override public function update(event:IModelEvent):void {
 			var model:ModelBuild3r = event.model as ModelBuild3r;
-			if(model.mapReferencePoint != null) {
+			if(model.mapReferencePoint != null || model.map == null) {
 				visible = false;
 				return;
 			}

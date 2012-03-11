@@ -11,10 +11,11 @@
 	
 	//header('Content-type: text/html; charset=iso-8859-1');
 	$pseudo = isset($_SESSION["uname"])? $_SESSION["uname"] : "";
+	/*
 	if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "as3game.blogspot.com")) {
 		$pseudo = "authorized_referer";
 		$lang = "en";
-	}
+	}*/
 	if(isset($_GET['uid'], $_GET['pubkey'])) {
 		$url = "http://muxxu.com/app/xml?app=kub3dit&xml=user&id=".$_GET['uid']."&key=".md5("ad10c672ca9b23cad961163da05071ed" . $_GET["pubkey"]);
 		$xml = simplexml_load_file($url);

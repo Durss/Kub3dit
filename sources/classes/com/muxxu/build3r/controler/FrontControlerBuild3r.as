@@ -97,6 +97,13 @@ package com.muxxu.build3r.controler {
 		public function pickUpKube():void {
 			_model.pickUpKube();
 		}
+		
+		/**
+		 * Clears the current map and goes back to load view
+		 */
+		public function clearMap():void {
+			_model.clearMap();
+		}
 
 
 		

@@ -13,23 +13,25 @@ if (document.getElementById('swf_kube') != null) {
 	panelRef = unsafeWindow.document.getElementById('panel');
 	
 	var mapRef = unsafeWindow.document.getElementById('swf_minimap');
-	var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	/*var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 	if(isChrome && mapRef.getElementsByTagName("embed")[0].getAttribute("wmode") != "direct") {
 		mapRef.getElementsByTagName("embed")[0].setAttribute("wmode", "opaque");
 		with (mapRef.parentNode) appendChild(removeChild(mapRef));
-	}
+	}*/
 	
 	function showBuild3r() {
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.width = "191px";
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.height = "310px";
+		document.getElementById('swf_minimap').style.visibility = 'hidden';
 		return false;
 	}
 	
-	//Due to a security shit this can't be called by flash even if the method is defin on the unsafeWindow object.
+	//Due to a security shit this can't be called by flash even if the method is defined on the unsafeWindow object.
 	//So flash does the exact same thing internally.
 	function hideBuild3r () {
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.width = "0px";
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.height = "0px";
+		document.getElementById('swf_minimap').style.visibility = '';
 		return false;
 	}
 	
