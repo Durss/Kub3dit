@@ -77,6 +77,14 @@ package com.muxxu.build3r.controler {
 		}
 		
 		/**
+		 * Simulates a forum touch.
+		 * Used only for debug purpose.
+		 */
+		public function touchForum(pos:Point3D):void {
+			_model.touchForum(pos);
+		}
+		
+		/**
 		 * Moves the la position.
 		 * For debug purpose
 		 */

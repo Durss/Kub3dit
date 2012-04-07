@@ -65,6 +65,7 @@
 .b-kubeCoos { font-family:Verdana; font-size:10; color:#aaaaaa; }
 .b-kubeCoosBig { font-family:Verdana; font-weight:bold; font-size:18; color:#aaaaaa; }
 .b-label { font-family:Verdana; font-size:10; color:#ffffff; }
+.b-help { font-family:Verdana; font-size:9; color:#ffffff; }
 .b-error { font-family:Verdana; font-size:12; color:#CC0000; flash-glow:[1.3,10,ffffff]}
 .b-button { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; flash-alpha:1; }
 .b-button_disabled { font-family:Verdana; font-size:12; font-weight:bold; color:#ffffff; flash-alpha:.4; }

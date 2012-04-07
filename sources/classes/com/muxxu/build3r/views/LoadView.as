@@ -67,6 +67,12 @@ package com.muxxu.build3r.views {
 		override public function update(event:IModelEvent):void {
 			var model:ModelBuild3r = event.model as ModelBuild3r;
 			visible = model.map == null;
+			if(visible) {
+				mouseEnabled = mouseChildren = true;
+				_formHolder.visible = true;
+				_idBt.enabled = true;
+				_browseBt.enabled = true;
+			}
 			if(model.autoLoading)
 				_spin.open();
 			else

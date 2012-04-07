@@ -24,7 +24,7 @@ package com.muxxu.build3r.components {
 	 * @author Francois
 	 * @date 11 mars 2012;
 	 */
-	public class IsoMap extends Sprite {
+	public class IsoMap extends Sprite implements IBuild3rMap {
 		
 		private var _width:int = 3;
 		private var _height:int = 3;
@@ -47,6 +47,7 @@ package com.muxxu.build3r.components {
 		private var _localOffsetSave:Point3D;
 		private var _rotation:int;
 		private var _northArrow:NorthArrowGraphic;
+		private var _ready:Boolean;
 		
 		
 		
@@ -66,9 +67,19 @@ package com.muxxu.build3r.components {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * @inheritDoc
+		 */
 		public function set sizes(value:int):void {
 			_width = _height = _depth = value;
 			render();
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function get sizes():int {
+			return _width;
 		}
 
 
@@ -77,18 +88,20 @@ package com.muxxu.build3r.components {
 		 * PUBLIC *
 		 * ****** */
 		/**
-		 * Called on model's update
+		 * @inheritDoc
 		 */
 		public function update(mapReferencePoint:Point3D, positionReference:Point3D, position:Point3D, map:LightMapData):void {
-			visible = true;
 			_refPoint = mapReferencePoint;
 			_forumPositionReference = positionReference;
 			_forumPosition = position;
 			_map = map;
 			_localOffset.x = _localOffset.y = _localOffset.z = 0;
 			
-			timeoutRendering();
-			render();
+			_ready = true;
+			if(stage != null) {
+				timeoutRendering();
+				render();
+			}
 		}
 
 
@@ -104,7 +117,6 @@ package com.muxxu.build3r.components {
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
 			_cache =  [];
-			visible = false;
 			_rotation = 0;
 			_lastCheck = new Point();
 			_localOffset = new Point3D();
@@ -116,7 +128,6 @@ package com.muxxu.build3r.components {
 			_markerCube = drawIsoKube(markerFace, markerFace, false, 1, true, 0xA0cc0000);
 			
 			_holder = addChild(new Shape()) as Shape;
-//			_help = addChild(new CssTextField("b-label")) as CssTextField;
 			_northArrow = addChild(new NorthArrowGraphic()) as NorthArrowGraphic;
 			
 			_northArrow.stop();
@@ -125,6 +136,7 @@ package com.muxxu.build3r.components {
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
+			addEventListener(Event.ADDED_TO_STAGE, render);
 		}
 		
 		/**
@@ -133,7 +145,7 @@ package com.muxxu.build3r.components {
 		 * Used to drag the map.
 		 */
 		private function mouseEventHandler(event:MouseEvent):void {
-			if(!visible) return;
+			if(stage == null) return;
 			
 			//Mouse down
 			if(event.type == MouseEvent.MOUSE_DOWN) {
@@ -183,7 +195,6 @@ package com.muxxu.build3r.components {
 		 * Called when a key is released
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
-			if(!visible) return;
 			
 			if(event.keyCode == Keyboard.SPACE) {
 				if(_spacePressed) {
@@ -204,7 +215,7 @@ package com.muxxu.build3r.components {
 		 * Called when a key is pressed
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
-			if(!visible) return;
+			if(stage == null) return;
 			
 			if (event.keyCode == Keyboard.SPACE) {
 				if(!_spacePressed) {
@@ -247,7 +258,9 @@ package com.muxxu.build3r.components {
 		/**
 		 * Renders the grid.
 		 */
-		private function render():void {
+		private function render(event:Event = null):void {
+			if(!_ready) return;
+			
 			var i:int, len:int, w:int, h:int, bmd:BitmapData, textures:Array, pos:Point3D, drawMark:Boolean;
 			var margin:int, tile:int, ratio:Number, m:Matrix, pos2:Point, offsetedPos:Point3D,tmpPos:Point3D;
 			ratio = Math.min(1, Metrics.STAGE_WIDTH/(39*_width));
