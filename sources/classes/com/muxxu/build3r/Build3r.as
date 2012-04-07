@@ -1,4 +1,5 @@
 package com.muxxu.build3r {
+	import com.muxxu.build3r.views.DebugView;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
 	import com.muxxu.build3r.views.BuildView;
@@ -71,6 +72,7 @@ package com.muxxu.build3r {
 			CssTextField.EMBED_FONT = false;
 			var ba:ByteArray = new _styles() as ByteArray;
 			CssManager.getInstance().setCss(ba.readUTFBytes(ba.length));
+//			Config.addPath("loadMapPath", "http://localhost/kub3dit/php/loadMap.php");
 			Config.addPath("loadMapPath", "http://fevermap.org/kub3dit/php/loadMap.php");
 			
 			_model = new ModelBuild3r();
@@ -82,6 +84,7 @@ package com.muxxu.build3r {
 			addChild(new SynchView());
 			addChild(new BuildView());
 			addChild(new CloseView());
+			addChild(new DebugView());
 			addChild(new ToolTipView(true));
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);

@@ -29,12 +29,15 @@ package com.muxxu.build3r.i18n {
 			_LABELS["fr"]["synch-titleMap"] = "Cliquez sur la carte pour<br />définir le point de référence :";
 			_LABELS["fr"]["synch-titleKube"] = "Touchez un kube forum dans le jeu pour situer le point de référence :";
 			
-			_LABELS["fr"]["build-keys"] = "espace entrée";
+			_LABELS["fr"]["build-keys"] = "← ↑ → ↓ PgUp PgDown espace entrée";
 			_LABELS["fr"]["build-getKube"] = "Ramasser le kube";
 			_LABELS["fr"]["build-helpBt"] = "Aide";
 			_LABELS["fr"]["build-helpTT"] = "Touchez un kube forum dans<br />le jeu pour savoir quel kube<br />doit se trouver à son<br />emplacement.";
-			_LABELS["fr"]["build-changeHelpBt"] = "Changer";
+			_LABELS["fr"]["build-changeHelpBt"] = "Carte";
 			_LABELS["fr"]["build-changeHelpTT"] = "Charger une<br />nouvelle carte.";
+			_LABELS["fr"]["build-renderMode-0"] = "2D";
+			_LABELS["fr"]["build-renderMode-1"] = "ISO";
+			_LABELS["fr"]["build-keys-0"] = "← ↑ → ↓ PgUp PgDown";
 			
 			//======= EN =======
 			_LABELS["en"] = {};
@@ -53,11 +56,17 @@ package com.muxxu.build3r.i18n {
 			_LABELS["en"]["synch-titleMap"] = "Click on the map to define <br />the reference point :";
 			_LABELS["en"]["synch-titleKube"] = "Touch a forum kube in the game to locate the reference point :";
 			
-			_LABELS["en"]["build-title"] = "Touch a forum kube in the game to know which kube should be put at its place.";
-			_LABELS["en"]["build-keys"] = "space enter";
+			_LABELS["en"]["build-keys"] = "← ↑ → ↓ PgUp PgDown space enter";
 			_LABELS["en"]["build-getKube"] = "Pick up kube";
+			_LABELS["en"]["build-helpBt"] = "Help";
+			_LABELS["en"]["build-helpTT"] = "Touch a forum kube in the game to know which kube should be put at its place.";
+			_LABELS["en"]["build-changeHelpBt"] = "Map";
+			_LABELS["en"]["build-changeHelpTT"] = "Load a new map.";
+			_LABELS["en"]["build-renderMode-0"] = "2D";
+			_LABELS["en"]["build-renderMode-1"] = "ISO";
+			_LABELS["en"]["build-keys-0"] = "← ↑ → ↓ PgUp PgDown";
 			
-			_LABELS["es"] = {};
+//			_LABELS["es"] = {};
 		}
 		
 		

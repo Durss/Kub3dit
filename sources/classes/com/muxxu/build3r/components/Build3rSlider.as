@@ -70,6 +70,14 @@ package com.muxxu.build3r.components {
 		public function set value(value:Number):void {
 			updateButtonState(value);
 		}
+		
+		/**
+		 * Updates the max value
+		 */
+		public function set maxValue(value:Number):void {
+			_max = value;
+			computePositions();
+		}
 
 
 

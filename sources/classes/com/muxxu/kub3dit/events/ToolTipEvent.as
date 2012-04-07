@@ -10,6 +10,8 @@ package com.muxxu.kub3dit.events {
 	public class ToolTipEvent extends Event {
 		
 		public static const OPEN:String = "OPEN";
+		public static const CLOSE:String = "CLOSE";
+		
 		private var _data:*;
 		private var _align:String;
 		private var _margin:int;
@@ -24,7 +26,7 @@ package com.muxxu.kub3dit.events {
 		/**
 		 * Creates an instance of <code>ToolTipEvent</code>.
 		 */
-		public function ToolTipEvent(type:String, data:*, align:String = "br", margin:int = 5, style:String = "tooltipContent", bubbles:Boolean = true, cancelable:Boolean = false) {
+		public function ToolTipEvent(type:String, data:* = null, align:String = "br", margin:int = 5, style:String = "tooltipContent", bubbles:Boolean = true, cancelable:Boolean = false) {
 			_style = style;
 			_margin = margin;
 			_align = align;

@@ -1,11 +1,13 @@
 package com.muxxu.kub3dit.views {
 	import com.muxxu.kub3dit.components.tooltip.ToolTip;
+	import com.muxxu.kub3dit.components.tooltip.content.TTBitmapContent;
 	import com.muxxu.kub3dit.components.tooltip.content.TTTextContent;
 	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.vo.ToolTipAlign;
 	import com.muxxu.kub3dit.vo.ToolTipMessage;
 	import com.nurun.utils.pos.roundPos;
 
+	import flash.display.BitmapData;
 	import flash.display.InteractiveObject;
 	import flash.display.Sprite;
 	import flash.events.Event;
@@ -24,6 +26,7 @@ package com.muxxu.kub3dit.views {
 		private var _content:TTTextContent;
 		private var _message:ToolTipMessage;
 		private var _build3rSkin:Boolean;
+		private var _contentBmp:TTBitmapContent;
 		
 		
 		
@@ -65,6 +68,7 @@ package com.muxxu.kub3dit.views {
 			_toolTip.addEventListener(Event.CLOSE, closeHandler);
 			
 			_content = new TTTextContent(false);
+			_contentBmp = new TTBitmapContent();
 			_message = new ToolTipMessage(_content, null);
 			
 			mouseEnabled = mouseChildren = false;
@@ -78,6 +82,7 @@ package com.muxxu.kub3dit.views {
 		private function addedToStageHandler(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(ToolTipEvent.OPEN, openHandler);
+			stage.addEventListener(ToolTipEvent.CLOSE, closeHandler);
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveHandler);
 		}
 		
@@ -142,7 +147,11 @@ package com.muxxu.kub3dit.views {
 		 * Called when the tooltip is closed
 		 */
 		private function closeHandler(event:Event):void {
-			_opened = false;
+			if(event is ToolTipEvent) {
+				_toolTip.close();
+			}else{
+				_opened = false;
+			}
 		}
 		
 		/**
@@ -152,7 +161,13 @@ package com.muxxu.kub3dit.views {
 			_opened = true;
 			_margin = event.margin;
 			_message.target = event.target as InteractiveObject;
-			_content.populate(event.data as String, event.style);
+			if(event.data is BitmapData){
+				_contentBmp.populate(event.data as BitmapData);
+				_message.content = _contentBmp;
+			}else if(event.data is String){
+				_content.populate(event.data as String, event.style);
+				_message.content = _content;
+			}
 			_toolTip.open(_message);
 			_alignType = event.align;
 			mouseMoveHandler(null);

@@ -141,6 +141,15 @@ package com.muxxu.build3r.model {
 		}
 		
 		/**
+		 * Simulates a forum touch.
+		 * Used only for debug purpose.
+		 */
+		public function touchForum(pos:Point3D):void {
+			_position = pos.clone();
+			update();
+		}
+		
+		/**
 		 * Moves the la position.
 		 * For debug purpose
 		 */
@@ -191,6 +200,9 @@ package com.muxxu.build3r.model {
 			delete _so.data["pass"];
 			delete _so.data["worldRef"];
 			delete _so.data["mapRef"];
+			if(!ExternalInterface.available) {
+				_position = new Point3D(0,0,0);
+			}
 			update();
 		}
 
@@ -223,7 +235,7 @@ package com.muxxu.build3r.model {
 			Textures.getInstance().initialize(map.readUTFBytes(map.length), add.readUTFBytes(add.length), (new _textures() as Bitmap).bitmapData, (new _colors() as Bitmap).bitmapData);
 			
 			if(!ExternalInterface.available) {
-				_position = new Point3D(0,0,3);
+				_position = new Point3D(0,0,8);
 			}
 		}
 		
@@ -249,9 +261,11 @@ package com.muxxu.build3r.model {
 	        var text:String = ExternalInterface.call(getZoneInfos.toString()); 
 		    
 			//check if picking up a forum
-			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/.test(text)) {
+//			return removeKube(43215,-148226,2);
+			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/gi.test(text)) {
+				text = text.replace(/.*(removeKube\(.*?\)).*/gi, "$1");
 				var matches:Array = text.match(/-?[0-9]+/gi);
-				var p:Point3D = new Point3D(parseInt(matches[1]), parseInt(matches[2]), parseInt(matches[3])-1);
+				var p:Point3D = new Point3D(parseInt(matches[0]), parseInt(matches[1]), parseInt(matches[2])-1);
 				if(_position == null || !p.equals(_position)) {
 					_position = p;
 					_so.data["position"] = {x:_position.x, y:_position.y, z:_position.z};
