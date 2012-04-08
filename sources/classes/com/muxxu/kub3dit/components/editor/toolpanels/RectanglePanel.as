@@ -32,6 +32,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _fillCb:CheckBoxKube;
 		private var _drawToLandmark:Boolean;
 		private var _chunksManager:ChunksManager;
+		private var _lastDrawGUID:String;
 		
 		
 		
@@ -110,6 +111,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Method that will be used to draw with the tool
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode;
+			if(!_drawToLandmark && drawGUID == _lastDrawGUID) return;
+			_lastDrawGUID = drawGUID;
+			
 			var i:int, len:int, w:int, h:int, t:int, px:Number, py:Number, pz:Number, c:uint;
 			w = parseInt(_inputWidth.text);
 			h = parseInt(_inputHeight.text);

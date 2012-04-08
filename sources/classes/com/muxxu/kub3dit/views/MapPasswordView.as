@@ -1,22 +1,17 @@
 package com.muxxu.kub3dit.views {
 	import com.muxxu.kub3dit.commands.IPassView;
-	import com.nurun.components.vo.Margin;
-	import com.muxxu.kub3dit.graphics.CancelIcon;
-	import com.muxxu.kub3dit.graphics.SubmitIcon;
-	import gs.TweenLite;
-
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
-	import com.muxxu.kub3dit.components.window.PromptWindow;
+	import com.muxxu.kub3dit.graphics.CancelIcon;
+	import com.muxxu.kub3dit.graphics.SubmitIcon;
 	import com.muxxu.kub3dit.model.Model;
 	import com.nurun.components.form.events.FormComponentEvent;
 	import com.nurun.components.text.CssTextField;
+	import com.nurun.components.vo.Margin;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
-	import com.nurun.structure.mvc.views.AbstractView;
 	import com.nurun.utils.pos.PosUtils;
 
-	import flash.display.Sprite;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 
@@ -25,10 +20,8 @@ package com.muxxu.kub3dit.views {
 	 * @author Francois
 	 * @date 2 janv. 2012;
 	 */
-	public class MapPasswordView extends AbstractView implements IPassView {
-		private var _disableLayer:Sprite;
-		private var _content:Sprite;
-		private var _window:PromptWindow;
+	public class MapPasswordView extends AbstractWindowView implements IPassView {
+		
 		private var _label:CssTextField;
 		private var _input:InputKube;
 		private var _submitBt:ButtonKube;
@@ -46,7 +39,7 @@ package com.muxxu.kub3dit.views {
 		 * Creates an instance of <code>MapPasswordView</code>.
 		 */
 		public function MapPasswordView() {
-			initialize();
+			super(Label.getLabel("prompt-mapLoadPassTitle"));
 		}
 
 		
@@ -70,11 +63,10 @@ package com.muxxu.kub3dit.views {
 		/**
 		 * Opens the view
 		 */
-		public function open(loadMethod:Function):void {
-			TweenLite.to(this, .25, {autoAlpha:1});
-			_loadMethod = loadMethod;
+		override public function open(...args):void {
+			_loadMethod = args[0];
 			_error.visible = false;
-			computePositions();
+			super.open();
 			stage.focus = _input;
 		}
 		
@@ -88,13 +80,6 @@ package com.muxxu.kub3dit.views {
 			computePositions();
 		}
 		
-		/**
-		 * Closes the view
-		 */
-		public function close():void {
-			TweenLite.to(this, .25, {autoAlpha:0});
-		}
-		
 		
 
 
@@ -106,16 +91,14 @@ package com.muxxu.kub3dit.views {
 		/**
 		 * Initialize the class.
 		 */
-		private function initialize():void {
-			alpha = 0;
-			visible = false;
-			_disableLayer = addChild(new Sprite()) as Sprite;
-			_content = new Sprite();
-			_label = _content.addChild(new CssTextField("promptWindowContent")) as CssTextField;
-			_input = _content.addChild(new InputKube()) as InputKube;
-			_error = _content.addChild(new CssTextField("promptWindowContentError")) as CssTextField;
-			_submitBt = _content.addChild(new ButtonKube(Label.getLabel("prompt-mapLoadPassSubmit"), false, new SubmitIcon())) as ButtonKube;
-			_cancelBt = _content.addChild(new ButtonKube(Label.getLabel("prompt-mapLoadPassCancel"), false, new CancelIcon())) as ButtonKube;
+		override protected function initialize():void {
+			super.initialize();
+			
+			_label = _container.addChild(new CssTextField("promptWindowContent")) as CssTextField;
+			_input = _container.addChild(new InputKube()) as InputKube;
+			_error = _container.addChild(new CssTextField("promptWindowContentError")) as CssTextField;
+			_submitBt = _container.addChild(new ButtonKube(Label.getLabel("prompt-mapLoadPassSubmit"), false, new SubmitIcon())) as ButtonKube;
+			_cancelBt = _container.addChild(new ButtonKube(Label.getLabel("prompt-mapLoadPassCancel"), false, new CancelIcon())) as ButtonKube;
 			
 			_submitBt.contentMargin = new Margin(5, 3, 5, 3);
 			_cancelBt.contentMargin = new Margin(5, 3, 5, 3);
@@ -125,39 +108,23 @@ package com.muxxu.kub3dit.views {
 			_error.text = Label.getLabel("prompt-mapLoadPassError");
 			_label.width = _input.width = 250;
 			_submitBt.width = _cancelBt.width = 250 * .5 - 5;
-			
-			_window = addChild(new PromptWindow(Label.getLabel("prompt-mapLoadPassTitle"), _content)) as PromptWindow;
+			_input.textfield.displayAsPassword = true;
 			
 			_input.addEventListener(FormComponentEvent.SUBMIT, submitHandler);
-			addEventListener(MouseEvent.CLICK, clickHandler);
-			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-		}
-		
-		/**
-		 * Called when the stage is available.
-		 */
-		private function addedToStageHandler(event:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-			stage.addEventListener(Event.RESIZE, computePositions);
-			computePositions();
 		}
 		
 		/**
 		 * Resize and replace the elements.
 		 */
-		private function computePositions(event:Event = null):void {
+		override protected function computePositions(event:Event = null):void {
 			PosUtils.vPlaceNext(5, _label, _input, _submitBt);
 			if(_error.visible) {
 				PosUtils.vPlaceNext(5, _input, _error, _submitBt);
 			}
 			_cancelBt.y = _submitBt.y;
 			_cancelBt.x = Math.round(_submitBt.width + 5);
-			_window.updateSizes();
-			PosUtils.centerInStage(_window);
-			_disableLayer.graphics.clear();
-			_disableLayer.graphics.beginFill(0xffffff, .5);
-			_disableLayer.graphics.drawRect(0, 0, stage.stageWidth, stage.stageHeight);
-			_disableLayer.graphics.endFill();
+			
+			super.computePositions();
 		}
 		
 		/**
@@ -173,7 +140,7 @@ package com.muxxu.kub3dit.views {
 		 * Called when disable layer is clicked.
 		 * Closes the view.
 		 */
-		private function clickHandler(event:MouseEvent):void {
+		override protected function clickHandler(event:MouseEvent):void {
 			if (event.target == _disableLayer || event.target == _cancelBt) {
 				close();
 				_loadMethod(null);

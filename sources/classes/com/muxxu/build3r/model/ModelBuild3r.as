@@ -1,4 +1,5 @@
 package com.muxxu.build3r.model {
+	import com.muxxu.kub3dit.vo.CubeData;
 	import flash.net.SharedObject;
 	import com.muxxu.build3r.views.LoadView;
 	import com.muxxu.build3r.vo.LightMapData;
@@ -122,6 +123,7 @@ package com.muxxu.build3r.model {
 		 * Loads a map by its ID
 		 */
 		public function loadMapById(id:String, password:String):void {
+			clearMap();
 			_loadMapCmd.id = id;
 			_loadMapCmd.password = password;
 			_loadMapCmd.execute();
@@ -201,7 +203,7 @@ package com.muxxu.build3r.model {
 			delete _so.data["worldRef"];
 			delete _so.data["mapRef"];
 			if(!ExternalInterface.available) {
-				_position = new Point3D(0,0,0);
+				_position = new Point3D(0,0,3);
 			}
 			update();
 		}
@@ -235,7 +237,7 @@ package com.muxxu.build3r.model {
 			Textures.getInstance().initialize(map.readUTFBytes(map.length), add.readUTFBytes(add.length), (new _textures() as Bitmap).bitmapData, (new _colors() as Bitmap).bitmapData);
 			
 			if(!ExternalInterface.available) {
-				_position = new Point3D(0,0,8);
+				_position = new Point3D(0,0,3);
 			}
 		}
 		
@@ -265,7 +267,7 @@ package com.muxxu.build3r.model {
 			if(/return removeKube\(-?[0-9]+,-?[0-9]+,-?[0-9]+\)/gi.test(text)) {
 				text = text.replace(/.*(removeKube\(.*?\)).*/gi, "$1");
 				var matches:Array = text.match(/-?[0-9]+/gi);
-				var p:Point3D = new Point3D(parseInt(matches[0]), parseInt(matches[1]), parseInt(matches[2])-1);
+				var p:Point3D = new Point3D(parseInt(matches[0]), parseInt(matches[1]), parseInt(matches[2]));
 				if(_position == null || !p.equals(_position)) {
 					_position = p;
 					_so.data["position"] = {x:_position.x, y:_position.y, z:_position.z};
@@ -312,8 +314,14 @@ package com.muxxu.build3r.model {
 					break;
 				
 				case Constants.MAP_FILE_TYPE_2:
-					var customsLen:uint = data.readUnsignedByte();
-					for(var i:int = 0; i < customsLen; ++i) data.readUTFBytes(data.readShort());
+					Textures.getInstance().removeCustomKubes();
+					var customs:uint = data.readUnsignedByte();
+					var i:int, len:int;
+					for(i = 0; i < customs; ++i) {
+						len = data.readShort();
+						Textures.getInstance().addKube( new CubeData().populate(new XML(data.readUTFBytes(len))) );
+					}
+					
 					data.position += 2+2+2+4+4;
 					_map = new LightMapData(data.readShort(), data.readShort(), data.readShort(), data);
 					break;

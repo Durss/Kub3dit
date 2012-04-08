@@ -135,8 +135,9 @@ package com.muxxu.build3r.views {
 			var i:int, len:int = numChildren;
 			for(i = 0; i < len; ++i) {
 				if(getChildAt(i) is IBuild3rMap) {
-					_views.push(getChildAt(i));
-					_views[_views.length-1].sizes = _slider.value;
+					_views.push(removeChildAt(i));
+					i--;
+					len --;
 				}
 			}
 			

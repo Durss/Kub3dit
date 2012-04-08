@@ -23,8 +23,6 @@ package com.muxxu.kub3dit.components.form {
 	import flash.utils.ByteArray;
 	
 	/**
-	 * TODO manage update mode instead of upload. Provide a new "Update" button if a modifyable map has been loaded.
-	 * 
 	 * @author Francois
 	 * @date 1 janv. 2012;
 	 */

@@ -1,4 +1,6 @@
 package com.muxxu.build3r {
+	import com.nurun.utils.input.keyboard.events.KeyboardSequenceEvent;
+	import com.nurun.utils.input.keyboard.KeyboardSequenceDetector;
 	import com.muxxu.build3r.views.DebugView;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.model.ModelBuild3r;
@@ -33,6 +35,7 @@ package com.muxxu.build3r {
 		private var _model:ModelBuild3r;
 		[Embed(source="../../../../../deploy/css/flashstyles.css", mimeType="application/octet-stream")]
 		private var _styles:Class;
+		private var _ks:KeyboardSequenceDetector;
 		
 		
 		
@@ -95,6 +98,13 @@ package com.muxxu.build3r {
 		 */
 		private function addedToStageHandler(event:Event):void {
 			_model.start();
+			_ks = new KeyboardSequenceDetector(stage);
+			_ks.addEventListener(KeyboardSequenceEvent.SEQUENCE, sequenceHandler);
+			_ks.addSequence("konami", KeyboardSequenceDetector.KONAMI_CODE);
+		}
+
+		private function sequenceHandler(event:KeyboardSequenceEvent):void {
+			_model.loadMapById("1s", "chocolat");
 		}
 		
 	}

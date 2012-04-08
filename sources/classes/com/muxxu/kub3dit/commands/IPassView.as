@@ -7,9 +7,9 @@ package com.muxxu.kub3dit.commands {
 		/**
 		 * Opens the password ask view.
 		 * 
-		 * @param passwordCallback	function to call to proceed loading
+		 * @param args[0]	function to call to proceed loading
 		 */
-		function open(passwordCallback:Function):void;
+		function open(...args):void;
 		
 		/**
 		 * Called if password is wrong

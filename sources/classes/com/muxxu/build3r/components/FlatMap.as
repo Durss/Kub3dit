@@ -26,9 +26,9 @@ package com.muxxu.build3r.components {
 	 */
 	public class FlatMap extends Sprite implements IBuild3rMap {
 		
-		private var _width:int = 3;
-		private var _height:int = 3;
-		private var _depth:int = 3;
+		private var _width:int = 13;
+		private var _height:int = 13;
+		private var _depth:int = 13;
 		
 		private var _refPoint:Point3D;
 		private var _forumPositionReference:Point3D;
@@ -93,7 +93,7 @@ package com.muxxu.build3r.components {
 			_forumPosition = position;
 			_map = map;
 			_localOffset.x = _localOffset.y = _localOffset.z = 0;
-			_levelSlider.value = _refPoint.z - _localOffset.z + 1;
+			_levelSlider.value = _forumPosition.z - (_forumPositionReference.z - _refPoint.z + _localOffset.z) + 1;
 			
 			_ready = true;
 			render();
@@ -117,7 +117,7 @@ package com.muxxu.build3r.components {
 			_holder = addChild(new Sprite()) as Sprite;
 			_emptyBmd = new BitmapData(16, 16, true, 0);
 			_levelSlider = addChild(new Build3rSlider(1, 31, LabelBuild3r.getl("build-level"))) as Build3rSlider;
-			_rotationSlider = addChild(new Build3rSlider(0, 360, LabelBuild3r.getl("build-rotation"), 45)) as Build3rSlider;
+			_rotationSlider = addChild(new Build3rSlider(0, 360, LabelBuild3r.getl("build-rotation"), 22.5)) as Build3rSlider;
 			
 			_levelSlider.width = Metrics.STAGE_WIDTH;
 			_rotationSlider.width = Metrics.STAGE_WIDTH;
@@ -149,7 +149,7 @@ package com.muxxu.build3r.components {
 		 * Called when level's slider value changes
 		 */
 		private function levelChangeHandler(event:Event):void {
-			_localOffset.z = -_levelSlider.value+_refPoint.z+1;
+			_localOffset.z = -_levelSlider.value + _forumPosition.z - _forumPositionReference.z + _refPoint.z + 1;
 			render();
 		}
 		
@@ -159,7 +159,7 @@ package com.muxxu.build3r.components {
 		 * Used to drag the map.
 		 */
 		private function mouseEventHandler(event:MouseEvent):void {
-			if(stage == null) return;
+			if(stage == null || !_ready) return;
 			
 			//Mouse down
 			if(event.type == MouseEvent.MOUSE_DOWN) {
@@ -174,7 +174,7 @@ package com.muxxu.build3r.components {
 			//Mouse wheel
 			}else if(event.type == MouseEvent.MOUSE_WHEEL) {
 				_localOffset.z -= MathUtils.sign(event.delta);
-				_levelSlider.value = _refPoint.z - _localOffset.z + 1;
+				_levelSlider.value = _forumPosition.z - (_forumPositionReference.z - _refPoint.z + _localOffset.z) + 1;
 				render();
 			
 			//Mouse move. Manage drag
@@ -217,7 +217,7 @@ package com.muxxu.build3r.components {
 		 * Called when a key is pressed
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
-			if(stage == null) return;
+			if(stage == null || !_ready) return;
 			
 			var px:int, py:int, pz:int;
 			
@@ -227,13 +227,18 @@ package com.muxxu.build3r.components {
 			if(event.keyCode == Keyboard.LEFT) px = -1;
 			if(event.keyCode == Keyboard.PAGE_UP) pz = -1;
 			if(event.keyCode == Keyboard.PAGE_DOWN) pz = 1;
+			if(event.keyCode == Keyboard.ENTER) {
+				_localOffset.x = _localOffset.y = _localOffset.z = 0;
+				_levelSlider.value = _forumPosition.z - (_forumPositionReference.z - _refPoint.z + _localOffset.z) + 1;
+				render();
+			}
 			
 			if(px != 0 || py != 0 || pz != 0) {
 				_localOffset.x += px;
 				_localOffset.y += py;
 				_localOffset.z += pz;
 				if(pz != 0) {
-					_levelSlider.value = _refPoint.z - _localOffset.z + 1;
+					_levelSlider.value = _forumPosition.z - (_forumPositionReference.z - _refPoint.z + _localOffset.z) + 1;
 				}
 				render();
 			}

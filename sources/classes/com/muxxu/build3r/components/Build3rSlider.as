@@ -32,7 +32,8 @@ package com.muxxu.build3r.components {
 		private var _min:int;
 		private var _labelStr:String;
 		private var _labeltxt:CssTextField;
-		private var _step:int;
+		private var _step:Number;
+		private var _value:Number;
 		
 		
 		
@@ -43,7 +44,7 @@ package com.muxxu.build3r.components {
 		/**
 		 * Creates an instance of <code>Build3rSlider</code>.
 		 */
-		public function Build3rSlider(min:int = 0, max:int = 31, label:String = null, step:int = 1) {
+		public function Build3rSlider(min:int = 0, max:int = 31, label:String = null, step:Number = 1) {
 			_step = step;
 			_labelStr = label;
 			_min = min;
@@ -69,7 +70,7 @@ package com.muxxu.build3r.components {
 		 * Gets the current's value
 		 */
 		public function get value():Number {
-			return parseInt(_button.text);
+			return _value;
 		}
 		
 		/**
@@ -156,9 +157,10 @@ package com.muxxu.build3r.components {
 		 * Updates the button's state.
 		 */
 		private function updateButtonState(v:Number):void {
-			v = MathUtils.restrict(v, _min, _max);
+			v = MathUtils.restrict(Math.round(v/_step)*_step, _min, _max);
 			
-			_button.text = v.toString();
+			_value = v;
+			_button.text = Math.round(v).toString();
 			_button.validate();
 			_button.x = Math.round((v-_min)/(_max-_min) * (_width - _bar.x - _button.width)) + _bar.x;
 			
@@ -168,11 +170,12 @@ package com.muxxu.build3r.components {
 		/**
 		 * Update sthe current level and fires an update if it has changed
 		 */
-		private function updateLevel(v:int):void {
-			v = MathUtils.restrict(v, _min, _max);
+		private function updateLevel(v:Number):void {
+			v = MathUtils.restrict(Math.round(v/_step)*_step, _min, _max);
 			var oldL:Number = value;
 			if(v != oldL) {
-				_button.text = v.toString();
+				_value = v;
+				_button.text = Math.round(v).toString();
 				dispatchEvent(new Event(Event.CHANGE));
 			}
 		}
@@ -217,7 +220,7 @@ package com.muxxu.build3r.components {
 		 * Called when move cam button is clicked
 		 */
 		private function clickButtonHandler(event:MouseEvent):void {
-			var lvl:Number = Math.floor((_bar.mouseX / _width) * _max) + _min;
+			var lvl:Number = Math.round((Math.floor((_bar.mouseX / _width) * _max) + _min)/_step)*_step;
 			updateLevel( lvl );
 			updateButtonState( lvl );
 		}

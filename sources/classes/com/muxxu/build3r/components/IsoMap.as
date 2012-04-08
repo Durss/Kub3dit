@@ -195,6 +195,7 @@ package com.muxxu.build3r.components {
 		 * Called when a key is released
 		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
+			if(stage == null || !_ready) return;
 			
 			if(event.keyCode == Keyboard.SPACE) {
 				if(_spacePressed) {
@@ -215,7 +216,7 @@ package com.muxxu.build3r.components {
 		 * Called when a key is pressed
 		 */
 		private function keyDownHandler(event:KeyboardEvent):void {
-			if(stage == null) return;
+			if(stage == null || !_ready) return;
 			
 			if (event.keyCode == Keyboard.SPACE) {
 				if(!_spacePressed) {

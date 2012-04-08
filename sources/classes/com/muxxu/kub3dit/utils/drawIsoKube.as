@@ -62,9 +62,9 @@ package com.muxxu.kub3dit.utils {
   
 			var m:Matrix = new Matrix();
 			m.rotate(90 * MathUtils.DEG2RAD);
-			m.translate(top.width,0);
+			m.translate(side.width,0);
 			m.scale(1, -1);
-			m.translate(0, top.height);
+			m.translate(0, side.height);
   			
   			var shadow:int = -40;
 			var right:BitmapData = side.clone();
@@ -79,8 +79,10 @@ package com.muxxu.kub3dit.utils {
 			var shape:Shape = new Shape();
 			var g:Graphics = shape.graphics;
 			g.clear();
-			g.beginBitmapFill(top, null, false, smooth);
-			g.drawTriangles(vertices, indicesTop, UVData);
+			if(top != null) {
+				g.beginBitmapFill(top, null, false, smooth);
+				g.drawTriangles(vertices, indicesTop, UVData);
+			}
 			g.beginBitmapFill(left, null, false, smooth);
 			g.drawTriangles(vertices, indicesLeft, UVData);
 			g.beginBitmapFill(right, null, false, smooth);

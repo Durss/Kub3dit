@@ -29,6 +29,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _landmark:Shape;
 		private var _drawToLandmark:Boolean;
 		private var _chunksManager:ChunksManager;
+		private var _lastDrawGUID:String;
 		
 		
 		
@@ -107,6 +108,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Method that will be used to draw with the tool
 		 */
 		public function draw(ox:int, oy:int, pz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			var drawGUID:String = ox + "" + oy + "" + pz + "" + kubeID + "" + eraseMode;
+			if(drawGUID == _lastDrawGUID) return;
+			_lastDrawGUID = drawGUID;
+			
 			var i:int, len:int, size:int, px:int, py:int, d:Number, c:uint;
 			size = parseInt(_inputSize.text);
 			if(_drawToLandmark) {

@@ -48,6 +48,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _vFlipBt:GraphicButtonKube;
 		private var _hflipState:Boolean;
 		private var _vflipState:Boolean;
+		private var _lastDrawGUID:String;
 		
 		
 		
@@ -126,6 +127,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode;
+			if(drawGUID == _lastDrawGUID) return;
+			_lastDrawGUID = drawGUID;
+			
 			if(_data == null) return;
 			
 			_data.position = 0;
@@ -163,7 +168,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					px += ox - Math.floor(_size * .5);
 					py += oy - Math.floor(_size * .5) - 1;
 					
-					_chunksManager.addInvalidableCube(px, py, pz, tile);
+					_chunksManager.addInvalidableCube(px, py, pz, _eraseMode? 0 : tile);
 				}
 				
 				i++;

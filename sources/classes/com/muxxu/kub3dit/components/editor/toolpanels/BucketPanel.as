@@ -23,6 +23,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _bmd:BitmapData;
 		private var _colors:Array;
 		private var _chunksManager:ChunksManager;
+		private var _lastDrawGUID:String;
 		
 		
 		
@@ -100,6 +101,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode;
+			if(drawGUID == _lastDrawGUID) return;
+			_lastDrawGUID = drawGUID;
+			
 			if(_lastSize != gridSize) {
 				_lastSize = gridSize;
 				if(_bmd!=null) _bmd.dispose();

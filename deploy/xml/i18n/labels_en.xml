@@ -163,6 +163,14 @@
 		<label code="syncLevels"><![CDATA[Synch with cam]]></label>
 		<label code="drawFullRadar"><![CDATA[Draw full radar]]></label>
 		
+		<!-- Main menu -->
+		<label code="mainMenu-save"><![CDATA[Save]]></label>
+		<label code="mainMenu-stats"><![CDATA[Stats]]></label>
+		<label code="mainMenu-build3r"><![CDATA[Build3r]]></label>
+		
+		<!-- Stats -->
+		<label code="stats-title"><![CDATA[Statistics]]></label>
+		
 		
 		<!-- Save/upload/load -->
 		<label code="prompt-save"><![CDATA[Save]]></label>
@@ -181,6 +189,8 @@
 		<label code="prompt-mapLoadPassSubmit"><![CDATA[Submit]]></label>
 		<label code="prompt-mapLoadPassCancel"><![CDATA[Cancel]]></label>
 		<label code="prompt-mapLoadPassError"><![CDATA[Invalid password !]]></label>
+		<label code="prompt-exception"><![CDATA[Error]]></label>
+		<label code="prompt-exception-ok"><![CDATA[OK]]></label>
 	</labels>
 	
 </root>

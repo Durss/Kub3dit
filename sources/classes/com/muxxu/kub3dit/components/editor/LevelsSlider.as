@@ -119,7 +119,8 @@ package com.muxxu.kub3dit.components.editor {
 			_button.addEventListener(NurunButtonEvent.RELEASE, releaseHandler);
 			_button.addEventListener(NurunButtonEvent.RELEASE_OUTSIDE, releaseHandler);
 			_bar.addEventListener(MouseEvent.CLICK, clickButtonHandler);
-			_syncCb.addEventListener(NurunButtonEvent.OVER, rollOverButtonHandler);
+			_bar.addEventListener(MouseEvent.ROLL_OVER, rollOverHandler);
+			_syncCb.addEventListener(NurunButtonEvent.OVER, rollOverHandler);
 			
 			level = 0;//Math.round(Camera3D.locZ);
 		}
@@ -186,9 +187,6 @@ package com.muxxu.kub3dit.components.editor {
 			
 				if(_syncCb.selected) Camera3D.moveZTo(lvl);
 			}
-			if(_bar.hitTestPoint(stage.mouseX, stage.mouseY) && !_button.hitTestPoint(stage.mouseX, stage.mouseY)) {
-				_bar.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Math.floor((_bar.mouseX / _width) * _levels + 1).toString(), ToolTipAlign.TOP));
-			}
 		}
 		
 		
@@ -225,15 +223,22 @@ package com.muxxu.kub3dit.components.editor {
 		/**
 		 * Called when a button is rolled over
 		 */
-		private function rollOverButtonHandler(event:Event):void {
-			var label:String;
+		private function rollOverHandler(event:Event):void {
 			if(event.currentTarget == _syncCb) {
-				label = Label.getLabel("helpSyncCam");
+				EventDispatcher(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("helpSyncCam"), ToolTipAlign.TOP));
+			}else if(event.currentTarget == _bar) {
+				addEventListener(MouseEvent.MOUSE_MOVE, mouseMoveBarHandler);
+				addEventListener(MouseEvent.ROLL_OUT, rollOutBarHandler);
 			}
-			
-			if(label != null) {
-				EventDispatcher(event.target).dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.TOP));
-			}
+		}
+
+		private function rollOutBarHandler(event:MouseEvent):void {
+			removeEventListener(MouseEvent.MOUSE_MOVE, mouseMoveBarHandler);
+			removeEventListener(MouseEvent.ROLL_OUT, rollOutBarHandler);
+		}
+
+		private function mouseMoveBarHandler(event:MouseEvent):void {
+			_bar.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Math.floor((_bar.mouseX / _width) * _levels + 1).toString(), ToolTipAlign.TOP));
 		}
 		
 	}

@@ -65,6 +65,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _vflipState:Boolean;
 		private var _currentLevel:int;
 		private var _cutBt:ButtonKube;
+		private var _lastDrawGUID:String;
+		private var _eraseMode:Boolean;
 		
 		
 		
@@ -102,13 +104,14 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function set eraseMode(value:Boolean):void {
+			_eraseMode = value;
 		}
 
 		/**
 		 * @inheritDoc
 		 */
 		public function get eraseMode():Boolean {
-			return false;
+			return _eraseMode;
 		}
 		
 		/**
@@ -141,6 +144,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode;
+			if(drawGUID == _lastDrawGUID) return;
+			_lastDrawGUID = drawGUID;
+			
 			if(_fixedLandmark) {
 				if(_pressed) {
 					_lastOrigin.x = ox;
@@ -228,7 +235,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 							py = rH - 1 - py;
 						}
 						
-						_chunksManager.update(ox + px, oy + py, oz - pz, tile);
+						_chunksManager.update(ox + px, oy + py, oz - pz, _eraseMode? 0 : tile);
 					}
 					i++;
 				}
@@ -372,7 +379,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				_rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
 				_rotationLabel.alpha = _flipLabel.alpha = 1;
 
-				depth = parseInt(_depth.text);
+				depth = parseInt(_depth.text)+1;
 				if (_currentLevel + 1 - depth < 0) depth = _currentLevel + 1;
 				
 				_copyData = new ByteArray();
