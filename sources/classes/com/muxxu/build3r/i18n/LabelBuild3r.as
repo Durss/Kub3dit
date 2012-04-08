@@ -30,6 +30,9 @@ package com.muxxu.build3r.i18n {
 			_LABELS["fr"]["synch-titleKube"] = "Touchez un kube forum dans le jeu pour situer le point de référence :";
 			
 			_LABELS["fr"]["build-keys"] = "← ↑ → ↓ PgUp PgDown espace entrée";
+			_LABELS["fr"]["build-size"] = "Taille :";
+			_LABELS["fr"]["build-level"] = "Niveau :";
+			_LABELS["fr"]["build-rotation"] = "Angle :";
 			_LABELS["fr"]["build-getKube"] = "Ramasser le kube";
 			_LABELS["fr"]["build-helpBt"] = "Aide";
 			_LABELS["fr"]["build-helpTT"] = "Touchez un kube forum dans<br />le jeu pour savoir quel kube<br />doit se trouver à son<br />emplacement.";
@@ -57,6 +60,9 @@ package com.muxxu.build3r.i18n {
 			_LABELS["en"]["synch-titleKube"] = "Touch a forum kube in the game to locate the reference point :";
 			
 			_LABELS["en"]["build-keys"] = "← ↑ → ↓ PgUp PgDown space enter";
+			_LABELS["en"]["build-size"] = "Size :";
+			_LABELS["en"]["build-level"] = "Level :";
+			_LABELS["en"]["build-rotation"] = "Angle :";
 			_LABELS["en"]["build-getKube"] = "Pick up kube";
 			_LABELS["en"]["build-helpBt"] = "Help";
 			_LABELS["en"]["build-helpTT"] = "Touch a forum kube in the game to know which kube should be put at its place.";

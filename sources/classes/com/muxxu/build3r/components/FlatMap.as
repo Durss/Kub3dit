@@ -1,4 +1,5 @@
 package com.muxxu.build3r.components {
+	import com.muxxu.build3r.i18n.LabelBuild3r;
 	import com.muxxu.build3r.vo.LightMapData;
 	import com.muxxu.build3r.vo.Metrics;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
@@ -43,6 +44,7 @@ package com.muxxu.build3r.components {
 		private var _levelSlider:Build3rSlider;
 		private var _dragMode:Boolean;
 		private var _cacheISO:Array;
+		private var _rotationSlider:Build3rSlider;
 		
 		
 		
@@ -114,9 +116,11 @@ package com.muxxu.build3r.components {
 			_localOffset = new Point3D();
 			_holder = addChild(new Sprite()) as Sprite;
 			_emptyBmd = new BitmapData(16, 16, true, 0);
-			_levelSlider = addChild(new Build3rSlider(1, 31)) as Build3rSlider;
+			_levelSlider = addChild(new Build3rSlider(1, 31, LabelBuild3r.getl("build-level"))) as Build3rSlider;
+			_rotationSlider = addChild(new Build3rSlider(0, 360, LabelBuild3r.getl("build-rotation"), 45)) as Build3rSlider;
 			
-			_levelSlider.width = Metrics.STAGE_WIDTH - 20;
+			_levelSlider.width = Metrics.STAGE_WIDTH;
+			_rotationSlider.width = Metrics.STAGE_WIDTH;
 			
 			addEventListener(MouseEvent.MOUSE_WHEEL, mouseEventHandler);
 			stage.addEventListener(MouseEvent.MOUSE_UP, mouseEventHandler);
@@ -124,11 +128,25 @@ package com.muxxu.build3r.components {
 			stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseEventHandler);
 			_holder.addEventListener(MouseEvent.MOUSE_DOWN, mouseEventHandler);
 			_levelSlider.addEventListener(Event.CHANGE, levelChangeHandler);
+			_rotationSlider.addEventListener(Event.CHANGE, rotationChangeHandler);
 			addEventListener(Event.ADDED_TO_STAGE, render);
 		}
 		
 		/**
-		 * Called when slider's value changes
+		 * Called when rotation's slider value changes.
+		 */
+		private function rotationChangeHandler(event:Event = null):void {
+			var matrix:Matrix = _holder.transform.matrix; 
+			var rect:Rectangle = _holder.getBounds(this); 
+			matrix.translate(- (rect.left + (rect.width/2)), - (rect.top + (rect.height/2))); 
+			matrix.rotate((_rotationSlider.value - _holder.rotation) * MathUtils.DEG2RAD);
+			matrix.translate(rect.left + (rect.width/2), rect.top + (rect.height/2));
+			_holder.transform.matrix = matrix;
+			if(event != null) replaceElements();
+		}
+		
+		/**
+		 * Called when level's slider value changes
 		 */
 		private function levelChangeHandler(event:Event):void {
 			_localOffset.z = -_levelSlider.value+_refPoint.z+1;
@@ -145,7 +163,7 @@ package com.muxxu.build3r.components {
 			
 			//Mouse down
 			if(event.type == MouseEvent.MOUSE_DOWN) {
-				_dragOffset = new Point(mouseX, mouseY);
+				_dragOffset = new Point(_holder.mouseX, _holder.mouseY);
 				_dragLocOffset = _localOffset.clone();
 				_dragMode = true;
 				
@@ -162,12 +180,12 @@ package com.muxxu.build3r.components {
 			//Mouse move. Manage drag
 			} else {
 				if (_dragMode) {
-					_localOffset.x = _dragLocOffset.x - Math.round((mouseX - _dragOffset.x) / 10);
-					_localOffset.y = _dragLocOffset.y - Math.round((mouseY - _dragOffset.y) / 10);
+					_localOffset.x = _dragLocOffset.x - Math.round((_holder.mouseX - _dragOffset.x) / 10);
+					_localOffset.y = _dragLocOffset.y - Math.round((_holder.mouseY - _dragOffset.y) / 10);
 					render();
 				}
 				
-				if (_holder.hitTestPoint(stage.mouseX, stage.mouseY)) {
+				if (_holder.hitTestPoint(stage.mouseX, stage.mouseY, true)) {
 					var offsetedPos:Point3D = _forumPosition.clone();
 					offsetedPos.x -= _forumPositionReference.x - _refPoint.x - _localOffset.x;
 					offsetedPos.y -= _forumPositionReference.y - _refPoint.y - _localOffset.y;
@@ -297,14 +315,26 @@ package com.muxxu.build3r.components {
 				}
 			}
 			
+			replaceElements();
+		}
+		
+		/**
+		 * Replaces the elements
+		 */
+		private function replaceElements():void {
 			//Center the holder
-			_holder.y = Math.round((Metrics.STAGE_HEIGHT-y - _holder.height) * .5)-20;
+			_holder.rotation = 0;
+			var h:int = _holder.height;
+			_holder.y = 10;
 			_holder.x = Math.round((Metrics.STAGE_WIDTH - _holder.width) * .5);
 			var bounds:Rectangle = _holder.getBounds(_holder);
 			_holder.x -= bounds.x;
 			_holder.y -= bounds.y;
-			_levelSlider.y = _holder.y + _holder.height + 10;
+			rotationChangeHandler();
+			_levelSlider.y = Math.min(10 + h + 10, 196);
+			_rotationSlider.y = _levelSlider.y + _levelSlider.height + 2;
 			PosUtils.hCenterIn(_levelSlider, Metrics.STAGE_WIDTH);
+			PosUtils.hCenterIn(_rotationSlider, Metrics.STAGE_WIDTH);
 		}
 		
 	}

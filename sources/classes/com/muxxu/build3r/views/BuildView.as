@@ -105,12 +105,12 @@ package com.muxxu.build3r.views {
 			visible = false;
 			removeEventListener(Event.ADDED_TO_STAGE, initialize);
 			
-			_helpBt = addChild(new ButtonKube(LabelBuild3r.getl("build-helpBt"), false, null, true)) as ButtonKube;
-			_changeBt = addChild(new ButtonKube(LabelBuild3r.getl("build-changeHelpBt"), false, null, true)) as ButtonKube;
-			_slider = addChild(new Build3rSlider(1, 10)) as Build3rSlider;
-			_renderModeBt = addChild(new ButtonKube(LabelBuild3r.getl("build-renderMode-0"), false, null, true)) as ButtonKube;
 			_flatView = addChild(new FlatMap()) as FlatMap;
 			_isoView = addChild(new IsoMap()) as IsoMap;
+			_helpBt = addChild(new ButtonKube(LabelBuild3r.getl("build-helpBt"), false, null, true)) as ButtonKube;
+			_changeBt = addChild(new ButtonKube(LabelBuild3r.getl("build-changeHelpBt"), false, null, true)) as ButtonKube;
+			_slider = addChild(new Build3rSlider(1, 10, LabelBuild3r.getl("build-size"))) as Build3rSlider;
+			_renderModeBt = addChild(new ButtonKube(LabelBuild3r.getl("build-renderMode-0"), false, null, true)) as ButtonKube;
 			_pickupKube = addChild(new ButtonKube(LabelBuild3r.getl("build-getKube"), false, null, true)) as ButtonKube;
 			_help = addChild(new CssTextField("b-help")) as CssTextField;
 			
@@ -165,7 +165,7 @@ package com.muxxu.build3r.views {
 			len = _views.length;
 			for(i = 0; i < len; ++i) {
 				if(i == _renderMode) {
-					addChild(_views[i] as DisplayObject);
+					addChildAt(_views[i] as DisplayObject, 0);
 					_slider.value = _views[i].sizes;
 				}else if(contains(_views[i] as DisplayObject)) {
 					removeChild(_views[i] as DisplayObject);

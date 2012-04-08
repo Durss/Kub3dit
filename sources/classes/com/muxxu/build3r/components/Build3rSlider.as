@@ -1,4 +1,6 @@
 package com.muxxu.build3r.components {
+	import com.nurun.utils.pos.PosUtils;
+	import com.nurun.components.text.CssTextField;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.graphics.LevelSelectorIcon;
 	import com.nurun.components.button.IconAlign;
@@ -28,6 +30,9 @@ package com.muxxu.build3r.components {
 		private var _offsetDrag:int;
 		private var _max:Number;
 		private var _min:int;
+		private var _labelStr:String;
+		private var _labeltxt:CssTextField;
+		private var _step:int;
 		
 		
 		
@@ -38,7 +43,9 @@ package com.muxxu.build3r.components {
 		/**
 		 * Creates an instance of <code>Build3rSlider</code>.
 		 */
-		public function Build3rSlider(min:int = 0, max:int = 31) {
+		public function Build3rSlider(min:int = 0, max:int = 31, label:String = null, step:int = 1) {
+			_step = step;
+			_labelStr = label;
 			_min = min;
 			_max = max;
 			initialize();
@@ -55,6 +62,7 @@ package com.muxxu.build3r.components {
 		override public function set width(value:Number):void {
 			_width = value;
 			computePositions();
+			updateButtonState(_min);
 		}
 		
 		/**
@@ -67,8 +75,8 @@ package com.muxxu.build3r.components {
 		/**
 		 * Sets the current level
 		 */
-		public function set value(value:Number):void {
-			updateButtonState(value);
+		public function set value(v:Number):void {
+			updateButtonState(v);
 		}
 		
 		/**
@@ -98,6 +106,10 @@ package com.muxxu.build3r.components {
 		private function initialize():void {
 			_bar = addChild(new Sprite()) as Sprite;
 			_button = addChild(new ButtonKube("0", false, new LevelSelectorIcon(), true)) as ButtonKube;
+			if(_labelStr != null) {
+				_labeltxt = addChild(new CssTextField("b-sliderLabel")) as CssTextField;
+				_labeltxt.text = _labelStr;
+			}
 			
 			_button.contentMargin = new Margin(0, 1, 0, 1);
 			_button.iconAlign = IconAlign.CENTER;
@@ -121,11 +133,12 @@ package com.muxxu.build3r.components {
 		 */
 		private function computePositions():void {
 			_bar.graphics.clear();
-			var i:int, len:int, inc:Number;
-			len = _max - _min + 1;
-			inc = _width / len;
+			var i:int, len:int, inc:Number, availW:int;
+			availW = _labeltxt == null? _width : _width - _labeltxt.width;
+			len = (_max - _min + 1)/_step;
+			inc = availW / len;
 			_bar.graphics.beginFill(0xff0000, .1);
-			_bar.graphics.drawRect(0, 0, _width, 5);
+			_bar.graphics.drawRect(0, 0, availW, 5);
 			for(i = 0; i < len; ++i) {
 				_bar.graphics.beginFill(0xffffff, .5 + i%2*.25);
 				_bar.graphics.drawRect(i * inc, 0, inc, 5);
@@ -133,6 +146,10 @@ package com.muxxu.build3r.components {
 			}	
 			
 			_bar.y = Math.round((_button.height - _bar.height) * .5);
+			if(_labeltxt != null) {
+				_bar.x = Math.round(_labeltxt.width);
+				PosUtils.vAlign(PosUtils.V_ALIGN_CENTER, 0, _labeltxt, _bar);
+			}
 		}
 		
 		/**
@@ -140,9 +157,10 @@ package com.muxxu.build3r.components {
 		 */
 		private function updateButtonState(v:Number):void {
 			v = MathUtils.restrict(v, _min, _max);
+			
 			_button.text = v.toString();
 			_button.validate();
-			_button.x = Math.round((v-_min)/(_max-_min) * (_width - _button.width));
+			_button.x = Math.round((v-_min)/(_max-_min) * (_width - _bar.x - _button.width)) + _bar.x;
 			
 			computePositions();
 		}
@@ -165,11 +183,11 @@ package com.muxxu.build3r.components {
 		private function enterFrameHandler(event:Event):void {
 			if(_pressed) {
 				_button.x = mouseX - _offsetDrag;
-				if(_button.x < 0) _button.x = 0;
+				if(_button.x < _bar.x) _button.x = _bar.x;
 				if(_button.x > Math.round(_width - _button.width)) _button.x = Math.round(_width - _button.width);
 				roundPos(_button);
 
-				var lvl:Number = Math.round(_button.x / (_width - _button.width) * ((_max - 1))) + _min;
+				var lvl:Number = Math.round((_button.x-_bar.x) / (_width - _bar.x - _button.width) * ((_max - 1))) + _min;
 				updateLevel( lvl );
 			}
 		}
