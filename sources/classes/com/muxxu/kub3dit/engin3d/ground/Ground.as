@@ -72,7 +72,7 @@ package com.muxxu.kub3dit.engin3d.ground {
 			if(_timer == 0)_inc += 1/16;
 			_timer = (_timer+1)%(16/2);
 			_inc = _inc%16;
-			size = (Math.max(size, 2) + 4) * 16;
+			size = 1000;//(Math.max(size, 2) + 4) * 16;
 			
 			//Init vertices
 			var index:int = 0;
