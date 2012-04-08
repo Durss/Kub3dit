@@ -1,4 +1,5 @@
 package com.muxxu.build3r.views {
+	import flash.media.SoundTransform;
 	import com.muxxu.build3r.components.Build3rSlider;
 	import com.muxxu.build3r.controler.FrontControlerBuild3r;
 	import com.muxxu.build3r.i18n.LabelBuild3r;
@@ -231,7 +232,7 @@ package com.muxxu.build3r.views {
 		private function checkComplete():void {
 			_submit.enabled = _reference.x != -1 && _forumTouched;
 			if(_submit.enabled) {
-				Sound(new _sound()).play();
+				Sound(new _sound()).play(0, 0, new SoundTransform(.1));//TODO reset sound to 1
 			}
 		}
 		
