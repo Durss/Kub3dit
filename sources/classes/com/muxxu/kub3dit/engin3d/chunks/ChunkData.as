@@ -1,7 +1,7 @@
 package com.muxxu.kub3dit.engin3d.chunks {
 	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
-	import com.muxxu.kub3dit.engin3d.vo.Face;
+
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
@@ -19,7 +19,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public var _bufferArray:Vector.<Number>;
 		public var _indexesArray:Vector.<uint>;
 		private var _map:Map;
-		private var _faces:Vector.<Face>;
+//		private var _faces:Vector.<Face>;
 		
 		public function ChunkData(sizeX:int, sizeY:int, sizeZ:int, map:Map) {
 			_map = map;
@@ -32,7 +32,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Creates the bugger arrays
 		 */
 		public function createArrays():void {
-			_faces = new Vector.<Face>();
+//			_faces = new Vector.<Face>();
 			_indexesArray = new Vector.<uint>();
 			_bufferArray = createBufferArray();
 		}
@@ -45,7 +45,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_map = null;
 			_bufferArray = null;
 			_indexesArray = null;
-			_faces = new Vector.<Face>();
+//			_faces = new Vector.<Face>();
 		}
 
 		
@@ -56,11 +56,11 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var textureStretchX:Number		= 1 / bmd.width * .3;
 			var textureStretchY:Number		= 1 / bmd.height * .3;
 			var textureSizeRatio:Number		= 16 / bmd.width;
-			var count:int = 0;
-			var buffer:Vector.<Number> = new Vector.<Number>();
+			var buffer:Vector.<Number>		= new Vector.<Number>();
 			var xloc:int;
 			var yloc:int;
 			var zloc:int;
+			var count:int = 0;
 			var index:int = 0;
 			var i_index:int = 0;
 			var cubeSizeRatio:Number = CUBE_SIZE_RATIO;
@@ -129,7 +129,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX; //U
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY; //V
 								buffer[index++] = alpha;//Alpha
-								buffer[index++] = brightness - .1;//Brightness
+								buffer[index++] = brightness - .2;//Brightness
 								
 								buffer[index++] = -vertexOffset + xLoc2 + px;
 								buffer[index++] = vertexOffset + yLoc2 + py;
@@ -137,7 +137,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 								
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = vertexOffset + yLoc2 + py;
@@ -145,7 +145,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 							
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = vertexOffset + yLoc2 + py;
@@ -153,10 +153,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 								
-								_faces.push(new Face(buffer, index, 7, false));
-								_faces.push(new Face(buffer, index, 7, true));
+//								_faces.push(new Face(buffer, index, 7, false));
+//								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -178,7 +178,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX  + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 								
 								buffer[index++] = -vertexOffset + xLoc2 + px;
 								buffer[index++] = -vertexOffset + yLoc2 + py;
@@ -186,7 +186,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = -vertexOffset + yLoc2 + py;
@@ -194,7 +194,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 								
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = -vertexOffset + yLoc2 + py;
@@ -202,10 +202,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .1;
+								buffer[index++] = brightness - .2;
 								
-								_faces.push(new Face(buffer, index, 7, false));
-								_faces.push(new Face(buffer, index, 7, true));
+//								_faces.push(new Face(buffer, index, 7, false));
+//								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -253,8 +253,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								_faces.push(new Face(buffer, index, 7, false));
-								_faces.push(new Face(buffer, index, 7, true));
+//								_faces.push(new Face(buffer, index, 7, false));
+//								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -302,8 +302,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								_faces.push(new Face(buffer, index, 7, false));
-								_faces.push(new Face(buffer, index, 7, true));
+//								_faces.push(new Face(buffer, index, 7, false));
+//								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -352,8 +352,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = alpha;
 								buffer[index++] = brightness;
 								
-								_faces.push(new Face(buffer, index, 7, false));
-								_faces.push(new Face(buffer, index, 7, true));
+//								_faces.push(new Face(buffer, index, 7, false));
+//								_faces.push(new Face(buffer, index, 7, true));
 							}
 							
 							
@@ -377,7 +377,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness;
+								buffer[index++] = brightness - .35;
 								
 								//back left
 								buffer[index++] = vertexOffset + xLoc2 + px;
@@ -386,7 +386,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileBottomY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness;
+								buffer[index++] = brightness - .35;
 								
 								//Front left
 								buffer[index++] = vertexOffset + xLoc2 + px;
@@ -395,7 +395,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileBottomX + textureStretchX;
 								buffer[index++] = tileBottomY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness;
+								buffer[index++] = brightness - .35;
 								
 								//Front right
 								buffer[index++] = -vertexOffset + xLoc2 + px;
@@ -404,10 +404,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileBottomX + textureStretchX;
 								buffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness;
+								buffer[index++] = brightness - .35;
 								
-								_faces.push(new Face(buffer, index, 7, false));
-								_faces.push(new Face(buffer, index, 7, true));
+//								_faces.push(new Face(buffer, index, 7, false));
+//								_faces.push(new Face(buffer, index, 7, true));
 							}
 						
 //							wasCubeOver = true;
