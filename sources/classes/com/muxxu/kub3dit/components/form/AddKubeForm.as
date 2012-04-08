@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.form {
+	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import flash.geom.ColorTransform;
 	import com.muxxu.kub3dit.components.LoaderSpinning;
 	import com.muxxu.kub3dit.events.LightModelEvent;
@@ -163,9 +164,11 @@ package com.muxxu.kub3dit.components.form {
 		 * Called when form is submitted
 		 */
 		private function submitHandler(event:Event):void {
-			_input.enabled = false;
-			_submit.enabled = false;
-			_spinning.open();
+			if(Textures.getInstance().customKubes.length < Textures.MAX_CUSTOM_KUBES) {
+				_input.enabled = false;
+				_submit.enabled = false;
+				_spinning.open();
+			}
 			
 			FrontControler.getInstance().addKube(_input.text);
 		}

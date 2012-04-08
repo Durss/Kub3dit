@@ -102,8 +102,8 @@ package com.muxxu.build3r.views {
 				drawLevel();
 			}
 			
+			_forumTouched = model.position != null;
 			if(model.position != null) {
-				_forumTouched = true;
 				_kubeCoos.style = "b-kubeCoos";
 				_kubeCoos.text = "["+model.position.x+"]["+model.position.y+"]["+model.position.z+"]";
 				checkComplete();
@@ -232,7 +232,7 @@ package com.muxxu.build3r.views {
 		private function checkComplete():void {
 			_submit.enabled = _reference.x != -1 && _forumTouched;
 			if(_submit.enabled) {
-				Sound(new _sound()).play(0, 0, new SoundTransform(.1));//TODO reset sound to 1
+				Sound(new _sound()).play(0, 0, new SoundTransform(1));
 			}
 		}
 		

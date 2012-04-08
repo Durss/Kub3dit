@@ -228,6 +228,7 @@ package com.muxxu.kub3dit.components.editor {
 				_lastStartTime = getTimer();
 			}
 			
+			//Draw landmark over the grid
 			if(_panel != null) {
 				if(_landMark.numChildren > 0) _landMark.removeChildAt(0);
 				var landmark:Shape = _panel.landmark;
@@ -248,7 +249,8 @@ package com.muxxu.kub3dit.components.editor {
 			_lookAt.y = _size * .5 * _cellSize - _offset.y * _cellSize + _cellSize*.5;
 			_lookAt.rotation = Camera3D.rotationX;
 			
-			//Drawing management
+			//DRAWING MANAGEMENT
+			//Detect if curosor is over the gris
 			if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
 				_mousePos.x = Math.floor(mouseX/_cellSize);
 				_mousePos.y = Math.floor(mouseY/_cellSize);
@@ -262,6 +264,7 @@ package com.muxxu.kub3dit.components.editor {
 				_globalMousePos.z = -1;
 			}
 			
+			//If user's drawing
 			if(_pressed && !_dragMode && _mousePos.x > -1) {
 				_lastPos = _mousePos;
 				_tmpPoint.x = ox;

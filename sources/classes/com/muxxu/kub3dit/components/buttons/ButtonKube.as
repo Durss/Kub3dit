@@ -41,7 +41,7 @@ package com.muxxu.kub3dit.components.buttons {
 			iconSpacing = label.length == 0? 0 : big? 5 : 5;
 			applyDefaultFrameVisitorNoTween(this, background);
 			_visitedIcons = new Dictionary();
-			if(icon != null && icon is MovieClip) {
+			if(icon != null && icon is MovieClip && MovieClip(icon).currentLabels.length > 0) {
 				applyDefaultFrameVisitorNoTween(this, icon);
 				_visitedIcons[icon] = true;
 			}
@@ -55,9 +55,12 @@ package com.muxxu.kub3dit.components.buttons {
 		 * ***************** */
 		override public function set icon(value:DisplayObject):void {
 			super.icon = value;
-			if(icon != null && icon is MovieClip && _visitedIcons[icon] == undefined) {
+			if(icon != null && icon is MovieClip && _visitedIcons[icon] == undefined && MovieClip(icon).currentLabels.length > 0) {
 				applyDefaultFrameVisitorNoTween(this, icon);
 				_visitedIcons[icon] = true;
+				textAlign = TextAlign.LEFT;
+			}else{
+				textAlign = value != null? TextAlign.LEFT : TextAlign.CENTER;
 			}
 		}
 

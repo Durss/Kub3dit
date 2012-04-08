@@ -88,7 +88,7 @@ package com.muxxu.build3r.views {
 		/**
 		 * @inheritDoc
 		 */
-		public function open(passwordCallback:Function):void {
+		public function open(...args):void {
 			_spin.close();
 			mouseEnabled = mouseChildren = true;
 			_formHolder.visible = true;

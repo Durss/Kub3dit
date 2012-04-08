@@ -4,7 +4,7 @@
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
 		<label code="uploadMapError"><![CDATA[Une erreur est survenue lors de l'upload.<br />Merci de ré-essayer.<br /><br />Si le problème persiste, contactez <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
-		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kube personnalisés.]]></label>
+		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kubes personnalisés.]]></label>
 		
 		<!-- Splash screen -->
 		<label code="splashDefault"><![CDATA[Carte ${X}x${Y}]]></label>
@@ -162,6 +162,23 @@
 		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>
 		
+		<!-- Main menu -->
+		<label code="mainMenu-save"><![CDATA[Enregistrer]]></label>
+		<label code="mainMenu-stats"><![CDATA[Stats]]></label>
+		<label code="mainMenu-build3r"><![CDATA[Build3r]]></label>
+		
+		<!-- Stats -->
+		<label code="build3r-title"><![CDATA[Build3r]]></label>
+		<label code="build3r-detailsNext"><![CDATA[Page suivante &gt;]]></label>
+		<label code="build3r-detailsPrev"><![CDATA[&lt; Page précédente]]></label>
+		<label code="build3r-details-page0"><![CDATA[Le <b>Build3r</b> est un script GreaseMonkey permettant de synchroniser un plan du Kub3dit avec le jeu rendant la construction ridiculement aisée.<br /><br />Pour le faire fonctionner il vous suffit d'être sous Chrome ou Firefox <i>(avec le plugin <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" class="link">GreaseMonkey</a>)</i> puis d'installer le script <b>Build3r</b> en cliquant simplement sur le lien suivant :<br /><a href="http://fevermap.org/kub3dit/gm/build3r.user.js" class="link">http://fevermap.org/kub3dit/gm/build3r.user.js</a><br /><br />Une fois installé, rendez-vous sur Kube, et vérifiez qu'un bouton soit bien apparu sous la mini-carte comme ceci :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rBT.jpg" align="center" width="178" height="139" /></p><br /><br />Cliquez sur ce bouton pour ouvrir le <b>Build3r</b>.<br />Pour les détails sur son utilisation rendez-vous à la page suivante.]]></label>
+		<label code="build3r-details-page1"><![CDATA[Une fois le panneau ouvert vous aurez le choix de charger un plan depuis un fichier Kub3dit ou depuis son ID d'URL si vous l'avez uploadé sur le serveur.<br /><br />Pour ce premier essai, entrez par exemple l'ID "<b>1f</b>" <i>(pas de mot de passe)</i> pour charger le plan d'un coeur, et cliquez sur charger.<br />Vous aurez alors ceci :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rSynch.jpg" align="center" width="193" height="312" /></p>Cet écran vous demande de synchroniser le jeu avec le plan. Bien que la manipulation parraisse obscure, elle reste très simple.<br /><br />Cliquez simplement sur une case de la grille du plan, par exemple le point rouge du niveau 1 qui correspond à la base du coeur, puis, dans le jeu, posez un kube forum à l'endroit où vous souhaitez poser ce kube <i>(la base du coeur)</i>.<br />Cliquez alors sur le forum. Un son aigüe devrait se faire entendre signifiant que la carte est bien synchronisée.<br /><br />Cliquez alors sur le bouton <b>OK</b> en bas à droite pour voir et utiliser le plan.]]></label>
+		<label code="build3r-details-page2"><![CDATA[Par défaut vous arriverez sur une vue 2D du plan, vous pouvez jouer avec les curseurs pour agrandir la vue, la tourner ou changer de niveau.<br /><br />Cliquez maintenant sur le bouton <b>2D</b> en haut pour passer sur une vue isométrique qui vous donnera un meilleur aperçu de la construction finale. Vous devriez alors avoir ceci :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rISO.jpg" align="center" width="193" height="312" /></p>La vue 2D reste néanmoins plus lisible.<br />Maintenant, il vous suffit de reproduire votre plan.<br /><br /><b>MAIS</b> ce qui fait la force du <b>Build3r</b> ce n'est pas juste d'avoir le plan à côté du jeu, mais d'aider à la construction.<br />En effet, il vous arrivera forcément d'avoir un doute à un moment ou un autre. Dans ce cas vous avez deux solutions, triturer le plan dans tous les sens jusqu'à vous y retrouver, <b>OU</b> poser un kube forum et le toucher pour que le <b>Build3r</b> vous montre quel kube doit être mis à cet endroit là.<br /><br />Essayez de reproduire le coeur maintenant ;)<br /><br /><br /><br /><br /><i>PS : pensez à la touche U pour enlever le forum sans perdre d'énergie ;)</i>]]></label>
+		
+		<!-- Stats -->
+		<label code="stats-title"><![CDATA[Statistiques]]></label>
+		<label code="stats-details"><![CDATA[Ce plan comporte un total de <b>{TOTAL}</b> kubes.<br />Sa réalisation demandera <b>{DAYS}</b> jours ou EMV (<b>{PRICE}</b>€)]]></label>
+		<label code="stats-copy"><![CDATA[Copier au format text]]></label>
 		
 		<!-- Save/upload/load -->
 		<label code="prompt-save"><![CDATA[Enregistrement]]></label>
@@ -180,6 +197,10 @@
 		<label code="prompt-mapLoadPassSubmit"><![CDATA[Valider]]></label>
 		<label code="prompt-mapLoadPassCancel"><![CDATA[Annuler]]></label>
 		<label code="prompt-mapLoadPassError"><![CDATA[Mot de passe invalide !]]></label>
+		
+		<!-- Exceptions -->
+		<label code="prompt-exception"><![CDATA[Erreur]]></label>
+		<label code="prompt-exception-ok"><![CDATA[OK]]></label>
 	</labels>
 	
 </root>

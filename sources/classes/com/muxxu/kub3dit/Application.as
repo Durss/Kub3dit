@@ -1,12 +1,14 @@
 package com.muxxu.kub3dit {
-	import com.muxxu.kub3dit.views.MapPasswordView;
+	import com.muxxu.kub3dit.views.Build3rView;
+	import com.muxxu.kub3dit.views.StatsView;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
-	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.views.EditorView;
+	import com.muxxu.kub3dit.views.ExceptionView;
 	import com.muxxu.kub3dit.views.LockView;
-	import com.muxxu.kub3dit.views.MainMenuView;
+	import com.muxxu.kub3dit.views.MapPasswordView;
 	import com.muxxu.kub3dit.views.ProgressView;
+	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.views.SplashScreenView;
 	import com.muxxu.kub3dit.views.Stage3DView;
 	import com.muxxu.kub3dit.views.ToolTipView;
@@ -76,12 +78,14 @@ package com.muxxu.kub3dit {
 
 			addChild(new Stage3DView());
 			addChild(new EditorView());
-			addChild(new MainMenuView());
 			addChild(new SplashScreenView());
 			addChild(new LockView());
 			addChild(new ProgressView());
 			addChild(new SaveView());
 			addChild(new MapPasswordView());
+			addChild(new StatsView());
+			addChild(new Build3rView());
+			addChild(new ExceptionView());
 			addChild(new ToolTipView());
 //			addChild(new Stats()).y = 50;
 			

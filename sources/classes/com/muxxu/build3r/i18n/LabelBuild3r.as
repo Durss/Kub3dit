@@ -29,7 +29,7 @@ package com.muxxu.build3r.i18n {
 			_LABELS["fr"]["synch-titleMap"] = "Cliquez sur la carte pour<br />définir le point de référence :";
 			_LABELS["fr"]["synch-titleKube"] = "Touchez un kube forum dans le jeu pour situer le point de référence :";
 			
-			_LABELS["fr"]["build-keys"] = "← ↑ → ↓ PgUp PgDown espace entrée";
+			_LABELS["fr"]["build-keys"] = "← ↑ → ↓ PgUp PgDown Espace Entrée";
 			_LABELS["fr"]["build-size"] = "Taille :";
 			_LABELS["fr"]["build-level"] = "Niveau :";
 			_LABELS["fr"]["build-rotation"] = "Angle :";
@@ -40,7 +40,7 @@ package com.muxxu.build3r.i18n {
 			_LABELS["fr"]["build-changeHelpTT"] = "Charger une<br />nouvelle carte.";
 			_LABELS["fr"]["build-renderMode-0"] = "2D";
 			_LABELS["fr"]["build-renderMode-1"] = "ISO";
-			_LABELS["fr"]["build-keys-0"] = "← ↑ → ↓ PgUp PgDown";
+			_LABELS["fr"]["build-keys-0"] = "← ↑ → ↓ PgUp PgDown Entrée";
 			
 			//======= EN =======
 			_LABELS["en"] = {};
@@ -59,7 +59,7 @@ package com.muxxu.build3r.i18n {
 			_LABELS["en"]["synch-titleMap"] = "Click on the map to define <br />the reference point :";
 			_LABELS["en"]["synch-titleKube"] = "Touch a forum kube in the game to locate the reference point :";
 			
-			_LABELS["en"]["build-keys"] = "← ↑ → ↓ PgUp PgDown space enter";
+			_LABELS["en"]["build-keys"] = "← ↑ → ↓ PgUp PgDown Space Enter";
 			_LABELS["en"]["build-size"] = "Size :";
 			_LABELS["en"]["build-level"] = "Level :";
 			_LABELS["en"]["build-rotation"] = "Angle :";
@@ -70,7 +70,7 @@ package com.muxxu.build3r.i18n {
 			_LABELS["en"]["build-changeHelpTT"] = "Load a new map.";
 			_LABELS["en"]["build-renderMode-0"] = "2D";
 			_LABELS["en"]["build-renderMode-1"] = "ISO";
-			_LABELS["en"]["build-keys-0"] = "← ↑ → ↓ PgUp PgDown";
+			_LABELS["en"]["build-keys-0"] = "← ↑ → ↓ PgUp PgDown Enter";
 			
 //			_LABELS["es"] = {};
 		}

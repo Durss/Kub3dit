@@ -240,7 +240,7 @@ package com.muxxu.kub3dit.model {
 				return;
 			}
 			var id:String = SWFAddress.getValue().replace(/[^A-Za-z0-9]/g, "");
-//			id="C";//TODO remove
+			id="5";//TODO remove
 			if(id.length > 0 && _ignoreLoadId != id) {
 //				lock();
 

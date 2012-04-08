@@ -15,7 +15,7 @@ package com.muxxu.kub3dit.vo {
 	 * 
 	 * @author Francois
 	 */
-	public class CubeData extends EventDispatcher implements XMLValueObject {
+	public class CubeData extends EventDispatcher {
 		
 		private var _id:Number;
 		private var _uid:Number;
@@ -67,7 +67,7 @@ package com.muxxu.kub3dit.vo {
 		/**
 		 * @inheritDoc
 		 */
-		public function populate(xml:XML, ...optionnals:Array):void {
+		public function populate(xml:XML, ...optionnals:Array):CubeData {
 			_rawData = xml;
 			_id = parseInt(xml.@id);
 			_uid = parseInt(xml.@uid);
@@ -79,6 +79,7 @@ package com.muxxu.kub3dit.vo {
 			_kub.fromByteArray(Base64.decode(xml[0]));
 			
 			dispatchEvent(new Event(Event.CHANGE));
+			return this;
 		}
 		
 		/**

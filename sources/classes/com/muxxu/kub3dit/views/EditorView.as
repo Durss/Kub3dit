@@ -1,12 +1,18 @@
 package com.muxxu.kub3dit.views {
-	import com.muxxu.kub3dit.engin3d.vo.Point3D;
+	import gs.TweenLite;
+	import gs.easing.Sine;
+
 	import com.muxxu.kub3dit.components.editor.ConfigToolPanel;
 	import com.muxxu.kub3dit.components.editor.Grid;
 	import com.muxxu.kub3dit.components.editor.ToolsPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
+	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.events.ToolsPanelEvent;
 	import com.muxxu.kub3dit.graphics.EditorBackgroundGraphic;
+	import com.muxxu.kub3dit.graphics.LockPanelButtonGraphic;
+	import com.muxxu.kub3dit.graphics.LockPanelButtonSelectedGraphic;
 	import com.muxxu.kub3dit.model.Model;
+	import com.nurun.components.form.ToggleButton;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
 
@@ -31,6 +37,8 @@ package com.muxxu.kub3dit.views {
 		private var _kubeSelector:KubeSelectorView;
 		private var _over:Boolean;
 		private var _mousePos:Point3D;
+		private var _lockBt:ToggleButton;
+		private var _menu:MainMenuView;
 		
 		
 		
@@ -43,6 +51,7 @@ package com.muxxu.kub3dit.views {
 		 */
 		public function EditorView() {
 			_kubeSelector = new KubeSelectorView();
+			_menu = new MainMenuView();
 		}
 
 		
@@ -98,41 +107,63 @@ package com.muxxu.kub3dit.views {
 			_grid = addChild(new Grid(_mousePos)) as Grid;
 			_config = addChild(new ConfigToolPanel()) as ConfigToolPanel;
 			_tools = addChild(new ToolsPanel()) as ToolsPanel;
+			_lockBt = addChild(new ToggleButton("", "", null, new LockPanelButtonGraphic(), new LockPanelButtonSelectedGraphic())) as ToggleButton;
 			addChild(_kubeSelector);
+			addChild(_menu);
 			
 			stage.addEventListener(Event.RESIZE, computePositions);
 			_tools.addEventListener(ToolsPanelEvent.OPEN_PANEL, openConfigPanelHandler);
 			_tools.addEventListener(ToolsPanelEvent.SELECT_TOOL, selectToolHandler);
 			_tools.addEventListener(ToolsPanelEvent.ERASE_MODE_CHANGE, eraseModeChangeHandler);
+			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownhandler);
 			
 			_tools.init();//kind of dirty... this is used to be sure to listen for the event before they are fired.
 			
+			_lockBt.width = _lockBt.height = 18;
+			_lockBt.activateDefaultVisitor();
+			
 			_background.filters = [new DropShadowFilter(2, 135, 0, .2, 2, 2, 1, 2)];
 			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
-			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
+//			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
 			_kubeSelector.addEventListener(Event.RESIZE, computePositions);
+		}
+		
+		/**
+		 * Called when mouse is pressed somewhere.
+		 */
+		private function mouseDownhandler(event:MouseEvent):void {
+			if(event.target == stage && !_lockBt.selected) {
+				TweenLite.to(this, .2, {x:stage.stageWidth - 30, ease:Sine.easeInOut});
+			}
 		}
 		
 		/**
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			_tools.x = 6;
-			_tools.y = 5;
+			_menu.y = 5;
 			
 			_grid.x = 30;
-			_grid.y = 5;
+			_grid.y = _menu.height + 10;
+			
+			_tools.x = 6;
+			_tools.y = _grid.y;
 			
 			_kubeSelector.x = _tools.x;
-			_kubeSelector.y = Math.max(_tools.height, _grid.height) + 15;
+			_kubeSelector.y = _grid.y + Math.max(_tools.height, _grid.height) + 15;
 			_kubeSelector.width = Math.round(_grid.x + _grid.width - _kubeSelector.x);
 			
 			_background.width = Math.round(_grid.x + _grid.width + 5);
 			_background.height = Math.round(_kubeSelector.y + _kubeSelector.height) + 10;
 			
+			_lockBt.x = Math.round(_background.x - _lockBt.width *.5);
+			_lockBt.y = Math.round(_background.y + _background.height - _lockBt.height *.5);
+			
 			_config.width = _grid.width;
 			_config.x = _grid.x;
 			_config.y = _grid.y;
+			
+			_menu.x = Math.round((_background.width - _menu.width) * .5);
 			
 			if(_over){
 				x = stage.stageWidth-width;
@@ -171,9 +202,9 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function rollHandler(event:MouseEvent):void {
 			_over = true;
-			computePositions();
-//			_over = event.type == MouseEvent.ROLL_OVER;
-//			TweenLite.to(this, .4, {x:_over? stage.stageWidth-width : stage.stageWidth - 30, ease:Sine.easeInOut});
+//			computePositions();
+			TweenLite.killTweensOf(this);
+			TweenLite.to(this, .25, {x:stage.stageWidth-width, ease:Sine.easeInOut});
 		}
 		
 	}

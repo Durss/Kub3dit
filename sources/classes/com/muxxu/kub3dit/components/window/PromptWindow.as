@@ -1,9 +1,11 @@
 package com.muxxu.kub3dit.components.window {
-	import flash.filters.DropShadowFilter;
-	import com.nurun.components.text.CssTextField;
-	import flash.display.DisplayObject;
+	import flash.text.TextFieldAutoSize;
 	import com.muxxu.kub3dit.graphics.PromptWindowGraphic;
+	import com.nurun.components.text.CssTextField;
+
+	import flash.display.DisplayObject;
 	import flash.display.Sprite;
+	import flash.filters.DropShadowFilter;
 	
 	/**
 	 * 
@@ -36,6 +38,13 @@ package com.muxxu.kub3dit.components.window {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Sets the window's label
+		 */
+		public function set label(value:String):void {
+			_titleTf.text = _title = value;
+			computePositions();
+		}
 
 
 
@@ -77,13 +86,18 @@ package com.muxxu.kub3dit.components.window {
 		 * Resizes and replaces the elements.
 		 */
 		private function computePositions():void {
-			_titleTf.width = _content.width;
-			while(_titleTf.numLines > 1) _titleTf.width += 2;
+			_titleTf.wordWrap = false;
+			_titleTf.multiline = false;
+			_titleTf.autoSize = TextFieldAutoSize.LEFT;
 			
-			_titleTf.x = 10;
-			_titleTf.y = 3;
-			_background.width = _titleTf.width + 25;
+			if(_content.width > _titleTf.width) {
+				_titleTf.width = _content.width;
+			}
+			
+			_background.width = _titleTf.width + 50;
 			_background.height = 60 + _content.height;
+			_titleTf.x = Math.round((_background.width - _titleTf.width) * .5);
+			_titleTf.y = 3;
 			_content.y = 40;
 			_content.x = Math.round((_background.width - _content.width) * .5);
 		}

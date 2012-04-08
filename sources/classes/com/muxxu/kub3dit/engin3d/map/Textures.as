@@ -31,6 +31,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		
 		private static var _instance:Textures;
 		public static const PADDING:int = 1;
+		public static const MAX_CUSTOM_KUBES:int = 30;
 		
 		private var _spriteSheet:BitmapData;
 		private var _cubesFramesCoos:Array;
@@ -343,10 +344,9 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Adds a custom kube
 		 */
 		public function addKube(data:CubeData):void {
-			var max:int = 30;
 			var total:int = _customKubes.length;
-			if(total == max) {
-				throw new Kub3ditException(Label.getLabel("maxCustomKubesError").replace(/\$\{VALUE\}/gi, max), Kub3ditExceptionSeverity.INFO);
+			if(total == MAX_CUSTOM_KUBES) {
+				throw new Kub3ditException(Label.getLabel("maxCustomKubesError").replace(/\$\{VALUE\}/gi, MAX_CUSTOM_KUBES), Kub3ditExceptionSeverity.INFO);
 				return;
 			}
 			_customKubes.push(data);
