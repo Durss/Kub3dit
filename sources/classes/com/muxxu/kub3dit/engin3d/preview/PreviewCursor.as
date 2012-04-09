@@ -274,94 +274,98 @@ package com.muxxu.kub3dit.engin3d.preview {
 			
 			
 			// TOP
-			indexesBuffer[i_index++] = 0 + count;
-			indexesBuffer[i_index++] = 1 + count;
-			indexesBuffer[i_index++] = 2 + count;
-			
-			indexesBuffer[i_index++] = 0 + count;
-			indexesBuffer[i_index++] = 2 + count;
-			indexesBuffer[i_index++] = 3 + count;
-			count += 4;
-			
-			verticesBuffer[index++] = -vertexOffset + px;
-			verticesBuffer[index++] = vertexOffset + py;
-			verticesBuffer[index++] = -vertexOffset - pz;
-			verticesBuffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
-			verticesBuffer[index++] =  tileTopY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
-			
-			verticesBuffer[index++] = -vertexOffset + px;
-			verticesBuffer[index++] = -vertexOffset + py;
-			verticesBuffer[index++] = -vertexOffset - pz;
-			verticesBuffer[index++] = tileTopX + textureStretchX;
-			verticesBuffer[index++] = tileTopY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
-			
-			verticesBuffer[index++] = vertexOffset + px;
-			verticesBuffer[index++] = -vertexOffset + py;
-			verticesBuffer[index++] = -vertexOffset - pz;
-			verticesBuffer[index++] = tileTopX + textureStretchX;
-			verticesBuffer[index++] = tileTopY + textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
-			
-			verticesBuffer[index++] = vertexOffset + px;
-			verticesBuffer[index++] = vertexOffset + py;
-			verticesBuffer[index++] = -vertexOffset - pz;
-			verticesBuffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
-			verticesBuffer[index++] = tileTopY + textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
+			if(tileTop.x > -1) {
+				indexesBuffer[i_index++] = 0 + count;
+				indexesBuffer[i_index++] = 1 + count;
+				indexesBuffer[i_index++] = 2 + count;
+				
+				indexesBuffer[i_index++] = 0 + count;
+				indexesBuffer[i_index++] = 2 + count;
+				indexesBuffer[i_index++] = 3 + count;
+				count += 4;
+				
+				verticesBuffer[index++] = -vertexOffset + px;
+				verticesBuffer[index++] = vertexOffset + py;
+				verticesBuffer[index++] = -vertexOffset - pz;
+				verticesBuffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
+				verticesBuffer[index++] =  tileTopY + textureSizeRatio - textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+				
+				verticesBuffer[index++] = -vertexOffset + px;
+				verticesBuffer[index++] = -vertexOffset + py;
+				verticesBuffer[index++] = -vertexOffset - pz;
+				verticesBuffer[index++] = tileTopX + textureStretchX;
+				verticesBuffer[index++] = tileTopY + textureSizeRatio - textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+				
+				verticesBuffer[index++] = vertexOffset + px;
+				verticesBuffer[index++] = -vertexOffset + py;
+				verticesBuffer[index++] = -vertexOffset - pz;
+				verticesBuffer[index++] = tileTopX + textureStretchX;
+				verticesBuffer[index++] = tileTopY + textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+				
+				verticesBuffer[index++] = vertexOffset + px;
+				verticesBuffer[index++] = vertexOffset + py;
+				verticesBuffer[index++] = -vertexOffset - pz;
+				verticesBuffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
+				verticesBuffer[index++] = tileTopY + textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+			}
 			
 			
 			
 			// BOTTOM
-			indexesBuffer[i_index++] = 0 + count;
-			indexesBuffer[i_index++] = 1 + count;
-			indexesBuffer[i_index++] = 2 + count;
-			
-			indexesBuffer[i_index++] = 0 + count;
-			indexesBuffer[i_index++] = 2 + count;
-			indexesBuffer[i_index++] = 3 + count;
-			count += 4;
-			
-			//back right
-			verticesBuffer[index++] = -vertexOffset + px; //X
-			verticesBuffer[index++] = vertexOffset + py; //Y
-			verticesBuffer[index++] = vertexOffset - pz; //Z
-			verticesBuffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
-			verticesBuffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
-			
-			//back left
-			verticesBuffer[index++] = vertexOffset + px;
-			verticesBuffer[index++] = vertexOffset + py;
-			verticesBuffer[index++] = vertexOffset - pz;
-			verticesBuffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
-			verticesBuffer[index++] = tileBottomY + textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
-			
-			//Front left
-			verticesBuffer[index++] = vertexOffset + px;
-			verticesBuffer[index++] = -vertexOffset + py;
-			verticesBuffer[index++] = vertexOffset - pz;
-			verticesBuffer[index++] = tileBottomX + textureStretchX;
-			verticesBuffer[index++] = tileBottomY + textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
-			
-			//Front right
-			verticesBuffer[index++] = -vertexOffset + px;
-			verticesBuffer[index++] = -vertexOffset + py;
-			verticesBuffer[index++] = vertexOffset - pz;
-			verticesBuffer[index++] = tileBottomX + textureStretchX;
-			verticesBuffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
-			verticesBuffer[index++] = brightness;
+			if(tileBottom.x > -1) {
+				indexesBuffer[i_index++] = 0 + count;
+				indexesBuffer[i_index++] = 1 + count;
+				indexesBuffer[i_index++] = 2 + count;
+				
+				indexesBuffer[i_index++] = 0 + count;
+				indexesBuffer[i_index++] = 2 + count;
+				indexesBuffer[i_index++] = 3 + count;
+				count += 4;
+				
+				//back right
+				verticesBuffer[index++] = -vertexOffset + px; //X
+				verticesBuffer[index++] = vertexOffset + py; //Y
+				verticesBuffer[index++] = vertexOffset - pz; //Z
+				verticesBuffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
+				verticesBuffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+				
+				//back left
+				verticesBuffer[index++] = vertexOffset + px;
+				verticesBuffer[index++] = vertexOffset + py;
+				verticesBuffer[index++] = vertexOffset - pz;
+				verticesBuffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
+				verticesBuffer[index++] = tileBottomY + textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+				
+				//Front left
+				verticesBuffer[index++] = vertexOffset + px;
+				verticesBuffer[index++] = -vertexOffset + py;
+				verticesBuffer[index++] = vertexOffset - pz;
+				verticesBuffer[index++] = tileBottomX + textureStretchX;
+				verticesBuffer[index++] = tileBottomY + textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+				
+				//Front right
+				verticesBuffer[index++] = -vertexOffset + px;
+				verticesBuffer[index++] = -vertexOffset + py;
+				verticesBuffer[index++] = vertexOffset - pz;
+				verticesBuffer[index++] = tileBottomX + textureStretchX;
+				verticesBuffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
+				verticesBuffer[index++] = alpha;
+				verticesBuffer[index++] = brightness;
+			}
 			
 			_context3D.setTextureAt(0, _texture);
 			_context3D.setProgram(_shaderProgram);
