@@ -144,7 +144,7 @@ package com.muxxu.kub3dit.views {
 			_menu.y = 5;
 			
 			_grid.x = 30;
-			_grid.y = _menu.height + 10;
+			_grid.y = Math.round(_menu.height + 10);
 			
 			_tools.x = 6;
 			_tools.y = _grid.y;
