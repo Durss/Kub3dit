@@ -1,5 +1,6 @@
 package com.muxxu.kub3dit.engin3d.chunks {
 	import com.muxxu.kub3dit.engin3d.map.Map;
+
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DVertexBufferFormat;
 	import flash.display3D.IndexBuffer3D;
@@ -21,12 +22,12 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _map:Map;
 		private var _data:ChunkData;
 		private var _context3D:Context3D;
-		private var _buffer:VertexBuffer3D;
-		private var _indexBuffer:IndexBuffer3D;
 		private var _texture:Texture;
 		private var _updating:Boolean;
 		private var _originX:int;
 		private var _originY:int;
+		private var _vertexBuffers:Vector.<VertexBuffer3D>;
+		private var _indexBuffers:Vector.<IndexBuffer3D>;
 		
 		
 		
@@ -57,7 +58,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Gets if the chunk is ready to be used
 		 */
 		public function get isReady():Boolean {
-			return _data != null && _data._bufferArray != null && _data._bufferArray.length > 0;
+			return _data != null && _data._buffers != null && _data._buffers.length > 0;
 		}
 		
 		/**
@@ -93,18 +94,24 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Draws the chunk
 		 */
 		public function renderBuffer():void {
-			if (_data._indexesArray.length > 0 && _data._bufferArray.length > 0) {
-				_context3D.setVertexBufferAt(0, _buffer, 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
-				_context3D.setVertexBufferAt(1, _buffer, 3, Context3DVertexBufferFormat.FLOAT_2); //uv
-				_context3D.setVertexBufferAt(2, _buffer, 5, Context3DVertexBufferFormat.FLOAT_1); //alpha
-				_context3D.setVertexBufferAt(3, _buffer, 6, Context3DVertexBufferFormat.FLOAT_1); //brightness
-				
-				_context3D.drawTriangles(_indexBuffer);
-				
-				_context3D.setVertexBufferAt(0, null); //clean the buffers
-				_context3D.setVertexBufferAt(1, null); //clean the buffers
-				_context3D.setVertexBufferAt(2, null); //clean the buffers
-				_context3D.setVertexBufferAt(3, null); //clean the buffers
+			if (_data._indexes.length > 0 && _data._buffers.length > 0) {
+				var i:int, len:int;
+				len = _vertexBuffers.length;
+				for(i = 0; i < len; ++i) {
+					if(_vertexBuffers[i] == null) continue;
+					
+					_context3D.setVertexBufferAt(0, _vertexBuffers[i], 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
+					_context3D.setVertexBufferAt(1, _vertexBuffers[i], 3, Context3DVertexBufferFormat.FLOAT_2); //uv
+					_context3D.setVertexBufferAt(2, _vertexBuffers[i], 5, Context3DVertexBufferFormat.FLOAT_1); //alpha
+					_context3D.setVertexBufferAt(3, _vertexBuffers[i], 6, Context3DVertexBufferFormat.FLOAT_1); //brightness
+					
+					_context3D.drawTriangles(_indexBuffers[i]);
+					
+					_context3D.setVertexBufferAt(0, null); //clean the buffers
+					_context3D.setVertexBufferAt(1, null); //clean the buffers
+					_context3D.setVertexBufferAt(2, null); //clean the buffers
+					_context3D.setVertexBufferAt(3, null); //clean the buffers
+				}
 			}
 		}
 		
@@ -114,11 +121,21 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public function createBuffers():void {
 			_data = _map.copyData(_chunkSize, _xloc, _yloc);
 			_data.createArrays();
-			if(_data._bufferArray.length > 0) {
-				_buffer = _context3D.createVertexBuffer(_data._bufferArray.length / 7, 7);
-				_indexBuffer = _context3D.createIndexBuffer(_data._indexesArray.length);
-				_buffer.uploadFromVector(_data._bufferArray, 0, _data._bufferArray.length / 7);
-				_indexBuffer.uploadFromVector(_data._indexesArray, 0, _data._indexesArray.length);
+			if(_data._buffers.length > 0) {
+				var i:int, len:int, vertex:VertexBuffer3D, index:IndexBuffer3D;
+				len = _data._indexes.length;
+				_vertexBuffers = new Vector.<VertexBuffer3D>(len, true);
+				_indexBuffers = new Vector.<IndexBuffer3D>(len, true);
+				for(i = 0; i < len; ++i) {
+					if(_data._buffers[i].length == 0) continue;
+					
+					vertex = _context3D.createVertexBuffer(_data._buffers[i].length / 7, 7);
+					index = _context3D.createIndexBuffer(_data._indexes[i].length);
+					vertex.uploadFromVector(_data._buffers[i], 0, _data._buffers[i].length / 7);
+					index.uploadFromVector(_data._indexes[i], 0, _data._indexes[i].length);
+					_vertexBuffers[i] = vertex;
+					_indexBuffers[i] = index;
+				}
 			}
 			_updating = false;
 		}
@@ -131,8 +148,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_map = null;
 			_data = null;
 			_context3D = null;
-			_buffer = null;
-			_indexBuffer = null;
+			_vertexBuffers = null;
+			_indexBuffers = null;
 			_texture = null;
 		}
 		

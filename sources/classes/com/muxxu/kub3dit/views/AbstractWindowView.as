@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.views {
+	import flash.ui.Keyboard;
+	import flash.events.KeyboardEvent;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.components.window.PromptWindow;
@@ -95,7 +97,17 @@ package com.muxxu.kub3dit.views {
 		protected function addedToStageHandler(event:Event):void {
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			computePositions();
+		}
+		
+		/**
+		 * Called when a key is released
+		 */
+		protected function keyUpHandler(event:KeyboardEvent):void {
+			if(event.keyCode == Keyboard.ESCAPE) {
+				close();
+			}
 		}
 		
 		/**

@@ -196,6 +196,10 @@ package com.muxxu.kub3dit.components.editor {
 					_tools[ event.keyCode-Keyboard.NUMBER_1 ].selected = true;
 				}
 			}
+			if(event.keyCode == Keyboard.M) {
+				_tools[ _tools.length-1 ].selected = true;
+				dispatchEvent(new ToolsPanelEvent(ToolsPanelEvent.OPEN_PANEL));
+			}
 		}
 		
 		/**

@@ -114,10 +114,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_mapSizeW = _map.mapSizeX;
 				_mapSizeH = _map.mapSizeY;
 				_accelerated = accelerated;
-				_chunkSize = 12;//Number of cubes to compose a chunk of
+				_chunkSize = 16;//Number of cubes to compose a chunk of
 				_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
-				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);//Number of visible chunks around us
-				
+				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.ceil(Math.min(_mapSizeW, _mapSizeH)/_chunkSize));//Number of visible chunks around us
 				_efTarget = new Shape();
 				
 				//Init cubes textures
