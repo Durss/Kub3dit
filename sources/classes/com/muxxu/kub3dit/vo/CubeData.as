@@ -1,6 +1,5 @@
 package com.muxxu.kub3dit.vo {
 	import by.blooddy.crypto.Base64;
-	import com.nurun.core.lang.vo.XMLValueObject;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;

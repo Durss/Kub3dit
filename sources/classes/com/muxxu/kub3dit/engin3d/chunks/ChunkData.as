@@ -16,8 +16,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public var _sizeY:int;
 		public var _sizeZ:int;
 		public var _data:Array;
-		public var _bufferArray:Vector.<Number>;
-		public var _indexesArray:Vector.<uint>;
+		public var _buffers:Vector.<Vector.<Number>>;
+		public var _indexes:Vector.<Vector.<uint>>;
 		private var _map:Map;
 //		private var _faces:Vector.<Face>;
 		
@@ -33,8 +33,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 */
 		public function createArrays():void {
 //			_faces = new Vector.<Face>();
-			_indexesArray = new Vector.<uint>();
-			_bufferArray = createBufferArray();
+			_buffers = new Vector.<Vector.<Number>>();
+			_indexes = new Vector.<Vector.<uint>>();
+			createBufferArrays();
 		}
 
 		/**
@@ -43,13 +44,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public function dispose():void {
 			_data = null;
 			_map = null;
-			_bufferArray = null;
-			_indexesArray = null;
+			_indexes = null;
+			_buffers = null;
 //			_faces = new Vector.<Face>();
 		}
 
 		
-		private function createBufferArray():Vector.<Number> {
+		private function createBufferArrays():void {
 			var bmd:BitmapData				= Textures.getInstance().spriteSheet;
 			var textureStepRatioX:Number	= 1 / bmd.width;
 			var textureStepRatioY:Number	= 1 / bmd.height;
@@ -57,6 +58,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var textureStretchY:Number		= 1 / bmd.height * .3;
 			var textureSizeRatio:Number		= 16 / bmd.width;
 			var buffer:Vector.<Number>		= new Vector.<Number>();
+			var indexes:Vector.<uint>		= new Vector.<uint>();
 			var xloc:int;
 			var yloc:int;
 			var zloc:int;
@@ -114,13 +116,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							//BACK
 							if((backCube == 0 || transparent[tile] === true || transparent[backCube] === true)
 							&& tileSide.x > -1) {
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 1 + count;
-								_indexesArray[i_index++] = 2 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 1 + count;
+								indexes[i_index++] = 2 + count;
 								
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 2 + count;
-								_indexesArray[i_index++] = 3 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 2 + count;
+								indexes[i_index++] = 3 + count;
 								count += 4;
 								
 								buffer[index++] = -vertexOffset + xLoc2 + px; //X
@@ -163,13 +165,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							//FRONT
 							if ((frontCube == 0 || transparent[tile] === true || transparent[frontCube] === true)
 							&& tileSide.x > -1) {
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 1 + count;
-								_indexesArray[i_index++] = 2 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 1 + count;
+								indexes[i_index++] = 2 + count;
 								
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 2 + count;
-								_indexesArray[i_index++] = 3 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 2 + count;
+								indexes[i_index++] = 3 + count;
 								count += 4;
 
 								buffer[index++] = -vertexOffset + xLoc2 + px;
@@ -212,13 +214,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							//LEFT
 							if ((leftCube == 0 || transparent[tile] === true || transparent[leftCube] === true)
 							&& tileSide.x > -1) {
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 1 + count;
-								_indexesArray[i_index++] = 2 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 1 + count;
+								indexes[i_index++] = 2 + count;
 								
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 2 + count;
-								_indexesArray[i_index++] = 3 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 2 + count;
+								indexes[i_index++] = 3 + count;
 								count += 4;
 								
 								buffer[index++] = vertexOffset + xLoc2 + px;
@@ -261,13 +263,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							//RIGHT
 							if ((rightCube == 0 || transparent[tile] === true || transparent[rightCube] === true)
 							&& tileSide.x > -1) {
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 1 + count;
-								_indexesArray[i_index++] = 2 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 1 + count;
+								indexes[i_index++] = 2 + count;
 								
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 2 + count;
-								_indexesArray[i_index++] = 3 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 2 + count;
+								indexes[i_index++] = 3 + count;
 								count += 4;
 							              
 								buffer[index++] = -vertexOffset + xLoc2 + px;
@@ -311,13 +313,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							// TOP
 							if(tileTop.x > -1
 							&& (overCube == 0 || transparent[tile] === true || transparent[overCube] === true)) {
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 1 + count;
-								_indexesArray[i_index++] = 2 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 1 + count;
+								indexes[i_index++] = 2 + count;
 								
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 2 + count;
-								_indexesArray[i_index++] = 3 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 2 + count;
+								indexes[i_index++] = 3 + count;
 								count += 4;
 								
 								buffer[index++] = -vertexOffset + xLoc2 + px;
@@ -361,13 +363,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							// BOTTOM
 							if (zLoc2 > 0 && tileBottom.x > -1
 							&& (underCube == 0 || transparent[tile] === true || transparent[underCube] === true) ) {
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 1 + count;
-								_indexesArray[i_index++] = 2 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 1 + count;
+								indexes[i_index++] = 2 + count;
 								
-								_indexesArray[i_index++] = 0 + count;
-								_indexesArray[i_index++] = 2 + count;
-								_indexesArray[i_index++] = 3 + count;
+								indexes[i_index++] = 0 + count;
+								indexes[i_index++] = 2 + count;
+								indexes[i_index++] = 3 + count;
 								count += 4;
 								
 								//back right
@@ -412,11 +414,22 @@ package com.muxxu.kub3dit.engin3d.chunks {
 						
 //							wasCubeOver = true;
 						}
+						
+						if(buffer.length + 7*4*6 >= 65535) {
+							_buffers.push(buffer);
+							_indexes.push(indexes);
+							buffer = new Vector.<Number>();
+							indexes = new Vector.<uint>();
+							i_index = 0;
+							index = 0;
+							count = 0;
+						}
 					}
 				}
 			}
 			
-			return buffer;
+			_buffers.push(buffer);
+			_indexes.push(indexes);
 		}
 	}
 

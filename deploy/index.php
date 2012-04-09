@@ -1,87 +1,114 @@
 <?php
 	session_start();
 	
+	$betaMode = false;
+	$redirectWithMap = false;
+	
 	//Redirect the user if "www" are on the address. Prevents from SharedObject problems.
 	if (strpos($_SERVER["SERVER_NAME"], "www") > -1) {
 		header("location: http://fevermap.org/kub3dit");
 		die;
 	}
 	
-	$lang = isset($_GET["lang"])? $_GET["lang"] : (isset($_SESSION["lang"])? $_SESSION["lang"] : "en");
+	if(!isset($_GET["lang"]) && !isset($_SESSION["lang"])) {
+		function get_client_language($availableLanguages, $default='en'){
+			
+			if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+					
+				$langs=explode(',',$_SERVER['HTTP_ACCEPT_LANGUAGE']);
+
+				//start going through each one
+				foreach ($langs as $value){
+					$choice=substr($value,0,2);
+					if(in_array($choice, $availableLanguages)){
+						return $choice;
+					}
+				}
+			} 
+			return $default;
+		}
+		$lang = $_SESSION["lang"] = get_client_language(array('fr', 'en'));
+	} else {
+		$lang = isset($_GET["lang"])? $_GET["lang"] : (isset($_SESSION["lang"])? $_SESSION["lang"] : "en");
+	}
 	
-	//header('Content-type: text/html; charset=iso-8859-1');
-	$pseudo = isset($_SESSION["uname"])? $_SESSION["uname"] : "";
-	/*
-	if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "as3game.blogspot.com")) {
-		$pseudo = "authorized_referer";
-		$lang = "en";
-	}*/
-	if(isset($_GET['uid'], $_GET['pubkey'])) {
-		$url = "http://muxxu.com/app/xml?app=kub3dit&xml=user&id=".$_GET['uid']."&key=".md5("ad10c672ca9b23cad961163da05071ed" . $_GET["pubkey"]);
-		$xml = simplexml_load_file($url);
-		if ($xml->getName() != "error") {
-			if (!isset($_GET["lang"])) {
-				$lang = (string)$xml->attributes()->lang;
+	//=========================================
+	//=============== BETA MODE ===============
+	//=========================================
+	if($betaMode) {
+		//header('Content-type: text/html; charset=iso-8859-1');
+		$pseudo = isset($_SESSION["uname"])? $_SESSION["uname"] : "";
+		/*
+		if(isset($_SERVER["HTTP_REFERER"]) && strpos($_SERVER["HTTP_REFERER"], "as3game.blogspot.com")) {
+			$pseudo = "authorized_referer";
+			$lang = "en";
+		}*/
+		if(isset($_GET['uid'], $_GET['pubkey'])) {
+			$url = "http://muxxu.com/app/xml?app=kub3dit&xml=user&id=".$_GET['uid']."&key=".md5("ad10c672ca9b23cad961163da05071ed" . $_GET["pubkey"]);
+			$xml = simplexml_load_file($url);
+			if ($xml->getName() != "error") {
+				if (!isset($_GET["lang"])) {
+					$lang = (string)$xml->attributes()->lang;
+				}
+				$pseudo	= (string)$xml->attributes()->name;
+			}else {
+				$pseudo = "goFuckYourself";
 			}
-			$pseudo	= (string)$xml->attributes()->name;
-		}else {
-			$pseudo = "goFuckYourself";
 		}
-	}
-	
-	/**
-	 * Checks if a user is on the authorized groups.
-	 */
-	function isUserOnGroup($pseudo, $url) {
-		$handle = fopen($url, "rb");
-		$content = '';
-		while (!feof($handle)) {
-		  $content .= fread($handle, 8192);
-		}
-		fclose($handle);
 		
-		$result = str_replace("\n", "", $content);
-		$result = str_replace("\r", "", $result);
-		$result = preg_replace('/"prevuser".*<\/li>/imU', "", $result);
-		return stripos($result, $pseudo) !== false;
+		/**
+		 * Checks if a user is on the authorized groups.
+		 */
+		function isUserOnGroup($pseudo, $url) {
+			$handle = fopen($url, "rb");
+			$content = '';
+			while (!feof($handle)) {
+			  $content .= fread($handle, 8192);
+			}
+			fclose($handle);
+			
+			$result = str_replace("\n", "", $content);
+			$result = str_replace("\r", "", $result);
+			$result = preg_replace('/"prevuser".*<\/li>/imU', "", $result);
+			return stripos($result, $pseudo) !== false;
+		}
+		
+		function isAuthorizedUser($pseudo, $ref) {
+			return strtolower($pseudo) == $ref;
+		}
+		
+		$authorized = false;//isAuthorizedUser($pseudo, "durss");//uncoment to authorize only me
+		$authorized = $authorized || isAuthorizedUser($pseudo, "ebene");
+		$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
+		$authorized = $authorized || isAuthorizedUser($pseudo, "mllenolwenn");
+		$authorized = $authorized || isAuthorizedUser($pseudo, "musaran");
+		$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
+		$authorized = $authorized || isAuthorizedUser($pseudo, "oshyso");
+		$authorized = $authorized || isAuthorizedUser($pseudo, "metylene");
+		
+		/*
+		$dateEnd = DateTime::createFromFormat('d/m/Y', '05/03/2012');
+		$dateStart = DateTime::createFromFormat('d/m/Y', '27/02/2012');
+		if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) >= $dateStart && DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
+			$authorized = $authorized || isAuthorizedUser($pseudo, "concours_ES");
+		}*/
+		$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
+		$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
+		$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
+		$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
+		
+		if ($authorized) {
+			//if (!isset($_SESSION["uname"])) {
+				$_SESSION["uname"] = $pseudo;
+				$_SESSION["lang"] = $lang;
+			//}
+		}else {
+			unset( $_SESSION["uname"] );
+		}
 	}
-	
-	function isAuthorizedUser($pseudo, $ref) {
-		return strtolower($pseudo) == $ref;
-	}
-	
-	$authorized = false;//isAuthorizedUser($pseudo, "durss");//uncoment to authorize only me
-	$authorized = $authorized || isAuthorizedUser($pseudo, "ebene");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "aerynsun");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "mllenolwenn");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "musaran");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "lwxtz2004");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "oshyso");
-	$authorized = $authorized || isAuthorizedUser($pseudo, "metylene");
-	
-	/*
-	$dateEnd = DateTime::createFromFormat('d/m/Y', '05/03/2012');
-	$dateStart = DateTime::createFromFormat('d/m/Y', '27/02/2012');
-	if (DateTime::createFromFormat('d/m/Y', date("d/m/Y")) >= $dateStart && DateTime::createFromFormat('d/m/Y', date("d/m/Y")) <= $dateEnd) {
-		$authorized = $authorized || isAuthorizedUser($pseudo, "concours_ES");
-	}*/
-	$authorized = $authorized || isAuthorizedUser($pseudo, "authorized_referer");
-	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/atlantes/members");
-	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/motiontwin/members");
-	$authorized = $authorized || isUserOnGroup($pseudo, "http://muxxu.com/g/architectoire/members");
-	
-	if ($authorized) {
-		//if (!isset($_SESSION["uname"])) {
-			$_SESSION["uname"] = $pseudo;
-			$_SESSION["lang"] = $lang;
-		//}
-	}else {
-		unset( $_SESSION["uname"] );
-	}
-	
-	$redirectWithMap = false;
+		
 	//Redirect the user
-	if (!$authorized && !isset($_SESSION["uname"])) {
+	if ($betaMode && !$authorized && !isset($_SESSION["uname"])) {
 		if (isset($_GET['uid'], $_GET['pubkey'])) {
 			header("location: ./closed");
 			die;
@@ -170,7 +197,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "16";
+	$version= "16.1.2";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";

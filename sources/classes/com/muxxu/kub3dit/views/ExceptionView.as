@@ -9,6 +9,7 @@ package com.muxxu.kub3dit.views {
 	import com.nurun.utils.pos.PosUtils;
 
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
 	import flash.events.UncaughtErrorEvent;
 	import flash.text.TextFieldAutoSize;
@@ -115,6 +116,14 @@ package com.muxxu.kub3dit.views {
 			if (event.target == _disableLayer || event.target == _submitBt) {
 				close();
 			}
+		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		override protected function keyUpHandler(event:KeyboardEvent):void {
+			if(!_submitBt.visible) return;
+			super.keyUpHandler(event);
 		}
 		
 	}
