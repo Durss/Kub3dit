@@ -106,8 +106,8 @@ package com.muxxu.build3r.model {
 				_positionReference = new Point3D(_so.data["worldRef"]["x"], _so.data["worldRef"]["y"], _so.data["worldRef"]["z"]);
 				_mapReferencePoint = new Point3D(_so.data["mapRef"]["x"], _so.data["mapRef"]["y"], _so.data["mapRef"]["z"]);
 				_position = new Point3D(_so.data["position"]["x"], _so.data["position"]["y"], _so.data["position"]["z"]);
-				loadMapById(_so.data["id"], _so.data["pass"]);
 				_autoLoading = true;
+				loadMapById(_so.data["id"], _so.data["pass"]);
 			}
 			update();
 		}
@@ -123,7 +123,9 @@ package com.muxxu.build3r.model {
 		 * Loads a map by its ID
 		 */
 		public function loadMapById(id:String, password:String):void {
-			clearMap();
+			if(!_autoLoading) {
+				clearMap();
+			}
 			_loadMapCmd.id = id;
 			_loadMapCmd.password = password;
 			_loadMapCmd.execute();

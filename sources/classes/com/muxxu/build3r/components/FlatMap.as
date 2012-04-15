@@ -301,7 +301,7 @@ package com.muxxu.build3r.components {
 				
 				if(tile > 0) {
 					if(_cache[tile] == undefined) {
-						bmd = _cache[tile] = textures[tile][0];
+						bmd = _cache[tile] = textures[tile][0] == undefined? textures[tile][1] : textures[tile][0];
 					}else{
 						bmd = _cache[tile];
 					}

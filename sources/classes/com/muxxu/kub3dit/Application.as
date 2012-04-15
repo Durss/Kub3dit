@@ -79,12 +79,12 @@ package com.muxxu.kub3dit {
 			addChild(new Stage3DView());
 			addChild(new EditorView());
 			addChild(new SplashScreenView());
-			addChild(new LockView());
-			addChild(new ProgressView());
 			addChild(new SaveView());
 			addChild(new MapPasswordView());
 			addChild(new StatsView());
 			addChild(new Build3rView());
+			addChild(new LockView());
+			addChild(new ProgressView());
 			addChild(new ExceptionView());
 			addChild(new ToolTipView());
 //			addChild(new Stats()).y = 50;
