@@ -55,7 +55,7 @@ package com.muxxu.kub3dit.engin3d.vo {
 		 * Gets if the point equals an other one.
 		 */
 		public function equals(point:Point3D):Boolean{
-			return point.x == x && point.y == y && point.y == y;
+			return point.x == x && point.y == y && point.z == z;
 		}
 
 

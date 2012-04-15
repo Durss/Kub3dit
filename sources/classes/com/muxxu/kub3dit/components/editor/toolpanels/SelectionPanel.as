@@ -268,7 +268,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_cancelBt = addChild(new ButtonKube(Label.getLabel("toolConfig-selector-cancel"))) as ButtonKube;
 			
 			_depthLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
-			_depth = addChild(new InputKube("", false, true, 1, Config.getNumVariable("mapSizeHeight")-1)) as InputKube;
+			_depth = addChild(new InputKube("", false, true, 0, Config.getNumVariable("mapSizeHeight")-1)) as InputKube;
 			
 			_rotationLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
 			_rCwBt = addChild(new GraphicButtonKube(new RotationCWIcon())) as GraphicButtonKube;
