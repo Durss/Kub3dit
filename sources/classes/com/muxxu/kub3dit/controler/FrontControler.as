@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.controler {
+	import flash.utils.ByteArray;
 	import com.muxxu.kub3dit.model.Model;
 
 	import flash.errors.IllegalOperationError;
@@ -122,6 +123,13 @@ package com.muxxu.kub3dit.controler {
 		 */
 		public function updateUploadedMap(id:String):void {
 			_model.updateUploadedMap(id);
+		}
+		
+		/**
+		 * Exports a selection
+		 */
+		public function exportSelection(data:ByteArray, width:int, height:int, depth:int):void {
+			_model.exportSelection(data, width, height, depth);
 		}
 
 

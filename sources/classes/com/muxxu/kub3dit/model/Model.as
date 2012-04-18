@@ -116,7 +116,7 @@ package com.muxxu.kub3dit.model {
 				_saveCmd.removeEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
 				_saveCmd.removeEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
 			}
-			_saveCmd = new GenerateRadarAndLevelsCmd(_map);
+			_saveCmd = new GenerateRadarAndLevelsCmd(_map.data, _map.mapSizeX, _map.mapSizeY, _map.mapSizeZ);
 			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
 			_saveCmd.addEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
 			_saveCmd.addEventListener(ProgressiveCommandEvent.PROGRESS, commandProgressHandler);
@@ -208,6 +208,22 @@ package com.muxxu.kub3dit.model {
 			_uploadCmd.addEventListener(CommandEvent.COMPLETE, uploadCompleteHandler);
 			_uploadCmd.addEventListener(CommandEvent.ERROR, uploadErrorHandler);
 			_uploadCmd.execute();
+		}
+		
+		/**
+		 * Exports a selection
+		 */
+		public function exportSelection(data:ByteArray, width:int, height:int, depth:int):void {
+			if(_saveCmd != null) {
+				_saveCmd.removeEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
+				_saveCmd.removeEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
+			}
+			_saveCmd = new GenerateRadarAndLevelsCmd(data, width, height, depth);
+			_saveCmd.addEventListener(CommandEvent.COMPLETE, saveGenerationCompleteHandler);
+			_saveCmd.addEventListener(CommandEvent.ERROR, saveGenerationErrorHandler);
+			_saveCmd.addEventListener(ProgressiveCommandEvent.PROGRESS, commandProgressHandler);
+			_saveCmd.execute();
+			lock();
 		}
 
 
@@ -393,6 +409,7 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function saveGenerationCompleteHandler(event:CommandEvent):void {
 			var bmd:BitmapData = _saveCmd.bitmapData;
+			var cmd:GenerateRadarAndLevelsCmd = event.currentTarget as GenerateRadarAndLevelsCmd;
 			
 			var ba:ByteArray = new ByteArray();
 			//============FILE TYPE============
@@ -415,20 +432,20 @@ package com.muxxu.kub3dit.model {
 			ba.writeInt(Camera3D.rotationY);
 			
 			//============MAP SIZES============
-			ba.writeShort(_map.mapSizeX);
-			ba.writeShort(_map.mapSizeY);
-			ba.writeShort(_map.mapSizeZ);
+			ba.writeShort(cmd.width);
+			ba.writeShort(cmd.height);
+			ba.writeShort(cmd.depth);
 			
 			//============MAP DATA============
-			_map.data.position = 0;
-			_map.data.readBytes(ba,ba.length);
+			cmd.data.position = 0;
+			cmd.data.readBytes(ba,ba.length);
 			ba.compress();
 			ba.position = 0;
 			_saveData = PNGEncoder.encode(bmd);
 			_saveData.position = _saveData.length;
 			_saveData.writeBytes(ba);
 			_saveData.writeUnsignedInt(ba.length);
-			_saveData.writeUnsignedInt(0x2e4b3344);
+			_saveData.writeUnsignedInt(0x2e4b3344);// write ".K3D" tag
 			_saveData.position = 0 ;
 			
 			dispatchEvent(new LightModelEvent(LightModelEvent.SAVE_MAP_GENERATION_COMPLETE, _saveData));
