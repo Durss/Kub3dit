@@ -34,6 +34,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	 */
 	public class ChunksManager extends EventDispatcher {
 		
+		public static const CHUNK_SIZE:int = 16;
+		
 		private var _intialized:Boolean;
 		private var _chunkSize:int;
 		private var _context3D:Context3D;
@@ -114,9 +116,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_mapSizeW = _map.mapSizeX;
 				_mapSizeH = _map.mapSizeY;
 				_accelerated = accelerated;
-				_chunkSize = 16;//Number of cubes to compose a chunk of
+				_chunkSize = CHUNK_SIZE;//Number of cubes to compose a chunk of
 				_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
-				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.ceil(Math.min(_mapSizeW, _mapSizeH)/_chunkSize));//Number of visible chunks around us
+				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.max(2, Math.ceil(Math.min(_mapSizeW, _mapSizeH)/_chunkSize)));//Number of visible chunks around us
 				_efTarget = new Shape();
 				
 				//Init cubes textures

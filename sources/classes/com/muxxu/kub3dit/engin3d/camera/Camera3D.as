@@ -72,7 +72,7 @@ com.muxxu.kub3dit.engin3d.camera {
 			var offx:Number = _strafe * 15 * coeff;
 			if(!_mouseView) {
 				offx = 0;
-				rotationX -= _strafe * 4 * coeff;
+				rotationX -= _strafe * 4;
 			}
 			var offy:Number = _forward * 15 * coeff;
 			var dist:Number = (Math.sqrt(offx * offx + offy * offy));

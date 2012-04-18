@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.engin3d.map {
+	import com.nurun.structure.environnement.configuration.Config;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.events.MapEvent;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 
@@ -158,11 +160,43 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Loads a map
 		 */
 		public function load(data:ByteArray):void {
-			_mapSizeX = data.readShort();
-			_mapSizeY = data.readShort();
-			_mapSizeZ = data.readShort();
+			var diffX:int, diffY:int, diffZ:int, value:int, ox:int, oy:int, oz:int;
+			_mapSizeX = ox = data.readShort();
+			_mapSizeY = oy = data.readShort();
+			_mapSizeZ = oz = data.readShort();
 			_map = new ByteArray();
-			data.readBytes(_map);
+			
+			if(_mapSizeX % ChunksManager.CHUNK_SIZE != 0) {
+				value = Math.ceil(_mapSizeX/ChunksManager.CHUNK_SIZE) * ChunksManager.CHUNK_SIZE;
+				diffX = value - _mapSizeX;
+				_mapSizeX = value;
+			}
+			if(_mapSizeY % ChunksManager.CHUNK_SIZE != 0) {
+				value = Math.ceil(_mapSizeY/ChunksManager.CHUNK_SIZE) * ChunksManager.CHUNK_SIZE;
+				diffY = value - _mapSizeY;
+				_mapSizeY = value;
+			}
+			if(_mapSizeZ < Config.getNumVariable("mapSizeHeight")) {
+				value = Config.getNumVariable("mapSizeHeight");
+				diffZ = value - _mapSizeZ;
+				_mapSizeZ = value;
+			}
+			
+			if(diffX > 0 || diffY > 0 || diffZ > 0) {
+				_map = new ByteArray();
+				_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
+				var px:int, py:int, pz:int, i:int;
+				while(data.bytesAvailable) {
+					px = diffX * .5 + i%ox;
+					py = diffY * .5 + Math.floor(i/ox)%oy;
+					pz = oz - 1 - Math.floor(i/(ox*oy));
+					_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
+					_map.writeByte(data.readByte());
+					i++;
+				}
+			}else{
+				data.readBytes(_map);
+			}
 			dispatchEvent(new MapEvent(MapEvent.LOAD));
 		}
 
