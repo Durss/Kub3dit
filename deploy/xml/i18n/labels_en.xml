@@ -153,9 +153,11 @@
 		
 		<label code="toolConfig-selector-copyHelp"><![CDATA[Draw a rectangle on the map<br />to define the zone to copy/cut.]]></label>
 		<label code="toolConfig-selector-depthHelp"><![CDATA[Number of levels to copy down side<br />starting from the current map's level.]]></label>
+		<label code="toolConfig-selector-exportHelp"><![CDATA[Export selection in an external file.]]></label>
 		<label code="toolConfig-selector-copy"><![CDATA[Copy]]></label>
 		<label code="toolConfig-selector-cut"><![CDATA[Cut]]></label>
 		<label code="toolConfig-selector-cancel"><![CDATA[Cancel]]></label>
+		<label code="toolConfig-selector-export"><![CDATA[Export]]></label>
 		<label code="toolConfig-selector-depth"><![CDATA[Depth]]></label>
 		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-selector-flip"><![CDATA[Flip]]></label>

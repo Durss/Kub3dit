@@ -363,8 +363,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Defines the number of visible chunks
 		 */
 		private function updateVisibleChunks():void {
-			_chunksW = Math.min(_visibleChunks, _mapSizeW/_chunkSize);
-			_chunksH = Math.min(_visibleChunks, _mapSizeH/_chunkSize);
+			_chunksW = Math.max(1, Math.min(_visibleChunks, _mapSizeW/_chunkSize));
+			_chunksH = Math.max(1, Math.min(_visibleChunks, _mapSizeH/_chunkSize));
 			_toUpdate = [];
 			create();
 		}

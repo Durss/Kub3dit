@@ -152,9 +152,11 @@
 		
 		<label code="toolConfig-selector-copyHelp"><![CDATA[Tracez un rectangle de sélection sur<br />la carte pour définir la zone à copier/couper.]]></label>
 		<label code="toolConfig-selector-depthHelp"><![CDATA[Nombre de niveaux à copier vers le bas<br /> à partir du niveau actuel de la carte.]]></label>
+		<label code="toolConfig-selector-exportHelp"><![CDATA[Exporte la sélection dans<br />un fichier externe.]]></label>
 		<label code="toolConfig-selector-copy"><![CDATA[Copier]]></label>
 		<label code="toolConfig-selector-cut"><![CDATA[Couper]]></label>
 		<label code="toolConfig-selector-cancel"><![CDATA[Annuler]]></label>
+		<label code="toolConfig-selector-export"><![CDATA[Exporter]]></label>
 		<label code="toolConfig-selector-depth"><![CDATA[Profondeur]]></label>
 		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-selector-flip"><![CDATA[Renverser]]></label>
