@@ -333,6 +333,7 @@ package com.muxxu.build3r.model {
 			}
 			
 			update();
+			_autoLoading = false;
 		}
 		
 		/**

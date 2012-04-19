@@ -111,7 +111,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphere (6)]]></label>
-		<label code="helpToolsSk"><![CDATA[Load Sandkube image]]></label>
+		<label code="helpToolsImport"><![CDATA[Import a map]]></label>
 		<label code="helpToolsImg"><![CDATA[Generate from bitmap]]></label>
 		<label code="helpToolsSelect"><![CDATA[Selection (m)]]></label>
 		<label code="helpSyncCam"><![CDATA[Synch the grid's level<br />and the camera's postion]]></label>
@@ -142,10 +142,10 @@
 		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Thickness]]></label>
 		<label code="toolConfig-sphereShape-fill"><![CDATA[Fill]]></label>
 		
-		<label code="toolConfig-sandKube-load"><![CDATA[Load]]></label>
-		<label code="toolConfig-sandKube-clear"><![CDATA[Clear]]></label>
-		<label code="toolConfig-sandKube-rotate"><![CDATA[Rotation]]></label>
-		<label code="toolConfig-sandKube-flip"><![CDATA[Flip]]></label>
+		<label code="toolConfig-import-load"><![CDATA[Load]]></label>
+		<label code="toolConfig-import-clear"><![CDATA[Clear]]></label>
+		<label code="toolConfig-import-rotate"><![CDATA[Rotation]]></label>
+		<label code="toolConfig-import-flip"><![CDATA[Flip]]></label>
 		
 		<label code="toolConfig-imageGen-load"><![CDATA[Load]]></label>
 		<label code="toolConfig-imageGen-clear"><![CDATA[Clear]]></label>

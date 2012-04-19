@@ -189,7 +189,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_processPercent.x = Math.round((_clearBt.x + _clearBt.width - _processPercent.width) * .5);
 			_processPercent.y = _levelsCb.y + _levelsCb.height + 10;
 			
-			_cmd = new BrowseForFileCmd("Sandkube image", "*.png;*.jpg;*.bmp;*.gif", true);
+			_cmd = new BrowseForFileCmd("Image", "*.png;*.jpg;*.jpeg;*.bmp;*.gif", true);
 			_cmd.addEventListener(CommandEvent.COMPLETE, loadImageCompleteHandler);
 			_clearBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			_loadBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
@@ -268,7 +268,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		//__________________________________________________________ PROCESSING
 		
 		/**
-		 * Called when SandKube image loading completes.
+		 * Called when image loading completes.
 		 */
 		private function loadImageCompleteHandler(event:CommandEvent):void {
 			_bmd = event.data as BitmapData;

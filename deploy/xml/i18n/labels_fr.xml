@@ -110,7 +110,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphère (6)]]></label>
-		<label code="helpToolsSk"><![CDATA[Charger image Sandkube]]></label>
+		<label code="helpToolsImport"><![CDATA[Importer une carte]]></label>
 		<label code="helpToolsImg"><![CDATA[Générer depuis une image]]></label>
 		<label code="helpToolsSelect"><![CDATA[Sélection (m)]]></label>
 		<label code="helpSyncCam"><![CDATA[Synchronise le niveau d'affichage de<br />la grille et la position de la caméra.]]></label>
@@ -141,10 +141,10 @@
 		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Epaisseur]]></label>
 		<label code="toolConfig-sphereShape-fill"><![CDATA[Remplir]]></label>
 		
-		<label code="toolConfig-sandKube-load"><![CDATA[Charger]]></label>
-		<label code="toolConfig-sandKube-clear"><![CDATA[Effacer]]></label>
-		<label code="toolConfig-sandKube-rotate"><![CDATA[Rotation]]></label>
-		<label code="toolConfig-sandKube-flip"><![CDATA[Renverser]]></label>
+		<label code="toolConfig-import-load"><![CDATA[Charger]]></label>
+		<label code="toolConfig-import-clear"><![CDATA[Effacer]]></label>
+		<label code="toolConfig-import-rotate"><![CDATA[Rotation]]></label>
+		<label code="toolConfig-import-flip"><![CDATA[Renverser]]></label>
 		
 		<label code="toolConfig-imageGen-load"><![CDATA[Charger]]></label>
 		<label code="toolConfig-imageGen-clear"><![CDATA[Effacer]]></label>

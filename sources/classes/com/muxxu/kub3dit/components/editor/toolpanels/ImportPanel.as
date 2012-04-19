@@ -28,7 +28,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	 * @author Francois
 	 * @date 11 nov. 2011;
 	 */
-	public class SandKubePanel extends Sprite implements IToolPanel {
+	public class ImportPanel extends Sprite implements IToolPanel {
 		private var _chunksManager:ChunksManager;
 		private var _landMark:Shape;
 		private var _cmd:BrowseForFileCmd;
@@ -57,9 +57,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * CONSTRUCTOR *
 		 * *********** */
 		/**
-		 * Creates an instance of <code>SandKubePanel</code>.
+		 * Creates an instance of <code>ImportPanel</code>.
 		 */
-		public function SandKubePanel() {
+		public function ImportPanel() {
 			initialize();
 		}
 
@@ -191,8 +191,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_colors = Textures.getInstance().levelColors;
 			_bmd = new BitmapData(_size, _size, true, 0);
 			
-			_loadBt = addChild(new ButtonKube(Label.getLabel("toolConfig-sandKube-load"))) as ButtonKube;
-			_clearBt = addChild(new ButtonKube(Label.getLabel("toolConfig-sandKube-clear"))) as ButtonKube;
+			_loadBt = addChild(new ButtonKube(Label.getLabel("toolConfig-import-load"))) as ButtonKube;
+			_clearBt = addChild(new ButtonKube(Label.getLabel("toolConfig-import-clear"))) as ButtonKube;
 			_rCwBt = addChild(new GraphicButtonKube(new RotationCWIcon())) as GraphicButtonKube;
 			_rCcwBt = addChild(new GraphicButtonKube(new RotationCCWIcon())) as GraphicButtonKube;
 			_rotationLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
@@ -201,8 +201,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_hFlipBt = addChild(new GraphicButtonKube(new FLipHorizontalIcon())) as GraphicButtonKube;
 			_vFlipBt = addChild(new GraphicButtonKube(new FLipVerticalIcon())) as GraphicButtonKube;
 			
-			_rotationLabel.text = Label.getLabel("toolConfig-sandKube-rotate");
-			_flipLabel.text = Label.getLabel("toolConfig-sandKube-flip");
+			_rotationLabel.text = Label.getLabel("toolConfig-import-rotate");
+			_flipLabel.text = Label.getLabel("toolConfig-import-flip");
 			
 			_clearBt.x = Math.round(_loadBt.x + _loadBt.width + 5);
 			_rotationLabel.y = Math.round(_clearBt.y + _clearBt.height + 5);
@@ -223,7 +223,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_clearBt.enabled = _rCwBt.enabled = _rCcwBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = false;
 			_rotationLabel.alpha = _flipLabel.alpha = .4;
 			
-			_cmd = new BrowseForFileCmd("Sandkube image", "*.png;*.jpg");
+			_cmd = new BrowseForFileCmd("Sandkube / Kub3dit map", "*.png;*.jpg;*.jpeg");
 			_cmd.addEventListener(CommandEvent.COMPLETE, loadImageCompleteHandler);
 			addEventListener(MouseEvent.CLICK, clickButtonHandler);
 		}
@@ -260,7 +260,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		}
 		
 		/**
-		 * Called when SandKube image loading completes.
+		 * Called when image image loading completes.
 		 */
 		private function loadImageCompleteHandler(event:CommandEvent):void {
 			var i:int, len:int, px:int, py:int, pz:int, tile:int;
