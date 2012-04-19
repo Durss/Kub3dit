@@ -111,7 +111,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphere (6)]]></label>
-		<label code="helpToolsImport"><![CDATA[Import a map]]></label>
+		<label code="helpToolsImport"><![CDATA[Import a Kub3dit or Sandkube map]]></label>
 		<label code="helpToolsImg"><![CDATA[Generate from bitmap]]></label>
 		<label code="helpToolsSelect"><![CDATA[Selection (m)]]></label>
 		<label code="helpSyncCam"><![CDATA[Synch the grid's level<br />and the camera's postion]]></label>
@@ -151,9 +151,9 @@
 		<label code="toolConfig-imageGen-clear"><![CDATA[Clear]]></label>
 		<label code="toolConfig-imageGen-levels"><![CDATA[Multiple levels]]></label>
 		
-		<label code="toolConfig-selector-copyHelp"><![CDATA[Draw a rectangle on the map<br />to define the zone to copy/cut.]]></label>
+		<label code="toolConfig-selector-disabledHelp"><![CDATA[Draw a rectangle on the map<br />to define the zone to copy/cut/export.]]></label>
 		<label code="toolConfig-selector-depthHelp"><![CDATA[Number of levels to copy down side<br />starting from the current map's level.]]></label>
-		<label code="toolConfig-selector-exportHelp"><![CDATA[Export selection in an external file.]]></label>
+		<label code="toolConfig-selector-exportHelp"><![CDATA[Export selection.]]></label>
 		<label code="toolConfig-selector-copy"><![CDATA[Copy]]></label>
 		<label code="toolConfig-selector-cut"><![CDATA[Cut]]></label>
 		<label code="toolConfig-selector-cancel"><![CDATA[Cancel]]></label>
@@ -188,6 +188,7 @@
 		<label code="prompt-save"><![CDATA[Save]]></label>
 		<label code="prompt-mapDownload"><![CDATA[Download]]></label>
 		<label code="prompt-mapUpload"><![CDATA[Upload]]></label>
+		<label code="prompt-mapUploadHelp"><![CDATA[If you plan to modify your map oftenly, please<br />specify it as <span class="tooltipContentWarn">Editable</span> and protect it with a <span class="tooltipContentWarn">password</span><br />to prevent other from modifying it.]]></label>
 		<label code="prompt-mapUpdate"><![CDATA[Update]]></label>
 		<label code="prompt-mapUploadInfo"><![CDATA[This option is available only<br />for maps smaller than {SIZE_MAX}Ko<br />The current map is {SIZE}Ko.]]></label>
 		<label code="prompt-mapDownloadLevels"><![CDATA[Download levels]]></label>

@@ -3,15 +3,15 @@
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Error en la carga.<br />La ID no es valida.]]></label>
 		<label code="uploadMapError"><![CDATA[Un error ocurrio durante la carga.<br />Por favor intente de nuevo.<br /><br />Si el problema persiste por favor contactar <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
-		<label code="maxCustomKubesError"><![CDATA[No se puede agregar mas de ${VALUE} cubos. ]]></label>
+		<label code="maxCustomKubesError"><![CDATA[No se puede agregar mas de ${VALUE} cubos.]]></label>
 		
 		<!-- Splash screen -->
-		<label code="splashDefault"><![CDATA[Mapa ${X}x${Y} ]]></label>
+		<label code="splashDefault"><![CDATA[Mapa ${X}x${Y}]]></label>
 		<label code="splashCreate"><![CDATA[Personalizado]]></label>
 		<label code="splashLoad"><![CDATA[Cargar]]></label>
 		<label code="submitMapSize"><![CDATA[Generar]]></label>
-		<label code="cancelMapSize"><![CDATA[Cancelar ]]></label>
-		<label code="inputMapSize"><![CDATA[Zonas : ]]></label>
+		<label code="cancelMapSize"><![CDATA[Cancelar]]></label>
+		<label code="inputMapSize"><![CDATA[Zonas :]]></label>
 		<label code="defaultHelp"><![CDATA[Mueve la rueda del mouse para aumentar y decrementar el tamaño.<br />Para otros tamaños personalizados usa el boton de abajo.]]></label>
 		<label code="titleMapSize"><![CDATA[Ingresa el numero de zonas <br />que queres para el mapa.]]></label>
 		<label code="unkownSaveFileType"><![CDATA[Tipo invalido de archivo]]></label>
@@ -34,156 +34,169 @@
 		<label code="kube15"><![CDATA[Nube]]></label>
 		<label code="kube16"><![CDATA[Madera Clara]]></label>
 		<label code="kube17"><![CDATA[Hojas Rosas]]></label>
-		<label code="kube18"><![CDATA[Raices ]]></label>
-		<label code="kube19"><![CDATA[Madera Gigante ]]></label>
+		<label code="kube18"><![CDATA[Raices]]></label>
+		<label code="kube19"><![CDATA[Madera Gigante]]></label>
 		<label code="kube20"><![CDATA[Hojas Gigantes]]></label>
-		<label code="kube21"><![CDATA[Tierra Nieve ]]></label>
-		<label code="kube22"><![CDATA[Madera de pino ]]></label>
-		<label code="kube23"><![CDATA[Hojas-Nieve ]]></label>
-		<label code="kube24"><![CDATA[Jungla ]]></label>
+		<label code="kube21"><![CDATA[Tierra Nieve]]></label>
+		<label code="kube22"><![CDATA[Madera de pino]]></label>
+		<label code="kube23"><![CDATA[Hojas-Nieve]]></label>
+		<label code="kube24"><![CDATA[Jungla]]></label>
 		<label code="kube25"><![CDATA[Lianas Oscuras]]></label>
-		<label code="kube26"><![CDATA[Lianas Claras ]]></label>
-		<label code="kube27"><![CDATA[Lianas Podridas ]]></label>
-		<label code="kube28"><![CDATA[Muro ]]></label>
-		<label code="kube29"><![CDATA[Roca ]]></label>
-		<label code="kube30"><![CDATA[Pilar ]]></label>
+		<label code="kube26"><![CDATA[Lianas Claras]]></label>
+		<label code="kube27"><![CDATA[Lianas Podridas]]></label>
+		<label code="kube28"><![CDATA[Muro]]></label>
+		<label code="kube29"><![CDATA[Roca]]></label>
+		<label code="kube30"><![CDATA[Pilar]]></label>
 		<label code="kube31"><![CDATA[Pradera]]></label>
-		<label code="kube32"><![CDATA[Hierbas Claras ]]></label>
-		<label code="kube33"><![CDATA[Hierbas ]]></label>
-		<label code="kube34"><![CDATA[Pantano ]]></label>
-		<label code="kube35"><![CDATA[Madera Pantano ]]></label>
-		<label code="kube36"><![CDATA[Hojas Pantano ]]></label>
-		<label code="kube37"><![CDATA[Lodo ]]></label>
-		<label code="kube38"><![CDATA[Roca fria ]]></label>
-		<label code="kube39"><![CDATA[Roca Volcanica ]]></label>
+		<label code="kube32"><![CDATA[Hierbas Claras]]></label>
+		<label code="kube33"><![CDATA[Hierbas]]></label>
+		<label code="kube34"><![CDATA[Pantano]]></label>
+		<label code="kube35"><![CDATA[Madera Pantano]]></label>
+		<label code="kube36"><![CDATA[Hojas Pantano]]></label>
+		<label code="kube37"><![CDATA[Lodo]]></label>
+		<label code="kube38"><![CDATA[Roca fria]]></label>
+		<label code="kube39"><![CDATA[Roca Volcanica]]></label>
 		<label code="kube40"><![CDATA[Cenizas]]></label>
-		<label code="kube41"><![CDATA[Arenicas ]]></label>
+		<label code="kube41"><![CDATA[Arenicas]]></label>
 		<label code="kube42"><![CDATA[Totem Antiguo]]></label>
-		<label code="kube43"><![CDATA[Pasto ]]></label>
-		<label code="kube44"><![CDATA[Flor Blanca ]]></label>
-		<label code="kube45"><![CDATA[Flor Rosa ]]></label>
-		<label code="kube46"><![CDATA[Stonehenge ]]></label>
-		<label code="kube47"><![CDATA[Sabana ]]></label>
-		<label code="kube48"><![CDATA[Arbusto Seco ]]></label>
-		<label code="kube49"><![CDATA[Cebra ]]></label>
-		<label code="kube50"><![CDATA[Elefante ]]></label>
-		<label code="kube51"><![CDATA[Arena ]]></label>
-		<label code="kube52"><![CDATA[Cactus ]]></label>
-		<label code="kube53"><![CDATA[Bellota ]]></label>
-		<label code="kube54"><![CDATA[Lava ]]></label>
-		<label code="kube55"><![CDATA[Oscuro ]]></label>
-		<label code="kube56"><![CDATA[Dolmen ]]></label>
-		<label code="kube57"><![CDATA[Meka ]]></label>
-		<label code="kube58"><![CDATA[Metal ]]></label>
-		<label code="kube59"><![CDATA[Acero ]]></label>
-		<label code="kube60"><![CDATA[Koala ]]></label>
-		<label code="kube61"><![CDATA[Invisible ]]></label>
-		<label code="kube62"><![CDATA[Ametista ]]></label>
-		<label code="kube63"><![CDATA[Esmeralda ]]></label>
-		<label code="kube64"><![CDATA[Rubi ]]></label>
-		<label code="kube65"><![CDATA[Zafiro ]]></label>
-		<label code="kube66"><![CDATA[Niebla ]]></label>
+		<label code="kube43"><![CDATA[Pasto]]></label>
+		<label code="kube44"><![CDATA[Flor Blanca]]></label>
+		<label code="kube45"><![CDATA[Flor Rosa]]></label>
+		<label code="kube46"><![CDATA[Stonehenge]]></label>
+		<label code="kube47"><![CDATA[Sabana]]></label>
+		<label code="kube48"><![CDATA[Arbusto Seco]]></label>
+		<label code="kube49"><![CDATA[Cebra]]></label>
+		<label code="kube50"><![CDATA[Elefante]]></label>
+		<label code="kube51"><![CDATA[Arena]]></label>
+		<label code="kube52"><![CDATA[Cactus]]></label>
+		<label code="kube53"><![CDATA[Bellota]]></label>
+		<label code="kube54"><![CDATA[Lava]]></label>
+		<label code="kube55"><![CDATA[Oscuro]]></label>
+		<label code="kube56"><![CDATA[Dolmen]]></label>
+		<label code="kube57"><![CDATA[Meka]]></label>
+		<label code="kube58"><![CDATA[Metal]]></label>
+		<label code="kube59"><![CDATA[Acero]]></label>
+		<label code="kube60"><![CDATA[Koala]]></label>
+		<label code="kube61"><![CDATA[Invisible]]></label>
+		<label code="kube62"><![CDATA[Ametista]]></label>
+		<label code="kube63"><![CDATA[Esmeralda]]></label>
+		<label code="kube64"><![CDATA[Rubi]]></label>
+		<label code="kube65"><![CDATA[Zafiro]]></label>
+		<label code="kube66"><![CDATA[Niebla]]></label>
 		<label code="kube67"><![CDATA[Oscuro]]></label>
-		<label code="kube68"><![CDATA[Luz ]]></label>
-		<label code="kube69"><![CDATA[Oro ]]></label>
-		<label code="kube70"><![CDATA[Foro ]]></label>
-		<label code="kube71"><![CDATA[Telepuerto ]]></label>
-		<label code="kube72"><![CDATA[Resorte ]]></label>
-		<label code="kube73"><![CDATA[Cofre ]]></label>
-		<label code="kube74"><![CDATA[Rubix ]]></label>
-		<label code="kube75"><![CDATA[MotionTwin ]]></label>
-		<label code="kube76"><![CDATA[Caja ]]></label>
+		<label code="kube68"><![CDATA[Luz]]></label>
+		<label code="kube69"><![CDATA[Oro]]></label>
+		<label code="kube70"><![CDATA[Foro]]></label>
+		<label code="kube71"><![CDATA[Telepuerto]]></label>
+		<label code="kube72"><![CDATA[Resorte]]></label>
+		<label code="kube73"><![CDATA[Cofre]]></label>
+		<label code="kube74"><![CDATA[Rubix]]></label>
+		<label code="kube75"><![CDATA[MotionTwin]]></label>
+		<label code="kube76"><![CDATA[Caja]]></label>
 		<label code="kube77"><![CDATA[Kubo de Navidad]]></label>
-		<label code="kubesList"><![CDATA[Lista de Kubos ]]></label>
-		<label code="addKubeButton"><![CDATA[Añadir kubo ]]></label>
-		<label code="submitKube"><![CDATA[Añadir kubo ]]></label>
+		<label code="kubesList"><![CDATA[Lista de Kubos]]></label>
+		<label code="addKubeButton"><![CDATA[Añadir kubo]]></label>
+		<label code="submitKube"><![CDATA[Añadir kubo]]></label>
 		<label code="addKubeDescription"><![CDATA[Podes agregar cubos personalizados a la lista. Para hacerlo, usa <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a>  para crear algun cubo especifico y copia el ID debajo.<br />El ID se encuentra en la ventana de detalles.]]></label>
 		<label code="invalidKubeId"><![CDATA[ID Invalido]]></label>
 		<label code="helpTools"><![CDATA[Mantene la barra apretada para mover la grilla.<br />Pulse la tecla Ctrl para mostrar las coordenadas de una celda.]]></label>
-		<label code="helpToolsRubber"><![CDATA[Cambia la herramienta actual a borrador (E) ]]></label>
-		<label code="helpTools1"><![CDATA[Lapiz (1) ]]></label>
-		<label code="helpTools2"><![CDATA[Balde de pintura (2) ]]></label>
-		<label code="helpTools3"><![CDATA[Circulo (3) ]]></label>
-		<label code="helpTools5"><![CDATA[Rectangulo (4) ]]></label>
-		<label code="helpTools7"><![CDATA[Cubo (5) ]]></label>
-		<label code="helpTools8"><![CDATA[Esfera (6) ]]></label>
-		<label code="helpToolsImport"><![CDATA[Importar un mapa]]></label>
+		<label code="helpToolsRubber"><![CDATA[Cambia la herramienta actual a borrador (E)]]></label>
+		<label code="helpTools1"><![CDATA[Lapiz (1)]]></label>
+		<label code="helpTools2"><![CDATA[Balde de pintura (2)]]></label>
+		<label code="helpTools3"><![CDATA[Circulo (3)]]></label>
+		<label code="helpTools5"><![CDATA[Rectangulo (4)]]></label>
+		<label code="helpTools7"><![CDATA[Cubo (5)]]></label>
+		<label code="helpTools8"><![CDATA[Esfera (6)]]></label>
+		<label code="helpToolsImport"><![CDATA[Importar un mapa Kub3dit o Sandkube]]></label>
 		<label code="helpToolsImg"><![CDATA[Generar de mapa de bits]]></label>
-		<label code="helpToolsSelect"><![CDATA[Seleccion (m) ]]></label>
+		<label code="helpToolsSelect"><![CDATA[Seleccion (m)]]></label>
 		<label code="helpSyncCam"><![CDATA[Sincroniza el nivel de la grilla<br />con la posicion de la camara]]></label>
-		<label code="axisSelector"><![CDATA[Eje : ]]></label>
-		<label code="toolConfig-pencilShape-input"><![CDATA[Tamaño ]]></label>
-		<label code="toolConfig-pencilShape-square"><![CDATA[Cuadrado ]]></label>
-		<label code="toolConfig-pencilShape-circle"><![CDATA[Circulo ]]></label>
-		<label code="toolConfig-diskShape-inputRadius"><![CDATA[Radio ]]></label>
-		<label code="toolConfig-diskShape-fill"><![CDATA[Rellenar ]]></label>
-		<label code="toolConfig-circleShape-inputRadius"><![CDATA[Radio ]]></label>
-		<label code="toolConfig-circleShape-inputThick"><![CDATA[Espesor ]]></label>
-		<label code="toolConfig-rectShape-inputWidth"><![CDATA[Ancho ]]></label>
-		<label code="toolConfig-rectShape-inputHeight"><![CDATA[Alto ]]></label>
-		<label code="toolConfig-rectShape-inputThick"><![CDATA[Espesor ]]></label>
-		<label code="toolConfig-cubeShape-inputWidth"><![CDATA[Ancho ]]></label>
-		<label code="toolConfig-cubeShape-inputHeight"><![CDATA[Alto ]]></label>
-		<label code="toolConfig-cubeShape-inputDepth"><![CDATA[Profundidad ]]></label>
-		<label code="toolConfig-cubeShape-inputThick"><![CDATA[Espesor ]]></label>
-		<label code="toolConfig-cubeShape-fill"><![CDATA[Rellenar ]]></label>
-		<label code="toolConfig-sphereShape-inputRadius"><![CDATA[Radio ]]></label>
-		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Espesor ]]></label>
-		<label code="toolConfig-sphereShape-fill"><![CDATA[Rellenar ]]></label>
-		<label code="toolConfig-import-load"><![CDATA[Cargar ]]></label>
-		<label code="toolConfig-import-clear"><![CDATA[Borrar ]]></label>
-		<label code="toolConfig-import-rotate"><![CDATA[Rotacion ]]></label>
-		<label code="toolConfig-import-flip"><![CDATA[Voltear ]]></label>
-		<label code="toolConfig-imageGen-load"><![CDATA[Cargar ]]></label>
-		<label code="toolConfig-imageGen-clear"><![CDATA[Borrar ]]></label>
-		<label code="toolConfig-imageGen-levels"><![CDATA[Multiples niveles ]]></label>
-		<label code="toolConfig-selector-copyHelp"><![CDATA[Dibuja un rectangulo en el mapa<br />para definir la zona a copiar/cortar.]]></label>
+		<label code="axisSelector"><![CDATA[Eje :]]></label>
+		
+		<label code="toolConfig-pencilShape-input"><![CDATA[Tamaño]]></label>
+		<label code="toolConfig-pencilShape-square"><![CDATA[Cuadrado]]></label>
+		<label code="toolConfig-pencilShape-circle"><![CDATA[Circulo]]></label>
+		
+		<label code="toolConfig-diskShape-inputRadius"><![CDATA[Radio]]></label>
+		<label code="toolConfig-diskShape-fill"><![CDATA[Rellenar]]></label>
+		
+		<label code="toolConfig-circleShape-inputRadius"><![CDATA[Radio]]></label>
+		<label code="toolConfig-circleShape-inputThick"><![CDATA[Espesor]]></label>
+		
+		<label code="toolConfig-rectShape-inputWidth"><![CDATA[Ancho]]></label>
+		<label code="toolConfig-rectShape-inputHeight"><![CDATA[Alto]]></label>
+		<label code="toolConfig-rectShape-inputThick"><![CDATA[Espesor]]></label>
+		
+		<label code="toolConfig-cubeShape-inputWidth"><![CDATA[Ancho]]></label>
+		<label code="toolConfig-cubeShape-inputHeight"><![CDATA[Alto]]></label>
+		<label code="toolConfig-cubeShape-inputDepth"><![CDATA[Profundidad]]></label>
+		<label code="toolConfig-cubeShape-inputThick"><![CDATA[Espesor]]></label>
+		<label code="toolConfig-cubeShape-fill"><![CDATA[Rellenar]]></label>
+		
+		<label code="toolConfig-sphereShape-inputRadius"><![CDATA[Radio]]></label>
+		<label code="toolConfig-sphereShape-inputThick"><![CDATA[Espesor]]></label>
+		<label code="toolConfig-sphereShape-fill"><![CDATA[Rellenar]]></label>
+		
+		<label code="toolConfig-import-load"><![CDATA[Cargar]]></label>
+		<label code="toolConfig-import-clear"><![CDATA[Borrar]]></label>
+		<label code="toolConfig-import-rotate"><![CDATA[Rotacion]]></label>
+		<label code="toolConfig-import-flip"><![CDATA[Voltear]]></label>
+		
+		<label code="toolConfig-imageGen-load"><![CDATA[Cargar]]></label>
+		<label code="toolConfig-imageGen-clear"><![CDATA[Borrar]]></label>
+		<label code="toolConfig-imageGen-levels"><![CDATA[Multiples niveles]]></label>
+		
+		<label code="toolConfig-selector-disabledHelp"><![CDATA[Dibuja un rectangulo en el mapa<br />para definir la zona a copiar/cortar/exportar.]]></label>
 		<label code="toolConfig-selector-depthHelp"><![CDATA[Numero de niveles a copiar <br />empezando del nivel actual del mapa.]]></label>
-		<label code="toolConfig-selector-copy"><![CDATA[Copiar ]]></label>
-		<label code="toolConfig-selector-cut"><![CDATA[Cortar ]]></label>
-		<label code="toolConfig-selector-cancel"><![CDATA[Cancelar ]]></label>
-		<label code="toolConfig-selector-depth"><![CDATA[Profundidad ]]></label>
-		<label code="toolConfig-selector-rotate"><![CDATA[Rotacion ]]></label>
-		<label code="toolConfig-selector-flip"><![CDATA[Voltear ]]></label>
+		<label code="toolConfig-selector-exportHelp"><![CDATA[Exportar la selección.]]></label>
+		<label code="toolConfig-selector-copy"><![CDATA[Copiar]]></label>
+		<label code="toolConfig-selector-cut"><![CDATA[Cortar]]></label>
+		<label code="toolConfig-selector-cancel"><![CDATA[Cancelar]]></label>
+		<label code="toolConfig-selector-export"><![CDATA[Exportar]]></label>
+		<label code="toolConfig-selector-depth"><![CDATA[Niveles]]></label>
+		<label code="toolConfig-selector-rotate"><![CDATA[Rotacion]]></label>
+		<label code="toolConfig-selector-flip"><![CDATA[Voltear]]></label>
+		
 		<label code="syncLevels"><![CDATA[Alinear con la camara]]></label>
 		<label code="drawFullRadar"><![CDATA[Dibujar todo el radar]]></label>
 		
 		<!-- Main menu -->
-		<label code="mainMenu-save"><![CDATA[Guardar ]]></label>
-		<label code="mainMenu-stats"><![CDATA[Estadisticas ]]></label>
-		<label code="mainMenu-build3r"><![CDATA[Build3r ]]></label>
+		<label code="mainMenu-save"><![CDATA[Guardar]]></label>
+		<label code="mainMenu-stats"><![CDATA[Estadisticas]]></label>
+		<label code="mainMenu-build3r"><![CDATA[Build3r]]></label>
 		
 		<!-- Stats -->
-		<label code="build3r-title"><![CDATA[Build3r ]]></label>
-		<label code="build3r-detailsNext"><![CDATA[Siguiente &gt; ]]></label>
-		<label code="build3r-detailsPrev"><![CDATA[&lt; Anterior ]]></label>
+		<label code="build3r-title"><![CDATA[Build3r]]></label>
+		<label code="build3r-detailsNext"><![CDATA[Siguiente &gt;]]></label>
+		<label code="build3r-detailsPrev"><![CDATA[&lt; Anterior]]></label>
 		<label code="build3r-details-page0"><![CDATA[The <b>Build3r</b> is a GreaseMonkey script that allows you to synch a Kub3dit's map with the game.<br /><br />To make it work you just have to use Chrome or Firefox <i>(with <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" class="link">GreaseMonkey</a> plugin)</i> and to install <b>Build3r</b> extension by clicking on the following link :<br /><a href="http://fevermap.org/kub3dit/gm/build3r.user.js" class="link">http://fevermap.org/kub3dit/gm/build3r.user.js</a><br /><br />Once installed check if the following button appears under the minimap :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rBT.jpg" align="center" width="178" height="139" /></p><br /><br />Click on it to open the <b>Build3r</b>.<br />For more details about it, go to the next page.]]></label>
 		<label code="build3r-details-page1"><![CDATA[Once you opened the panel, you'll have the choice to load a map from a kub3dit's file or by it's URL's <b>ID</b> if you've uploaded it on the server<br /><br />For this first test, let's load a map with the ID "<b>1f</b>" <i>(no password)</i>. The map represents a 3D heart.<br />You should have the following screen :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rSynch.jpg" align="center" width="193" height="312" /></p>This screen lets you synch the game with the map. Even if this manipulation looks unclear, it's actually quite simple.<br /><br />You simply have to click a cell of the grid, for example the red one of the 1st level which is the heart's base, then, in the game, place a forum kube where you want this kube <i>(the heart's base)</i> to be.<br />Then click on the forum. You should hear an acute sound meaning that the map is synchronized with the game.<br /><br />Click on the <b>OK</b> button at the bottom right to see and use the map.]]></label>
 		<label code="build3r-details-page2"><![CDATA[By default you'll see a 2D representation of the map. You can use the sliders to scale, rotate or change level of the map.<br /><br />Now click on the <b>2D</b> button at the top to get an isometric view that will give you a better representation of the construction. You should get this :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rISO.jpg" align="center" width="193" height="312" /></p>Note nonetheless that the 2D rendering is more readable.<br />Now you just have to reproduce the map.<br /><br /><b>BUT</b> what makes the <b>Build3r</b>'s power isn't to just get the map aside the game, but to help building it.<br />Indeed, at one time or another you will get a doubt about where or what type of kube you should put. In this case, you have two solutions. Look at the map in details during more or less time, <b>OR</b> simply put a forum kube and touch it so that the <b>Build3r</b> will tell you which kube you have to put at this place.<br /><br />Try to reproduce the heart now ;)<br /><br /><br /><br /><br /><i>PS : Think about the U key to remove the forum without loosing energy ;)</i>]]></label>
 		
 		<!-- Stats -->
-		<label code="stats-title"><![CDATA[Estadisticas ]]></label>
+		<label code="stats-title"><![CDATA[Estadisticas]]></label>
 		<label code="stats-details"><![CDATA[Este mapa esta compuesto de<b>{TOTAL}</b> kubss.<br />Esta realizacion tardaria <b>{DAYS}</b> dias o aguas minerales(<b>{PRICE}</b>€)]]></label>
 		<label code="stats-copy"><![CDATA[Copiar en formato texto]]></label>
 		
 		<!-- Save/upload/load -->
-		<label code="prompt-save"><![CDATA[Guardar ]]></label>
-		<label code="prompt-mapDownload"><![CDATA[Descargar ]]></label>
-		<label code="prompt-mapUpload"><![CDATA[Subir ]]></label>
-		<label code="prompt-mapUpdate"><![CDATA[Actualizar ]]></label>
+		<label code="prompt-save"><![CDATA[Guardar]]></label>
+		<label code="prompt-mapDownload"><![CDATA[Descargar]]></label>
+		<label code="prompt-mapUpload"><![CDATA[Subir]]></label>
+		<label code="prompt-mapUploadHelp"><![CDATA[Si va a modificar su mapa a menudo, por favor especifique<br />como <span class="tooltipContentWarn">editables</span> y protegerlo con una <span class="tooltipContentWarn">contraseña</span><br />para evitar que otros lo modifiquen.]]></label>
+		<label code="prompt-mapUpdate"><![CDATA[Actualizar]]></label>
 		<label code="prompt-mapUploadInfo"><![CDATA[Esta opcion es solamente<br />para mapas mas pequeños que{SIZE_MAX}Ko<br />El mapa actual es de  {SIZE}Ko.]]></label>
 		<label code="prompt-mapDownloadLevels"><![CDATA[Descargar niveles]]></label>
-		<label code="prompt-mapSave"><![CDATA[Guardar ]]></label>
+		<label code="prompt-mapSave"><![CDATA[Guardar]]></label>
 		<label code="prompt-mapUploadCopyLink"><![CDATA[Copiar URL]]></label>
-		<label code="prompt-mapUploadModify"><![CDATA[Editable : ]]></label>
-		<label code="prompt-mapUploadProtect"><![CDATA[Proteger ]]></label>
-		<label code="prompt-mapUploadProtectPass"><![CDATA[Contraseña: ]]></label>
-		<label code="prompt-mapLoadPassTitle"><![CDATA[Contraseña: ]]></label>
+		<label code="prompt-mapUploadModify"><![CDATA[Editable :]]></label>
+		<label code="prompt-mapUploadProtect"><![CDATA[Proteger]]></label>
+		<label code="prompt-mapUploadProtectPass"><![CDATA[Contraseña:]]></label>
+		<label code="prompt-mapLoadPassTitle"><![CDATA[Contraseña:]]></label>
 		<label code="prompt-mapLoadPassDescription"><![CDATA[Este mapa esta protegido. Ingrese la contraseña.]]></label>
-		<label code="prompt-mapLoadPassSubmit"><![CDATA[OK ]]></label>
-		<label code="prompt-mapLoadPassCancel"><![CDATA[Cancelar ]]></label>
-		<label code="prompt-mapLoadPassError"><![CDATA[Contraseña incorrecta ]]></label>
-		<label code="prompt-exception"><![CDATA[Error ]]></label>
-		<label code="prompt-exception-ok"><![CDATA[OK ]]></label>
+		<label code="prompt-mapLoadPassSubmit"><![CDATA[OK]]></label>
+		<label code="prompt-mapLoadPassCancel"><![CDATA[Cancelar]]></label>
+		<label code="prompt-mapLoadPassError"><![CDATA[Contraseña incorrecta]]></label>
+		<label code="prompt-exception"><![CDATA[Error]]></label>
+		<label code="prompt-exception-ok"><![CDATA[OK]]></label>
 	</labels>
 </root>

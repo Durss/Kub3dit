@@ -21,7 +21,7 @@ package com.muxxu.kub3dit.model {
 	import com.muxxu.kub3dit.views.MapPasswordView;
 	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.vo.Constants;
-	import com.muxxu.kub3dit.vo.CubeData;
+	import com.muxxu.kub3dit.vo.MapDataParser;
 	import com.nurun.core.commands.ProgressiveCommand;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.commands.events.ProgressiveCommandEvent;
@@ -256,7 +256,7 @@ package com.muxxu.kub3dit.model {
 				return;
 			}
 			var id:String = SWFAddress.getValue().replace(/[^A-Za-z0-9]/g, "");
-//			id="24";
+//			id="1Z";//TODO REMOVE
 			if(id.length > 0 && _ignoreLoadId != id) {
 //				lock();
 
@@ -313,62 +313,9 @@ package com.muxxu.kub3dit.model {
 			if(event.currentTarget is LoadMapCmd) {
 				LoadMapCmd(event.currentTarget).editable;
 			}
-			
-			var data:ByteArray = event.data as ByteArray;
-			data.position = 0;
-			//Search for PNG signature
-			if(data.readUnsignedInt() == 0x89504e47) {
-				data.position = data.length - 4;
-				//search for ".K3D" signature at the end
-				if(data.readUnsignedInt() == 0x2e4b3344) {
-					data.position = data.length - 4 - 4;
-					var dataLen:Number = data.readUnsignedInt();
-					data.position = data.length - 4 - 4 - dataLen;
-					var tmp:ByteArray = new ByteArray();
-					tmp.writeBytes(data, data.position, dataLen);
-					data = tmp;
-					data.position = 0;
-				}
-			}else{
-				data.position == 0;
-			}
-			try {
-				data.uncompress();
-				data.position = 0;
-			}catch(error:Error) {
-				throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
-				return;
-			}
-			var fileVersion:int = data.readByte();
-			switch(fileVersion){
-					
-				case Constants.MAP_FILE_TYPE_1:
-					if(_map == null) _map = new Map();
-					_map.load(data);
-					update();
-					break;
-				
-				case Constants.MAP_FILE_TYPE_2:
-					Textures.getInstance().removeCustomKubes();
-					var customs:uint = data.readUnsignedByte();
-					var i:int, len:int, cube:CubeData;
-					for(i = 0; i < customs; ++i) {
-						len = data.readShort();
-						cube = new CubeData();
-						cube.populate(new XML(data.readUTFBytes(len)));
-						Textures.getInstance().addKube(cube);
-					}
-					
-					Camera3D.configure(data);
-					
-					if(_map == null) _map = new Map();
-					_map.load(data);
-					update();
-					break;
-				
-				default:
-					throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
-			}
+			Textures.getInstance().removeCustomKubes();
+			_map = MapDataParser.parse(event.data as ByteArray, true, _map);
+			update();
 		}
 		
 		/**

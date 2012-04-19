@@ -179,10 +179,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					_landMark.graphics.drawRect(_selectRect.x, _selectRect.y, _selectRect.width, _selectRect.height);
 					_landMark.graphics.drawRect(_selectRect.x+1, _selectRect.y+1, Math.max(0, _selectRect.width-2), Math.max(0, _selectRect.height-2));
 					
-					_copyBt.enabled = _cutBt.enabled = _selectRect.width > 0 && _selectRect.height > 0;
-					_depth.enabled = _copyBt.enabled;
+					_copyBt.enabled = _cutBt.enabled = _depth.enabled = _exportBt.enabled = _selectRect.width > 0 && _selectRect.height > 0;
 					_depthLabel.alpha = _copyBt.enabled? 1 : .4;
-					_copyBt.mouseEnabled = _cutBt.mouseEnabled = true;
+					_copyBt.mouseEnabled = _cutBt.mouseEnabled = _exportBt.mouseEnabled = true;
 				}
 			}else{
 //				_fixedLandmark = true;
@@ -263,7 +262,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			
 			_rotation = 0;
 			_fixedLandmark = true;
-			_levelToColor = Textures.getInstance().levelColors;
 			
 			_copyBt		= addChild(new ButtonKube(Label.getLabel("toolConfig-selector-copy"))) as ButtonKube;
 			_cutBt		= addChild(new ButtonKube(Label.getLabel("toolConfig-selector-cut"))) as ButtonKube;
@@ -290,23 +288,26 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_copyBt.mouseEnabled = true;
 			_cutBt.enabled = false;
 			_cutBt.mouseEnabled = true;
+			_exportBt.enabled = false;
+			_exportBt.mouseEnabled = true;
 			
 			_cutBt.x = _copyBt.width + 5;
-			_cancelBt.y = _copyBt.y + _copyBt.height + 5;
-			_exportBt.x = _cancelBt.x + _cancelBt.width + 5;
-			_exportBt.y = _cancelBt.y;
-			_depth.x = _depthLabel.width + 5;
-			_depth.y = _depthLabel.y  = _cancelBt.y + _cancelBt.height + 5;
+			_exportBt.x = _cutBt.x + _cutBt.width + 5;
+			_depthLabel.x = _exportBt.x + _exportBt.width + 10;
+			_depth.x = _depthLabel.x + _depthLabel.width + 5;
 			
 			_rotationLabel.y = Math.round(_depth.y + _depth.height + 5);
-			_rCcwBt.x = _rotationLabel.x + Math.max(_flipLabel.width, _rotationLabel.width) + 10;
+			_rCcwBt.x = _rotationLabel.x + _rotationLabel.width + 10;
 			_rCwBt.x = _rCcwBt.x + _rCcwBt.width + 10;
 			_rCwBt.y = _rCcwBt.y = _rotationLabel.y;
 			
-			_flipLabel.y = Math.round(_rCwBt.y + _rCwBt.height + 5);
-			_hFlipBt.x = _rCcwBt.x;
+			_flipLabel.x = _rCwBt.x + _rCwBt.width + 25;
+			_hFlipBt.x = _flipLabel.x + _flipLabel.width + 10;
 			_vFlipBt.x = _hFlipBt.x + _hFlipBt.width + 10;
-			_vFlipBt.y = _hFlipBt.y = _flipLabel.y;
+			_vFlipBt.y = _hFlipBt.y = _flipLabel.y = _rotationLabel.y;
+			
+			_cancelBt.x = _vFlipBt.x + _vFlipBt.width + 15;
+			_cancelBt.y = _vFlipBt.y;
 			
 			var i:int, len:int = numChildren;
 			for(i = 0; i < len; ++i) {
@@ -379,15 +380,15 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				var clear:Boolean = event.target == _cutBt;
 				_fixedLandmark = false;
 				_copyBt.enabled = _cutBt.enabled = false;
-				_copyBt.mouseEnabled = _cutBt.mouseEnabled = true;
-				_rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled  = _exportBt.enabled= _hFlipBt.enabled = _vFlipBt.enabled = true;
+				_copyBt.mouseEnabled = _cutBt.mouseEnabled = _exportBt.mouseEnabled = true;
+				_rCcwBt.enabled = _rCwBt.enabled = _cancelBt.enabled = _exportBt.enabled = _hFlipBt.enabled = _vFlipBt.enabled = true;
 				_rotationLabel.alpha = _flipLabel.alpha = 1;
 				
 				_bmd = new BitmapData(_selectRect.width, _selectRect.height, true, 0);
 				
 				_landMark.graphics.clear();
 				//Copy data from top left to the lower levels
-				copySource();
+				copySource(true, clear);
 				drawLandMark();
 				if(clear) _chunksManager.invalidate();
 				
@@ -395,6 +396,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				cancel();
 				
 			}else if(event.target == _exportBt) {
+				_bmd = new BitmapData(_selectRect.width, _selectRect.height, true, 0);
 				copySource();
 				var depth:int = parseInt(_depth.text)+1;
 				if (_currentLevel + 1 - depth < 0) depth = _currentLevel + 1;
@@ -433,11 +435,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/**
 		 * Copies the source to ByteArray
 		 */
-		private function copySource(generateLandmark:Boolean = true):void {
+		private function copySource(generateLandmark:Boolean = true, clear:Boolean = false):void {
 			_copyData = new ByteArray();
 			_copyData.writeUnsignedInt(_selectRect.width);
 			_copyData.writeUnsignedInt(_selectRect.height);
-			var i:int, len:int, px:int, py:int, pz:int, depth:int, tile:int, pixelsDone:Array, clear:Boolean;
+			_levelToColor = Textures.getInstance().levelColors;
+			var i:int, len:int, px:int, py:int, pz:int, depth:int, tile:int, pixelsDone:Array;
 			depth = parseInt(_depth.text)+1;
 			if (_currentLevel + 1 - depth < 0) depth = _currentLevel + 1;
 			pixelsDone = [];
@@ -504,7 +507,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		private function rollOverCopyHandler(event:MouseEvent):void {
 			if(!_copyBt.enabled) {
-				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-copyHelp"), ToolTipAlign.BOTTOM));
+				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-disabledHelp"), ToolTipAlign.BOTTOM));
 			}
 		}
 		
@@ -519,7 +522,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Called when export button is rolled over
 		 */
 		private function rollOverExportHandler(event:MouseEvent):void {
-			dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-exportHelp"), ToolTipAlign.BOTTOM));
+			if(!_exportBt.enabled) {
+				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-disabledHelp"), ToolTipAlign.BOTTOM));
+			}else{
+				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-selector-exportHelp"), ToolTipAlign.BOTTOM));
+			}
 		}
 		
 	}

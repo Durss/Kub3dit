@@ -72,6 +72,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _tmpPoint:Point;
 		private var _ox:int;
 		private var _oy:int;
+		private var _displayCoords:Boolean;
 		
 		
 		
@@ -305,6 +306,10 @@ package com.muxxu.kub3dit.components.editor {
 			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
 			_gridHolder.graphics.endFill();
 			
+			if(_displayCoords) {
+				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, (_ox-_map.mapSizeX*.5+_mousePos.x)+","+(_oy-_map.mapSizeY*.5+_mousePos.y)));
+			}
+			
 			updateCursor();
 		}
 		
@@ -380,7 +385,7 @@ package com.muxxu.kub3dit.components.editor {
 				//Coords tooltip
 				if (event.keyCode == Keyboard.CONTROL) {
 					if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
-						dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, (_ox-_map.mapSizeX*.5+_mousePos.x)+","+(_oy-_map.mapSizeY*.5+_mousePos.y)));
+						_displayCoords = true;
 					}
 				}
 			}else {
@@ -388,6 +393,7 @@ package com.muxxu.kub3dit.components.editor {
 					_dragMode = false;
 				}
 				if (event.keyCode == Keyboard.CONTROL) {
+					_displayCoords = false;
 					dispatchEvent(new ToolTipEvent(ToolTipEvent.CLOSE));
 				}
 			}
