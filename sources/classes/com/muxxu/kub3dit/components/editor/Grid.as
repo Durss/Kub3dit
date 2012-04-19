@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
@@ -69,6 +70,8 @@ package com.muxxu.kub3dit.components.editor {
 		private var _mousePos:Point;
 		private var _scaleMatrix:Matrix;
 		private var _tmpPoint:Point;
+		private var _ox:int;
+		private var _oy:int;
 		
 		
 		
@@ -136,7 +139,7 @@ package com.muxxu.kub3dit.components.editor {
 			_pattern.draw(src);
 			
 			_size = 32*2;
-			_cellSize = _pattern.width;
+			_cellSize = 6;
 			_lastPos = new Point(-1,-1);
 			_oldCamPos = new Point(-1,-1);
 			_offset = new Point(0,0);
@@ -192,25 +195,25 @@ package com.muxxu.kub3dit.components.editor {
 			_bitmaps = Textures.getInstance().bitmapDatas;
 			_colors = Textures.getInstance().levelColors;
 
-			var ox:int, oy:int;
+			
 			//Drag management
 			if(_dragMode && _pressed) {
 				_offset.x = Math.round((_offsetDrag.x - mouseX)/_cellSize) + _offsetOffDrag.x;
 				_offset.y = Math.round((_offsetDrag.y - mouseY)/_cellSize) + _offsetOffDrag.y;
 			}
-			ox = Math.round(-Camera3D.locX / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.x;
-			oy = Math.round(Camera3D.locY / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.y;
+			_ox = Math.round(-Camera3D.locX / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.x;
+			_oy = Math.round(Camera3D.locY / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.y;
 			//Limit drag
-			if(ox < -_size*.5) _offset.x -= ox+_size*.5;
-			if(oy < -_size*.5) _offset.y -= oy+_size*.5;
-			if(ox > _map.mapSizeX - _size*.5) _offset.x -= ox - (_map.mapSizeX - _size*.5);
-			if(oy > _map.mapSizeY - _size*.5) _offset.y -= oy - (_map.mapSizeY - _size*.5);
+			if(_ox < -_size*.5) _offset.x -= _ox+_size*.5;
+			if(_oy < -_size*.5) _offset.y -= _oy+_size*.5;
+			if(_ox > _map.mapSizeX - _size*.5) _offset.x -= _ox - (_map.mapSizeX - _size*.5);
+			if(_oy > _map.mapSizeY - _size*.5) _offset.y -= _oy - (_map.mapSizeY - _size*.5);
 			//limit global offset
-			ox = MathUtils.restrict(ox, -_size * .5, _map.mapSizeX - _size*.5);
-			oy = MathUtils.restrict(oy, -_size * .5, _map.mapSizeY - _size*.5);
+			_ox = MathUtils.restrict(_ox, -_size * .5, _map.mapSizeX - _size*.5);
+			_oy = MathUtils.restrict(_oy, -_size * .5, _map.mapSizeY - _size*.5);
 			
-			_lastOrigin.x = ox;
-			_lastOrigin.y = oy;
+			_lastOrigin.x = _ox;
+			_lastOrigin.y = _oy;
 			
 			//Draw the water
 			_gridHolder.graphics.clear();
@@ -254,8 +257,8 @@ package com.muxxu.kub3dit.components.editor {
 			if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
 				_mousePos.x = Math.floor(mouseX/_cellSize);
 				_mousePos.y = Math.floor(mouseY/_cellSize);
-				_globalMousePos.x = ox + _mousePos.x;
-				_globalMousePos.y = oy + _mousePos.y;
+				_globalMousePos.x = _ox + _mousePos.x;
+				_globalMousePos.y = _oy + _mousePos.y;
 				_globalMousePos.z = _z;
 			}else{
 				_mousePos.x = _mousePos.y = -1;
@@ -267,9 +270,9 @@ package com.muxxu.kub3dit.components.editor {
 			//If user's drawing
 			if(_pressed && !_dragMode && _mousePos.x > -1) {
 				_lastPos = _mousePos;
-				_tmpPoint.x = ox;
-				_tmpPoint.y = oy;
-				_panel.draw(ox+_mousePos.x, oy+_mousePos.y, _z, parseInt(_currentKube), _size, _tmpPoint);
+				_tmpPoint.x = _ox;
+				_tmpPoint.y = _oy;
+				_panel.draw(_ox+_mousePos.x, _oy+_mousePos.y, _z, parseInt(_currentKube), _size, _tmpPoint);
 				if(_panel.eraseMode) {
 					_lastStartTime = getTimer();
 					_subLevelsDrawn = false;
@@ -283,20 +286,22 @@ package com.muxxu.kub3dit.components.editor {
 				//If sublevels haven't been drawn yet since last action that needed it, draw them
 				if(!_subLevelsDrawn) {
 					_subLevelsDrawn = true;
-					drawGridBase(ox, oy);
-					drawSubLevels(ox, oy, _z-1);
+					drawGridBase(_ox, _oy);
+					drawSubLevels(_ox, _oy, _z-1);
 				}
-				if(!_radarMode) drawLevel(ox, oy, _z, 1);
+				if(!_radarMode) drawLevel(_ox, _oy, _z, 1);
 			}else{
-				drawGridBase(ox, oy);
-				drawLevel(ox, oy, _z, 1);
+				drawGridBase(_ox, _oy);
+				drawLevel(_ox, _oy, _z, 1);
 			}
 			
 			_gridHolder.graphics.beginBitmapFill(_bmdGrid, _scaleMatrix);
 			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
 			_gridHolder.graphics.endFill();
 			
-			_gridHolder.graphics.beginBitmapFill(_pattern);
+			var m:Matrix = new Matrix();
+			m.translate(-_ox * _cellSize, -_oy * _cellSize);
+			_gridHolder.graphics.beginBitmapFill(_pattern, m);
 			_gridHolder.graphics.drawRect(0, 0, _size*_cellSize+1, _size*_cellSize+1);
 			_gridHolder.graphics.endFill();
 			
@@ -372,8 +377,19 @@ package com.muxxu.kub3dit.components.editor {
 		private function keyHandler(event:KeyboardEvent):void {
 			if(event.type == KeyboardEvent.KEY_DOWN) {
 				_dragMode = event.keyCode == Keyboard.SPACE;
-			}else if(event.keyCode == Keyboard.SPACE){
-				_dragMode = false;
+				//Coords tooltip
+				if (event.keyCode == Keyboard.CONTROL) {
+					if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
+						dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, (_ox-_map.mapSizeX*.5+_mousePos.x)+","+(_oy-_map.mapSizeY*.5+_mousePos.y)));
+					}
+				}
+			}else {
+				if(event.keyCode == Keyboard.SPACE){
+					_dragMode = false;
+				}
+				if (event.keyCode == Keyboard.CONTROL) {
+					dispatchEvent(new ToolTipEvent(ToolTipEvent.CLOSE));
+				}
 			}
 			if(_dragMode) _oldCamPos = new Point(-1,-1);//forces the sublevels redraw
 		}
