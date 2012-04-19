@@ -204,6 +204,8 @@ package com.muxxu.kub3dit.components.form {
 				label = label.replace(/\{SIZE_MAX\}/gi, Math.round(_MAX_SIZE/1024));
 				label = label.replace(/\{SIZE\}/gi, Math.round(_mapSize/1024));
 				_uploadBt.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, label, ToolTipAlign.TOP));
+			}else{
+				_uploadBt.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("prompt-mapUploadHelp"), ToolTipAlign.TOP));
 			}
 		}
 		

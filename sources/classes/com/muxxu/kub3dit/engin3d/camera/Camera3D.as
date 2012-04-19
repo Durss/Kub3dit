@@ -32,7 +32,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		
 		private var _stage:Stage;
 		private var _lookOffset:Point = new Point();
-		private var _mouseView:Boolean = true;
+		private var _mouseView:Boolean = false;
 		private var _forward:int;
 		private var _strafe:int;
 		private var _ctrl:Boolean;

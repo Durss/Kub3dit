@@ -344,10 +344,17 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Adds a custom kube
 		 */
 		public function addKube(data:CubeData):void {
+			var i:int, j:int, len:int, color:uint, bmd:BitmapData, pixels:ByteArray;
 			var total:int = _customKubes.length;
 			if(total == MAX_CUSTOM_KUBES) {
 				throw new Kub3ditException(Label.getLabel("maxCustomKubesError").replace(/\$\{VALUE\}/gi, MAX_CUSTOM_KUBES), Kub3ditExceptionSeverity.INFO);
 				return;
+			}
+			//Check if texture is already here or not.
+			//if true, ignore it.
+			len = _customKubes.length;
+			for(i = 0; i < len; ++i) {
+				if(_customKubes[i].id == data.id) return;
 			}
 			_customKubes.push(data);
 			var id:int = 256 - _customKubes.length;
@@ -369,7 +376,6 @@ package com.muxxu.kub3dit.engin3d.map {
 			pos.y = _spriteSheet.height - PADDING - margin - 16;
 			
 			//Update texture and store the coordinates
-			var i:int, j:int, color:uint, bmd:BitmapData, pixels:ByteArray;
 			var frame:int = total*3;
 			for(i = 0; i < 3; ++i) {
 				if(i == 0) bmd = data.kub.faceTop;

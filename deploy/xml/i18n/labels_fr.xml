@@ -110,7 +110,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphère (6)]]></label>
-		<label code="helpToolsImport"><![CDATA[Importer une carte]]></label>
+		<label code="helpToolsImport"><![CDATA[Importer une carte Kub3dit ou Sandkube]]></label>
 		<label code="helpToolsImg"><![CDATA[Générer depuis une image]]></label>
 		<label code="helpToolsSelect"><![CDATA[Sélection (m)]]></label>
 		<label code="helpSyncCam"><![CDATA[Synchronise le niveau d'affichage de<br />la grille et la position de la caméra.]]></label>
@@ -150,14 +150,14 @@
 		<label code="toolConfig-imageGen-clear"><![CDATA[Effacer]]></label>
 		<label code="toolConfig-imageGen-levels"><![CDATA[Plusieurs niveaux]]></label>
 		
-		<label code="toolConfig-selector-copyHelp"><![CDATA[Tracez un rectangle de sélection sur<br />la carte pour définir la zone à copier/couper.]]></label>
+		<label code="toolConfig-selector-disabledHelp"><![CDATA[Tracez un rectangle de sélection sur<br />la carte pour définir la zone à copier/couper/exporter.]]></label>
 		<label code="toolConfig-selector-depthHelp"><![CDATA[Nombre de niveaux à copier vers le bas<br /> à partir du niveau actuel de la carte.]]></label>
-		<label code="toolConfig-selector-exportHelp"><![CDATA[Exporte la sélection dans<br />un fichier externe.]]></label>
+		<label code="toolConfig-selector-exportHelp"><![CDATA[Exporter la sélection.]]></label>
 		<label code="toolConfig-selector-copy"><![CDATA[Copier]]></label>
 		<label code="toolConfig-selector-cut"><![CDATA[Couper]]></label>
 		<label code="toolConfig-selector-cancel"><![CDATA[Annuler]]></label>
 		<label code="toolConfig-selector-export"><![CDATA[Exporter]]></label>
-		<label code="toolConfig-selector-depth"><![CDATA[Profondeur]]></label>
+		<label code="toolConfig-selector-depth"><![CDATA[Niveaux]]></label>
 		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-selector-flip"><![CDATA[Renverser]]></label>
 		
@@ -186,6 +186,7 @@
 		<label code="prompt-save"><![CDATA[Enregistrement]]></label>
 		<label code="prompt-mapDownload"><![CDATA[Télécharger]]></label>
 		<label code="prompt-mapUpload"><![CDATA[Uploader]]></label>
+		<label code="prompt-mapUploadHelp"><![CDATA[Si vous comptez apporter des modification à votre carte régulièrement<br />spécifiez-la comme <span class="tooltipContentWarn">modifiable</span> et protégez-la par <span class="tooltipContentWarn">mot de passe</span> pour <br />éviter que d'autres puissent la modifier.]]></label>
 		<label code="prompt-mapUpdate"><![CDATA[Mettre à jour]]></label>
 		<label code="prompt-mapUploadInfo"><![CDATA[Cette option n'est disponible que pour<br />les cartes pesant moins de {SIZE_MAX}Ko<br />La carte actuelle pèse {SIZE}Ko.]]></label>
 		<label code="prompt-mapDownloadLevels"><![CDATA[Télécharger plans]]></label>

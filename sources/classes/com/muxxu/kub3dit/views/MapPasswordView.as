@@ -141,6 +141,8 @@ package com.muxxu.kub3dit.views {
 		 * Closes the view.
 		 */
 		override protected function clickHandler(event:MouseEvent):void {
+			if(_loadMethod == null) return;
+			
 			if (event.target == _disableLayer || event.target == _cancelBt) {
 				close();
 				_loadMethod(null);

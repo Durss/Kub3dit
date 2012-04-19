@@ -3,11 +3,13 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
+	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.graphics.FLipHorizontalIcon;
 	import com.muxxu.kub3dit.graphics.FLipVerticalIcon;
 	import com.muxxu.kub3dit.graphics.RotationCCWIcon;
 	import com.muxxu.kub3dit.graphics.RotationCWIcon;
+	import com.muxxu.kub3dit.vo.MapDataParser;
 	import com.nurun.components.invalidator.Validable;
 	import com.nurun.components.text.CssTextField;
 	import com.nurun.core.commands.events.CommandEvent;
@@ -34,7 +36,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _cmd:BrowseForFileCmd;
 		private var _bmd:BitmapData;
 		private var _colors:Array;
-		private var _size:int;
 		private var _loadBt:ButtonKube;
 		private var _rotationLabel:CssTextField;
 		private var _data:ByteArray;
@@ -49,6 +50,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _hflipState:Boolean;
 		private var _vflipState:Boolean;
 		private var _lastDrawGUID:String;
+		private var _width:int;
+		private var _height:int;
+		private var _depth:int;
 		
 		
 		
@@ -139,34 +143,34 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			while(_data.bytesAvailable) {
 				tile = _data.readByte();
 				if(tile > 0 && tile < max) {
-					px = i%_size;
-					py = _size - Math.floor(i/_size)%_size;
-					pz = oz + Math.floor(i/(_size*_size));
+					px = i%_width;
+					py = _height - Math.floor(i/_width)%_width;
+					pz = oz + Math.floor(i/(_width*_height));
 					if(_rotation == 90) {
 						reg = px;
-						px = _size - py;
+						px = _width - py;
 						py = reg + 1;
 					}else
 					if(_rotation == 180) {
 						reg = px;
-						px = _size - 1 - px;
-						py = _size + 1 - py;
+						px = _width - 1 - px;
+						py = _height + 1 - py;
 					}else
 					if(_rotation == 270) {
 						reg = px;
 						px = py - 1;
-						py = _size - reg;
+						py = _height - reg;
 					}
 					
 					if(_hflipState) {
-						px = _size - 1 - px;
+						px = _width - 1 - px;
 					}
 					if(_vflipState) {
-						py = _size + 1 - py;
+						py = _height + 1 - py;
 					}
 					
-					px += ox - Math.floor(_size * .5);
-					py += oy - Math.floor(_size * .5) - 1;
+					px += ox - Math.floor(_width * .5);
+					py += oy - Math.floor(_height * .5) - 1;
 					
 					_chunksManager.addInvalidableCube(px, py, pz, _eraseMode? 0 : tile);
 				}
@@ -186,10 +190,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_size = 32;
 			_landMark = new Shape();
 			_colors = Textures.getInstance().levelColors;
-			_bmd = new BitmapData(_size, _size, true, 0);
 			
 			_loadBt = addChild(new ButtonKube(Label.getLabel("toolConfig-import-load"))) as ButtonKube;
 			_clearBt = addChild(new ButtonKube(Label.getLabel("toolConfig-import-clear"))) as ButtonKube;
@@ -263,24 +265,46 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Called when image image loading completes.
 		 */
 		private function loadImageCompleteHandler(event:CommandEvent):void {
-			var i:int, len:int, px:int, py:int, pz:int, tile:int;
+			var i:int, len:int, px:int, py:int, pz:int, tile:int, sandkubeType:Boolean;
 			var ba:ByteArray = event.data as ByteArray;
 			_data = new ByteArray();
-			ba.position = ba.length - _size*_size*(_size-1);//-1 removes the useless sea level
-			ba.readBytes(_data);
-			len = _bmd.width * _bmd.height;
-			_bmd.fillRect(_bmd.rect, 0);
+			try {
+				var map:Map = MapDataParser.parse(ba, false);
+			}catch(error:Error) {
+				//not a Kub3dit map. Parse it as a Sandkube image
+				sandkubeType = true;
+			}
+			
+			//Gets map's sizes
+			if(sandkubeType) {
+				_width = _height = 32;
+				_depth = 31;
+				ba.position = ba.length - _width*_height*_depth;
+				ba.readBytes(_data);
+			}else{
+				_width = map.mapSizeX;
+				_height = map.mapSizeY;
+				_depth = map.mapSizeZ;
+				_data = map.data;
+				trace(_width, _height, _depth)
+			}
+			
+			if(_bmd != null) _bmd.dispose();
+			_bmd = new BitmapData(_width, _height, true, 0);
+			
+			//Draw radar
+			len = _width * _height;
 			var max:int = _colors.length;
 			for(i = 0; i < len; ++i) {
-				px = i%_size;
-				py = Math.floor(i/_size);
-				pz = 30;
+				px = i%_width;
+				py = Math.floor(i/_height);
+				pz = _depth-1;
 				while(pz>=0) {
-					_data.position = px + py*_size + pz*_size*_size;
+					_data.position = px + py*_height + pz*_width*_height;
 					tile = _data.readByte();
 					if(tile > 0) {
 						if(tile < max) {
-							_bmd.setPixel32(px, (_size-1) - py, _colors[tile][pz]);
+							_bmd.setPixel32(px, (_height-1) - py, _colors[tile][pz]);
 						}
 						break;
 					}
@@ -306,16 +330,16 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			
 			var m:Matrix = new Matrix();
 			m.rotate(_rotation * MathUtils.DEG2RAD);
-			if(_rotation == 90) m.translate(_size, 0);
-			if(_rotation == 180) m.translate(_size, _size);
-			if(_rotation == 270) m.translate(0, _size);
+			if(_rotation == 90) m.translate(_width, 0);
+			if(_rotation == 180) m.translate(_width, _height);
+			if(_rotation == 270) m.translate(0, _height);
 			
 			if(_hflipState) m.scale(-1, 1);
 			if(_vflipState) m.scale(1, -1);
 			
 			_landMark.graphics.clear();
 			_landMark.graphics.beginBitmapFill(_bmd, m);
-			_landMark.graphics.drawRect(0, 0, _size, _size);
+			_landMark.graphics.drawRect(0, 0, _width, _height);
 		}
 		
 	}
