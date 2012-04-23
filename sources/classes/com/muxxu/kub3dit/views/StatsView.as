@@ -188,7 +188,8 @@ package com.muxxu.kub3dit.views {
 				_copy.enabled = true;
 				_spin.close();
 			}
-
+			
+			total *= 2;//x2 because take+put
 			var days:int = Math.ceil(total/Config.getNumVariable("energyPerDay"));
 			var price:Number = days * Config.getNumVariable("energyCost");
 			_label.text = Label.getLabel("stats-details").replace(/\{TOTAL\}/gi, total).replace(/\{DAYS\}/gi, days).replace(/\{PRICE\}/gi, price.toFixed(2));

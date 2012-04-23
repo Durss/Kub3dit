@@ -44,12 +44,13 @@ package com.muxxu.kub3dit.vo {
 		 * 
 		 * @param data				ByteArray to parse
 		 * @param configureCamera	defines if the camera should be configured or not with the data eventually specified inside the ByteArray.
+		 * @param adaptSizes		adapts the sizes of the map to chunks sizes.
 		 * @param map				optional Map instance. If defined, the instance is updated. Else a new one is created.
 		 * 
 		 * @throws Kub3ditException if the file type is unknown
 		 */
-		public static function parse(data:ByteArray, configureCamera:Boolean = true, map:Map = null):Map {
-			if(map == null) map = new Map();
+		public static function parse(data:ByteArray, configureCamera:Boolean = true, adaptSizes:Boolean = true, map:Map = null):Map {
+			if(map == null) map = new Map(adaptSizes);
 			
 			data.position = 0;
 			//Search for PNG signature

@@ -103,7 +103,7 @@
 		<label code="addKubeDescription"><![CDATA[You can add custom kubes to the list. To do that, please use the <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> to create some then specify the IDs in the input below.<br />The ID can be found on it's details window.]]></label>
 		<label code="invalidKubeId"><![CDATA[Invalid ID]]></label>
 		
-		<label code="helpTools"><![CDATA[Keep space bar pressed to be able to drag the grid.<br /Press Ctrl key to display a cell's coordinates.]]></label>
+		<label code="helpTools"><![CDATA[• Keep space bar pressed to be able to drag the grid.<br />• Press Ctrl key to display a cell's coordinates.<br />• Shift+Mouse Wheel to zoom the grid]]></label>
 		<label code="helpToolsRubber"><![CDATA[Toggles the current tool to rubber (E)]]></label>
 		<label code="helpTools1"><![CDATA[Pencil (1)]]></label>
 		<label code="helpTools2"><![CDATA[Paint bucket (2)]]></label>
