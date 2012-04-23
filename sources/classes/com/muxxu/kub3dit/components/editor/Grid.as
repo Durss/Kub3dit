@@ -31,6 +31,9 @@ package com.muxxu.kub3dit.components.editor {
 	import flash.ui.MouseCursor;
 	import flash.utils.getTimer;
 	
+	
+	[Event(name="resize", type="flash.events.Event")]
+	
 	/**
 	 * 
 	 * @author Francois
@@ -98,7 +101,7 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		public function set currentKube(currentKube:String):void { _currentKube = currentKube; }
 		
-		override public function get width():Number { return _size * _cellSize; }
+		override public function get width():Number { return _size * _cellSize * _gridHolder.scaleX; }
 		
 		override public function get height():Number { return _levelSlider.y + _levelSlider.height; }
 		
@@ -161,12 +164,7 @@ package com.muxxu.kub3dit.components.editor {
 			_bmdGrid = new BitmapData(_size*_cellSize, _size*_cellSize, true, 0);
 			_levelsTarget = _bmdGrid.clone();
 			
-			_levelSlider.y = _size * _cellSize + 5;
-			_levelSlider.width = _size * _cellSize;
-			_z = _levelSlider.level;
-			_radarBt.height = 15;
-			_radarBt.x = Math.round(_levelSlider.width - _radarBt.width);
-			_radarBt.y = _levelSlider.y + 22;
+			computePositions();
 			
 			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
 			addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
@@ -179,6 +177,19 @@ package com.muxxu.kub3dit.components.editor {
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_SELECTION_CHANGE, kubeSelectionChangeHandler);
 			
 			_gridHolder.scrollRect = new Rectangle(0,0,_size*_cellSize,_size*_cellSize);
+		}
+		
+		/**
+		 * Replaces the elements
+		 */
+		private function computePositions():void {
+			_levelSlider.y = _size * _cellSize * _gridHolder.scaleY + 5;
+			_levelSlider.width = _size * _cellSize * _gridHolder.scaleX;
+			_z = _levelSlider.level;
+			_radarBt.height = 15;
+			_radarBt.x = Math.round(_levelSlider.width - _radarBt.width);
+			_radarBt.y = _levelSlider.y + 22;
+			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
 		/**
@@ -199,8 +210,8 @@ package com.muxxu.kub3dit.components.editor {
 			
 			//Drag management
 			if(_dragMode && _pressed) {
-				_offset.x = Math.round((_offsetDrag.x - mouseX)/_cellSize) + _offsetOffDrag.x;
-				_offset.y = Math.round((_offsetDrag.y - mouseY)/_cellSize) + _offsetOffDrag.y;
+				_offset.x = Math.round((_offsetDrag.x - _gridHolder.mouseX)/_cellSize) + _offsetOffDrag.x;
+				_offset.y = Math.round((_offsetDrag.y - _gridHolder.mouseY)/_cellSize) + _offsetOffDrag.y;
 			}
 			_ox = Math.round(-Camera3D.locX / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.x;
 			_oy = Math.round(Camera3D.locY / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.y;
@@ -240,8 +251,8 @@ package com.muxxu.kub3dit.components.editor {
 					_landMark.addChild(landmark);
 					landmark.scaleX = landmark.scaleY = _cellSize;
 					if(!_panel.fixedLandmark) {
-						landmark.x = Math.floor( ((mouseX) / _cellSize) - Math.floor((landmark.width * .5) / _cellSize))*_cellSize;
-						landmark.y = Math.floor( ((mouseY) / _cellSize) - Math.floor((landmark.height * .5) / _cellSize))*_cellSize;
+						landmark.x = Math.floor( ((_gridHolder.mouseX) / _cellSize) - Math.floor((landmark.width * .5) / _cellSize))*_cellSize;
+						landmark.y = Math.floor( ((_gridHolder.mouseY) / _cellSize) - Math.floor((landmark.height * .5) / _cellSize))*_cellSize;
 					}else{
 						landmark.x = landmark.y = 0;
 					}
@@ -255,9 +266,9 @@ package com.muxxu.kub3dit.components.editor {
 			
 			//DRAWING MANAGEMENT
 			//Detect if curosor is over the gris
-			if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
-				_mousePos.x = Math.floor(mouseX/_cellSize);
-				_mousePos.y = Math.floor(mouseY/_cellSize);
+			if(_gridHolder.mouseX >= 0 && _gridHolder.mouseY >= 0 && _gridHolder.mouseX < _size*_cellSize && _gridHolder.mouseY < _size*_cellSize) {
+				_mousePos.x = Math.floor(_gridHolder.mouseX/_cellSize);
+				_mousePos.y = Math.floor(_gridHolder.mouseY/_cellSize);
 				_globalMousePos.x = _ox + _mousePos.x;
 				_globalMousePos.y = _oy + _mousePos.y;
 				_globalMousePos.z = _z;
@@ -360,8 +371,8 @@ package com.muxxu.kub3dit.components.editor {
 		 * Updates the cursor depending on the action to do
 		 */
 		private function updateCursor():void {
-			if(_dragMode && mouseX >= 0 && mouseY >= 0 &&
-				mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
+			if(_dragMode && _gridHolder.mouseX >= 0 && _gridHolder.mouseY >= 0 &&
+				_gridHolder.mouseX < _size*_cellSize && _gridHolder.mouseY < _size*_cellSize) {
 				Mouse.cursor = MouseCursor.HAND;
 			}else if(Mouse.cursor == MouseCursor.HAND){
 				Mouse.cursor = MouseCursor.AUTO;
@@ -384,7 +395,7 @@ package com.muxxu.kub3dit.components.editor {
 				_dragMode = event.keyCode == Keyboard.SPACE;
 				//Coords tooltip
 				if (event.keyCode == Keyboard.CONTROL) {
-					if(mouseX >= 0 && mouseY >= 0 && mouseX < _size*_cellSize && mouseY < _size*_cellSize) {
+					if(_gridHolder.mouseX >= 0 && _gridHolder.mouseY >= 0 && _gridHolder.mouseX < _size*_cellSize && _gridHolder.mouseY < _size*_cellSize) {
 						_displayCoords = true;
 					}
 				}
@@ -404,19 +415,24 @@ package com.muxxu.kub3dit.components.editor {
 		 * Called when mouse wheel is used
 		 */
 		private function mouseWheelHandler(event:MouseEvent):void {
-			_z += event.delta > 0? 1 : -1;
-			_z = MathUtils.restrict(_z, 0, Config.getNumVariable("mapSizeHeight")-1);
-			_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
-			_lastPos.x = _lastPos.y = -1;
-			_levelSlider.level = _z;
-			if(_panel != null) _panel.level = _z;
+			if(event.shiftKey) {
+				_gridHolder.scaleX = _gridHolder.scaleY = MathUtils.restrict(_gridHolder.scaleX+MathUtils.sign(event.delta)*.25, 1, 1.5);
+				computePositions();
+			}else{
+				_z += event.delta > 0? 1 : -1;
+				_z = MathUtils.restrict(_z, 0, Config.getNumVariable("mapSizeHeight")-1);
+				_oldCamPos = new Point(-1,-1);//forces the sublevels redraw
+				_lastPos.x = _lastPos.y = -1;
+				_levelSlider.level = _z;
+				if(_panel != null) _panel.level = _z;
+			}
 		}
 		
 		/**
 		 * Called when the mouse is pressed
 		 */
 		private function mouseDownHandler(event:MouseEvent):void {
-			_offsetDrag = new Point(mouseX, mouseY);
+			_offsetDrag = new Point(_gridHolder.mouseX, _gridHolder.mouseY);
 			_offsetOffDrag = _offset.clone();
 			_pressed = true;
 			enterFrameHandler();

@@ -131,7 +131,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
-			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode;
+			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode + "" + _rotation + "" + _hflipState + "" + _vflipState;
 			if(drawGUID == _lastDrawGUID) return;
 			_lastDrawGUID = drawGUID;
 			
@@ -144,33 +144,33 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				tile = _data.readByte();
 				if(tile > 0 && tile < max) {
 					px = i%_width;
-					py = _height - Math.floor(i/_width)%_width;
+					py = Math.floor(i/_width)%_height;
 					pz = oz + Math.floor(i/(_width*_height));
 					if(_rotation == 90) {
 						reg = px;
-						px = _width - py;
-						py = reg + 1;
+						px = _width - py - 1;
+						py = reg;
 					}else
 					if(_rotation == 180) {
 						reg = px;
 						px = _width - 1 - px;
-						py = _height + 1 - py;
+						py = _height - 1 - py;
 					}else
 					if(_rotation == 270) {
 						reg = px;
-						px = py - 1;
-						py = _height - reg;
+						px = py;
+						py = _height - reg - 1;
 					}
 					
 					if(_hflipState) {
 						px = _width - 1 - px;
 					}
 					if(_vflipState) {
-						py = _height + 1 - py;
+						py = _height - 1 - py;
 					}
 					
 					px += ox - Math.floor(_width * .5);
-					py += oy - Math.floor(_height * .5) - 1;
+					py += oy - Math.floor(_height * .5);
 					
 					_chunksManager.addInvalidableCube(px, py, pz, _eraseMode? 0 : tile);
 				}
@@ -269,7 +269,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			var ba:ByteArray = event.data as ByteArray;
 			_data = new ByteArray();
 			try {
-				var map:Map = MapDataParser.parse(ba, false);
+				var map:Map = MapDataParser.parse(ba, false, false);
 			}catch(error:Error) {
 				//not a Kub3dit map. Parse it as a Sandkube image
 				sandkubeType = true;
@@ -286,7 +286,6 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				_height = map.mapSizeY;
 				_depth = map.mapSizeZ;
 				_data = map.data;
-				trace(_width, _height, _depth)
 			}
 			
 			if(_bmd != null) _bmd.dispose();
@@ -297,14 +296,14 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			var max:int = _colors.length;
 			for(i = 0; i < len; ++i) {
 				px = i%_width;
-				py = Math.floor(i/_height);
+				py = Math.floor(i/_width)%_height;
 				pz = _depth-1;
 				while(pz>=0) {
-					_data.position = px + py*_height + pz*_width*_height;
+					_data.position = px + py*_width + pz*_width*_height;
 					tile = _data.readByte();
 					if(tile > 0) {
 						if(tile < max) {
-							_bmd.setPixel32(px, (_height-1) - py, _colors[tile][pz]);
+							_bmd.setPixel32(px, py, _colors[tile][pz]);
 						}
 						break;
 					}

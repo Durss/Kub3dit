@@ -109,7 +109,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		public function draw(ox:int, oy:int, pz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
 			var drawGUID:String = ox + "" + oy + "" + pz + "" + kubeID + "" + eraseMode;
-			if(drawGUID == _lastDrawGUID) return;
+			if(drawGUID == _lastDrawGUID && !_drawToLandmark) return;
 			_lastDrawGUID = drawGUID;
 			
 			var i:int, len:int, size:int, px:int, py:int, d:Number, c:uint;

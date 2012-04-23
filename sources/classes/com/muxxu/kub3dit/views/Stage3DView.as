@@ -136,7 +136,6 @@ package com.muxxu.kub3dit.views {
 			_ground		= new Ground(_context3D, _accelerated);
 			_preview	= new PreviewCursor(_context3D, _accelerated);
 			
-			
 			FrontControler.getInstance().view3DReady();
 			stage.addEventListener(Event.RESIZE, resizeHandler);
 			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
@@ -215,13 +214,13 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(_manager.visibleChunks * 3, 24) * ChunkData.CUBE_SIZE_RATIO;
+			var fogLength:int = Math.min(Math.max(_manager.visibleChunksX, _manager.visibleChunksY) * 3, 24) * ChunkData.CUBE_SIZE_RATIO;
 			// Number of cubes to do the fog on
 			var farplane:int = _manager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO - fogLength;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			
-			_ground.render(_manager.visibleChunks+1);
+			_ground.render(Math.max(_manager.visibleChunksX, _manager.visibleChunksY)+1);
 			_preview.render();
 			_manager.render(m, W, H);
 			

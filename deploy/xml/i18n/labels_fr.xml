@@ -102,7 +102,7 @@
 		<label code="addKubeDescription"><![CDATA[Vous pouvez ici ajouter des kubes personnalisés à la liste existante de kubes. Pour cela il vous faudra utiliser l'application <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> afin de créer des kubes puis en renseigner l'ID dans le champs ci-dessous.<br />L'ID d'un kube est disponible sur sa fiche de détail]]></label>
 		<label code="invalidKubeId"><![CDATA[ID invalide]]></label>
 		
-		<label code="helpTools"><![CDATA[Gardez la barre d'espace appuyée pour déplacer la grille.<br />Appuyez sur la touche Ctrl pour afficher les coordonnées d'une cellule.]]></label>
+		<label code="helpTools"><![CDATA[• Gardez la barre d'espace appuyée pour déplacer la grille.<br />• Ctrl pour afficher les coordonnées d'une cellule.<br />• Shift+Molette pour zoomer la grille]]></label>
 		<label code="helpToolsRubber"><![CDATA[Bascule l'outil courant en mode gomme (E)]]></label>
 		<label code="helpTools1"><![CDATA[Pinceau (1)]]></label>
 		<label code="helpTools2"><![CDATA[Pot de peinture (2)]]></label>
@@ -186,7 +186,7 @@
 		<label code="prompt-save"><![CDATA[Enregistrement]]></label>
 		<label code="prompt-mapDownload"><![CDATA[Télécharger]]></label>
 		<label code="prompt-mapUpload"><![CDATA[Uploader]]></label>
-		<label code="prompt-mapUploadHelp"><![CDATA[Si vous comptez apporter des modification à votre carte régulièrement<br />spécifiez-la comme <span class="tooltipContentWarn">modifiable</span> et protégez-la par <span class="tooltipContentWarn">mot de passe</span> pour <br />éviter que d'autres puissent la modifier.]]></label>
+		<label code="prompt-mapUploadHelp"><![CDATA[Si vous comptez apporter des modifications à votre carte régulièrement<br />spécifiez-la comme <span class="tooltipContentWarn">modifiable</span> et protégez-la par <span class="tooltipContentWarn">mot de passe</span> pour <br />éviter que d'autres puissent la modifier.]]></label>
 		<label code="prompt-mapUpdate"><![CDATA[Mettre à jour]]></label>
 		<label code="prompt-mapUploadInfo"><![CDATA[Cette option n'est disponible que pour<br />les cartes pesant moins de {SIZE_MAX}Ko<br />La carte actuelle pèse {SIZE}Ko.]]></label>
 		<label code="prompt-mapDownloadLevels"><![CDATA[Télécharger plans]]></label>

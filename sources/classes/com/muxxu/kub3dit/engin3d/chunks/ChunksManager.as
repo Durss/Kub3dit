@@ -62,7 +62,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _accelerated:Boolean;
 		private var _invalidateStack:Array;
 		private var _visibleCubes:int;
-		private var _visibleChunks:Number;
+		private var _visibleChunksX:Number;
+		private var _visibleChunksY:Number;
 		
 		
 		
@@ -96,7 +97,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 
 		public function get visibleCubes():int { return _visibleCubes; }
 
-		public function get visibleChunks():Number { return _visibleChunks; }
+		public function get visibleChunksX():Number { return _visibleChunksX; }
+		
+		public function get visibleChunksY():Number { return _visibleChunksY; }
 
 
 
@@ -118,7 +121,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_accelerated = accelerated;
 				_chunkSize = CHUNK_SIZE;//Number of cubes to compose a chunk of
 				_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
-				_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.max(2, Math.ceil(Math.min(_mapSizeW, _mapSizeH)/_chunkSize)));//Number of visible chunks around us
+				_visibleChunksX = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.max(2, Math.ceil(_mapSizeW/_chunkSize)));//Number of visible chunks around us
+				_visibleChunksY = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.max(2, Math.ceil(_mapSizeH/_chunkSize)));//Number of visible chunks around us
 				_efTarget = new Shape();
 				
 				//Init cubes textures
@@ -351,7 +355,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public function changeRenderingDistance(sign:int):void {
 			_visibleCubes += _chunkSize * MathUtils.sign(sign);
 			_visibleCubes = Math.max(_visibleCubes, _chunkSize);
-			_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
+			_visibleChunksX = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, _mapSizeW/_chunkSize);
+			_visibleChunksY = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, _mapSizeH/_chunkSize);
 			updateVisibleChunks();
 		}
 
@@ -365,8 +370,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Defines the number of visible chunks
 		 */
 		private function updateVisibleChunks():void {
-			_chunksW = Math.max(1, Math.min(_visibleChunks, _mapSizeW/_chunkSize));
-			_chunksH = Math.max(1, Math.min(_visibleChunks, _mapSizeH/_chunkSize));
+			_chunksW = Math.max(1, Math.min(_visibleChunksX, _mapSizeW/_chunkSize));
+			_chunksH = Math.max(1, Math.min(_visibleChunksY, _mapSizeH/_chunkSize));
 			_toUpdate = [];
 			create();
 		}
@@ -377,7 +382,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private function loadMapHandler(event:MapEvent):void {
 			_mapSizeW = _map.mapSizeX;
 			_mapSizeH = _map.mapSizeY;
-			_visibleChunks = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.min(_mapSizeW, _mapSizeH)/_chunkSize);
+			_visibleChunksX = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, _mapSizeW/_chunkSize);
+			_visibleChunksY = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, _mapSizeH/_chunkSize);
 			updateVisibleChunks();
 		}
 		

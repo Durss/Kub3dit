@@ -23,6 +23,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _mapSizeY:int;
 		private var _mapSizeZ:int;
 		private var _map:ByteArray;
+		private var _adaptSizes:Boolean;
 		
 		
 		
@@ -33,7 +34,8 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Creates an instance of <code>Map</code>.
 		 */
-		public function Map() {
+		public function Map(adaptSizes:Boolean = true) {
+			_adaptSizes = adaptSizes;
 			super();
 		}
 
@@ -168,42 +170,46 @@ package com.muxxu.kub3dit.engin3d.map {
 			
 			//here we round the map's size to the nearest chunk size multiple.
 			//if chunk size is 16 and map size is 14, we round the map'size to 16 and center the content on it.
-			
-			//Check if a resize is needed
-			if(_mapSizeX % ChunksManager.CHUNK_SIZE != 0) {
-				value = Math.ceil(_mapSizeX/ChunksManager.CHUNK_SIZE) * ChunksManager.CHUNK_SIZE;
-				diffX = value - _mapSizeX;
-				_mapSizeX = value;
-			}
-			if(_mapSizeY % ChunksManager.CHUNK_SIZE != 0) {
-				value = Math.ceil(_mapSizeY/ChunksManager.CHUNK_SIZE) * ChunksManager.CHUNK_SIZE;
-				diffY = value - _mapSizeY;
-				_mapSizeY = value;
-			}
-			if(_mapSizeZ < Config.getNumVariable("mapSizeHeight")) {
-				value = Config.getNumVariable("mapSizeHeight");
-				diffZ = value - _mapSizeZ;
-				_mapSizeZ = value;
-			}
-			
-			//If a resize is needed, center the content on it.
-			if(diffX > 0 || diffY > 0 || diffZ > 0) {
-				_map = new ByteArray();
-				_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
+			if(_adaptSizes) {
+				//Check if a resize is needed
+				if(_mapSizeX % ChunksManager.CHUNK_SIZE != 0) {
+					value = Math.ceil(_mapSizeX/ChunksManager.CHUNK_SIZE) * ChunksManager.CHUNK_SIZE;
+					diffX = value - _mapSizeX;
+					_mapSizeX = value;
+				}
+				if(_mapSizeY % ChunksManager.CHUNK_SIZE != 0) {
+					value = Math.ceil(_mapSizeY/ChunksManager.CHUNK_SIZE) * ChunksManager.CHUNK_SIZE;
+					diffY = value - _mapSizeY;
+					_mapSizeY = value;
+				}
+				if(_mapSizeZ < Config.getNumVariable("mapSizeHeight")) {
+					value = Config.getNumVariable("mapSizeHeight");
+					diffZ = value - _mapSizeZ;
+					_mapSizeZ = value;
+				}
 				
-				//write loaded map on the bottom center.
-				var px:int, py:int, pz:int, i:int;
-				while(data.bytesAvailable) {
-					px = diffX * .5 + i%ox;
-					py = diffY * .5 + Math.floor(i/ox)%oy;
-					pz = oz - 1 - Math.floor(i/(ox*oy));
-					_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
-					_map.writeByte(data.readByte());
-					i++;
+				//If a resize is needed, center the content on it.
+				if(diffX > 0 || diffY > 0 || diffZ > 0) {
+					_map = new ByteArray();
+					_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
+					
+					//write loaded map on the bottom center.
+					var px:int, py:int, pz:int, i:int;
+					while(data.bytesAvailable) {
+						px = diffX * .5 + i%ox;
+						py = diffY * .5 + Math.floor(i/ox)%oy;
+						pz = Math.floor(i/(ox*oy));
+						_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
+						_map.writeByte(data.readByte());
+						i++;
+					}
+				}else{
+					data.readBytes(_map);
 				}
 			}else{
 				data.readBytes(_map);
 			}
+			
 			dispatchEvent(new MapEvent(MapEvent.LOAD));
 		}
 

@@ -314,7 +314,7 @@ package com.muxxu.kub3dit.model {
 				LoadMapCmd(event.currentTarget).editable;
 			}
 			Textures.getInstance().removeCustomKubes();
-			_map = MapDataParser.parse(event.data as ByteArray, true, _map);
+			_map = MapDataParser.parse(event.data as ByteArray, true, true, _map);
 			update();
 		}
 		

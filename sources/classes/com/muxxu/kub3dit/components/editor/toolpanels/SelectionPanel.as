@@ -146,7 +146,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @inheritDoc
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
-			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode;
+			var drawGUID:String = ox + "" + oy + "" + oz + "" + kubeID + "" + eraseMode + "" + _rotation + "" + _hflipState + "" + _vflipState;
 			if(drawGUID == _lastDrawGUID) return;
 			_lastDrawGUID = drawGUID;
 			
@@ -190,6 +190,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				var px:int, py:int, pz:int, tile:int, reg:int;
 				var w:uint = _copyData.readUnsignedInt();
 				var h:uint = _copyData.readUnsignedInt();
+				var d:uint = _copyData.readUnsignedInt();
 				var rW:int, rH:int;
 				
 				if(_rotation == 0 || _rotation == 180) {
@@ -236,7 +237,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 							py = rH - 1 - py;
 						}
 						
-						_chunksManager.update(ox + px, oy + py, oz - pz, _eraseMode? 0 : tile);
+						_chunksManager.update(ox + px, oy + py, oz + pz - d + 1, _eraseMode? 0 : tile);
 					}
 					i++;
 				}
@@ -398,18 +399,17 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			}else if(event.target == _exportBt) {
 				_bmd = new BitmapData(_selectRect.width, _selectRect.height, true, 0);
 				copySource();
-				var depth:int = parseInt(_depth.text)+1;
-				if (_currentLevel + 1 - depth < 0) depth = _currentLevel + 1;
 				_copyData.position = 0;
 				var w:uint = _copyData.readUnsignedInt();
 				var h:uint = _copyData.readUnsignedInt();
+				var d:uint = _copyData.readUnsignedInt();
 				_copyData.position = 0;
-
+				
 				var ba:ByteArray = new ByteArray();
-				ba.writeBytes( _copyData, 4*2 );
+				ba.writeBytes( _copyData, 4*3 );
 				ba.position = 0;
 				
-				FrontControler.getInstance().exportSelection(ba, w, h, depth);
+				FrontControler.getInstance().exportSelection(ba, w, h, d);
 				
 			}else if(event.target == _rCcwBt){
 				_rotation -= 90;
@@ -436,29 +436,38 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Copies the source to ByteArray
 		 */
 		private function copySource(generateLandmark:Boolean = true, clear:Boolean = false):void {
-			_copyData = new ByteArray();
-			_copyData.writeUnsignedInt(_selectRect.width);
-			_copyData.writeUnsignedInt(_selectRect.height);
-			_levelToColor = Textures.getInstance().levelColors;
 			var i:int, len:int, px:int, py:int, pz:int, depth:int, tile:int, pixelsDone:Array;
 			depth = parseInt(_depth.text)+1;
 			if (_currentLevel + 1 - depth < 0) depth = _currentLevel + 1;
+			
+			_copyData = new ByteArray();
+			_copyData.writeUnsignedInt(_selectRect.width);
+			_copyData.writeUnsignedInt(_selectRect.height);
+			_copyData.writeUnsignedInt(depth);
+			
 			pixelsDone = [];
+			_levelToColor = Textures.getInstance().levelColors;
 			len = _selectRect.width * _selectRect.height * depth;
 			
 			for(i = 0; i < len; ++i) {
 				px = i%_selectRect.width;
 				py = Math.floor(i/_selectRect.width)%_selectRect.height;
-				pz = _currentLevel - Math.floor(i/(_selectRect.width*_selectRect.height));
+				pz = Math.floor(i/(_selectRect.width*_selectRect.height)) + _currentLevel - depth + 1;
 				
 				if(pz < 0) break;
+				
 				tile = _chunksManager.map.getTile(_lastOrigin.x + px, _lastOrigin.y + py, pz);
 				if(clear) {
 					_chunksManager.addInvalidableCube(_lastOrigin.x + px, _lastOrigin.y + py, pz, 0);
 				}
 				
 				if (generateLandmark && tile > 0 && pixelsDone[px+"_"+py] == undefined) {
-					pixelsDone[px+"_"+py] = true;
+					//Removed the optimisation because I now copy from bottom to top
+					//to fit the global map format. Before i was doing it from top
+					//top bottom so with this trick i could avoid pixel drawing
+					//if it was already drawn.
+					//By drawing from bottom to top, i can't do this anymore.
+//					pixelsDone[px+"_"+py] = true;
 					_bmd.setPixel32(px, py, _levelToColor[tile][pz]);
 				}
 				

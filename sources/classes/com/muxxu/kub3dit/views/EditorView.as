@@ -126,6 +126,7 @@ package com.muxxu.kub3dit.views {
 			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
 //			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
 			_kubeSelector.addEventListener(Event.RESIZE, computePositions);
+			_grid.addEventListener(Event.RESIZE, computePositions);
 		}
 		
 		/**

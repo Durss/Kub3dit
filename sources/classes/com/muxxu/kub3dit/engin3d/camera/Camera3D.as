@@ -68,7 +68,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		}
 		
 		private function enterFrameHandler(e:Event):void {
-			var coeff:int = _shift? 20 : _ctrl? 10 : 1;
+			var coeff:int = _shift && _ctrl? 40 : _shift? 1 : _ctrl? 20 : 5;
 			var offx:Number = _strafe * 15 * coeff;
 			if(!_mouseView) {
 				offx = 0;
@@ -112,8 +112,8 @@ com.muxxu.kub3dit.engin3d.camera {
 		private function onKeyDown(e:KeyboardEvent):void {
 			if(e.target is TextField) return;
 			
-			_ctrl = e.ctrlKey;
-			_shift = e.shiftKey;
+			_ctrl = e.ctrlKey || e.keyCode == Keyboard.CONTROL;
+			_shift = e.shiftKey || e.keyCode == Keyboard.SHIFT;
 			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.W) {
 				_forward = 1;
 			}
@@ -128,6 +128,8 @@ com.muxxu.kub3dit.engin3d.camera {
 		}
 		
 		private function onKeyUp(e:KeyboardEvent):void {
+			if(e.keyCode == Keyboard.CONTROL) _ctrl = false;
+			if(e.keyCode == Keyboard.SHIFT) _shift = false;
 			if (e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S || e.keyCode == Keyboard.W) _forward = 0;
 			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.D || e.keyCode == Keyboard.A) _strafe = 0;
 		}

@@ -17,7 +17,7 @@
 		<var code="shareUrl"><![CDATA[http://fevermap.org/kub3dit/#{ID}]]></var>
 		<var code="mapSizeHeight">31</var>
 		<var code="energyPerDay">125</var>
-		<var code="energyCost">0.2142857142857143</var>
+		<var code="energyCost">0.21428571428571428571428571428572</var>
 	</vars>
 	
 	<paths>
