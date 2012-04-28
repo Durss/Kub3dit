@@ -60,6 +60,8 @@ package com.muxxu.kub3dit.views {
 		 * Opens the view
 		 */
 		public function open(...args):void {
+			alpha = 0;
+			visible = false;
 			TweenLite.to(this, .25, {autoAlpha:1});
 			computePositions();
 		}
