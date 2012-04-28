@@ -192,7 +192,7 @@ package com.muxxu.kub3dit.views {
 			total *= 2;//x2 because take+put
 			var days:int = Math.ceil(total/Config.getNumVariable("energyPerDay"));
 			var price:Number = days * Config.getNumVariable("energyCost");
-			_label.text = Label.getLabel("stats-details").replace(/\{TOTAL\}/gi, total).replace(/\{DAYS\}/gi, days).replace(/\{PRICE\}/gi, price.toFixed(2));
+			_label.text = Label.getLabel("stats-details").replace(/\{TOTAL\}/gi, total*.5).replace(/\{DAYS\}/gi, days).replace(/\{PRICE\}/gi, price.toFixed(2));
 			_label.y = _kubesHolder.height + 10;
 			_label.width = Math.max(150, _kubesHolder.width);
 			_copy.y = Math.round(_label.y + _label.height) + 10;
