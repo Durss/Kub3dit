@@ -1,9 +1,10 @@
 package com.muxxu.kub3dit.engin3d.ground {
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
-	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeVertexShader;
+
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DTextureFormat;
@@ -35,6 +36,7 @@ package com.muxxu.kub3dit.engin3d.ground {
 		private var _bmd:BitmapData;
 		private var _timer:int;
 		private var _accelerated:Boolean;
+		private var _manager:ChunksManager;
 		
 		
 		
@@ -45,7 +47,8 @@ package com.muxxu.kub3dit.engin3d.ground {
 		/**
 		 * Creates an instance of <code>Background</code>.
 		 */
-		public function Ground(context3D:Context3D, accelerated:Boolean) {
+		public function Ground(context3D:Context3D, accelerated:Boolean, manager:ChunksManager) {
+			_manager = manager;
 			_accelerated = accelerated;
 			_context3D = context3D;
 			initialize();
@@ -66,18 +69,21 @@ package com.muxxu.kub3dit.engin3d.ground {
 		/**
 		 * Renders the background's buffer
 		 */
-		public function render(size:int):void {
+		public function render():void {
+			if(_manager.bounds == null) return;
+			
 			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE_RATIO;
 			
 			if(_timer == 0)_inc += 1/16;
 			_timer = (_timer+1)%(16/2);
 			_inc = _inc%16;
-			size = 1000;//(Math.max(size, 2) + 4) * 16;
+
+			var size:Number = _manager.bounds.width;
 			
 			//Init vertices
 			var index:int = 0;
-			var offsetX:Number = -(size * cubeSizeRatio * .5)-Math.floor(Camera3D.locX/(16*cubeSizeRatio))*(16*cubeSizeRatio);
-			var offsetY:Number = -(size * cubeSizeRatio * .5)+Math.floor(Camera3D.locY/(16*cubeSizeRatio))*(16*cubeSizeRatio);
+			var offsetX:Number = -_manager.bounds.x * cubeSizeRatio - cubeSizeRatio * .5;
+			var offsetY:Number = -_manager.bounds.y * cubeSizeRatio - cubeSizeRatio * .5;
 			
 			_vertexBuffer = new Vector.<Number>();
 			_vertexBuffer[index++] = offsetX;//X
