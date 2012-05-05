@@ -278,7 +278,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			//Gets map's sizes
 			if(sandkubeType) {
 				_width = _height = 32;
-				_depth = 31;
+				_depth = 32;//sandkube has one level too.
 				ba.position = ba.length - _width*_height*_depth;
 				ba.readBytes(_data);
 			}else{

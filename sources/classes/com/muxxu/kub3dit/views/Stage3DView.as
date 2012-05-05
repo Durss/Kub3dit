@@ -133,7 +133,7 @@ package com.muxxu.kub3dit.views {
 			_accelerated = _context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 			
 			_background	= new Background(_context3D);
-			_ground		= new Ground(_context3D, _accelerated);
+			_ground		= new Ground(_context3D, _accelerated, _manager);
 			_preview	= new PreviewCursor(_context3D, _accelerated);
 			
 			FrontControler.getInstance().view3DReady();
@@ -220,7 +220,7 @@ package com.muxxu.kub3dit.views {
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			
-			_ground.render(Math.max(_manager.visibleChunksX, _manager.visibleChunksY)+1);
+			_ground.render();
 			_preview.render();
 			_manager.render(m, W, H);
 			
@@ -242,7 +242,7 @@ package com.muxxu.kub3dit.views {
 				//Perspective view
 				var fov:int = 0;//60 * 0.0087266462599;
 				zNear = 2000;
-				zFar = 1;
+				zFar = 1.65;
 				var w1:Number = (2 * zNear / (zNear * Math.atan(fov) - w));
 				var h1:Number = (2 * zNear / (zNear * Math.atan(fov) + h));
 				var q1:Number = -1 * (zFar + zNear) / (zFar - zNear);

@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.chunks {
+	import flash.geom.Rectangle;
 	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
@@ -64,6 +65,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _visibleCubes:int;
 		private var _visibleChunksX:Number;
 		private var _visibleChunksY:Number;
+		private var _bounds : Rectangle;
 		
 		
 		
@@ -100,6 +102,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		public function get visibleChunksX():Number { return _visibleChunksX; }
 		
 		public function get visibleChunksY():Number { return _visibleChunksY; }
+		
+		public function get bounds():Rectangle { return _bounds; }
 
 
 
@@ -119,6 +123,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_mapSizeW = _map.mapSizeX;
 				_mapSizeH = _map.mapSizeY;
 				_accelerated = accelerated;
+				_bounds = new Rectangle();
 				_chunkSize = CHUNK_SIZE;//Number of cubes to compose a chunk of
 				_visibleCubes = _accelerated? 160 : 16;//Number of visible cubes before fog
 				_visibleChunksX = MathUtils.restrict(Math.ceil(_visibleCubes/_chunkSize)+2, 2, Math.max(2, Math.ceil(_mapSizeW/_chunkSize)));//Number of visible chunks around us
@@ -312,6 +317,11 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			//min limit
 			_offsetX = Math.max(0, _offsetX);
 			_offsetY = Math.max(0, _offsetY);
+			
+			_bounds.x = -_offsetX * _chunkSize;
+			_bounds.y = -_offsetY * _chunkSize;
+			_bounds.width = _chunksW * _chunkSize;
+			_bounds.height = _chunksH * _chunkSize;
 			
 			//Move, flag and sort the chunks
 			var drawArray:Array = [];
