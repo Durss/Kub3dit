@@ -113,6 +113,7 @@
 		<label code="helpToolsImport"><![CDATA[Importer une carte Kub3dit ou Sandkube]]></label>
 		<label code="helpToolsImg"><![CDATA[Générer depuis une image]]></label>
 		<label code="helpToolsSelect"><![CDATA[Sélection (m)]]></label>
+		<label code="helpToolsReplace"><![CDATA[Remplacer des kubes]]></label>
 		<label code="helpSyncCam"><![CDATA[Synchronise le niveau d'affichage de<br />la grille et la position de la caméra.]]></label>
 		
 		<label code="axisSelector"><![CDATA[Axe :]]></label>

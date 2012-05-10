@@ -110,6 +110,7 @@
 		<label code="helpToolsImport"><![CDATA[Importar un mapa Kub3dit o Sandkube]]></label>
 		<label code="helpToolsImg"><![CDATA[Generar de mapa de bits]]></label>
 		<label code="helpToolsSelect"><![CDATA[Seleccion (m)]]></label>
+		<label code="helpToolsReplace"><![CDATA[Reemplazar kubos]]></label>
 		<label code="helpSyncCam"><![CDATA[Sincroniza el nivel de la grilla<br />con la posicion de la camara]]></label>
 		<label code="axisSelector"><![CDATA[Eje :]]></label>
 		

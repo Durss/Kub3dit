@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.buttons {
+	import com.nurun.utils.draw.createRect;
 	import com.muxxu.kub3dit.graphics.ButtonSkin;
 	import com.nurun.components.button.GraphicButton;
 	import com.nurun.components.button.IconAlign;
@@ -29,7 +30,7 @@ package com.muxxu.kub3dit.components.buttons {
 		 */
 		public function GraphicButtonKube(icon:DisplayObject, hasBackground:Boolean = true) {
 			_hasBackground = hasBackground;
-			super(_hasBackground? new ButtonSkin() : null, icon);
+			super(_hasBackground? new ButtonSkin() : createRect(0), icon);
 			if(icon is Validable) Validable(icon).validate();
 			contentMargin = new Margin(2, 1, 2, 1);
 			iconAlign = IconAlign.LEFT;
