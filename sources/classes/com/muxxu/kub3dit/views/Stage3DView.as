@@ -41,7 +41,7 @@ package com.muxxu.kub3dit.views {
 	public class Stage3DView extends AbstractView {
 		
 		private var _stage3D:Stage3D;
-		private var _manager:ChunksManager;
+		private var _chunksManager:ChunksManager;
 		private var _context3D:Context3D;
 		private var _accelerated:Boolean;
 		private var _background:Background;
@@ -72,7 +72,7 @@ package com.muxxu.kub3dit.views {
 		/**
 		 * Gets the chunks manager's reference
 		 */
-		public function get manager():ChunksManager { return _manager; }
+		public function get manager():ChunksManager { return _chunksManager; }
 
 
 
@@ -124,7 +124,7 @@ package com.muxxu.kub3dit.views {
 		 * Called when context 3D is ready
 		 */
 		private function context3DReadyHandler(event:Event):void {
-			_manager = new ChunksManager(_map);
+			_chunksManager = new ChunksManager(_map);
 			_context3D = _stage3D.context3D;
 			_context3D.enableErrorChecking = true;
 			_context3D.setCulling(Context3DTriangleFace.BACK);
@@ -133,15 +133,16 @@ package com.muxxu.kub3dit.views {
 			_accelerated = _context3D.driverInfo.toLowerCase().indexOf("software") == -1;
 			
 			_background	= new Background(_context3D);
-			_ground		= new Ground(_context3D, _accelerated, _manager);
+			_ground		= new Ground(_context3D, _accelerated, _chunksManager);
 			_preview	= new PreviewCursor(_context3D, _accelerated);
 			
 			FrontControler.getInstance().view3DReady();
 			stage.addEventListener(Event.RESIZE, resizeHandler);
-			_manager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
+			_chunksManager.addEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
 			resizeHandler(null);
 			
 			initChunksManager();
+			FrontControler.getInstance().chunksManager = _chunksManager;
 		}
 		
 		/**
@@ -163,7 +164,7 @@ package com.muxxu.kub3dit.views {
 			//based on the z-sorting will be done correctly
 			renderFrame(null);
 			
-			_manager.initialize(_context3D, _accelerated);
+			_chunksManager.initialize(_context3D, _accelerated);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 		}
@@ -174,7 +175,7 @@ package com.muxxu.kub3dit.views {
 			if(event.keyCode == Keyboard.NUMPAD_ADD || event.keyCode == Keyboard.NUMPAD_SUBTRACT
 			|| event.keyCode == KeyboardConfigs.FOG_FAR || event.keyCode == KeyboardConfigs.FOG_NEAR) {
 				var sign:int = (event.keyCode == Keyboard.NUMPAD_ADD|| event.keyCode == KeyboardConfigs.FOG_FAR)? 1 : -1;
-				_manager.changeRenderingDistance(sign);
+				_chunksManager.changeRenderingDistance(sign);
 			}
 			
 			if(event.keyCode == Keyboard.ESCAPE && event.ctrlKey) {
@@ -187,10 +188,10 @@ package com.muxxu.kub3dit.views {
 		 * Called when chunks creation completes
 		 */
 		private function createChunksCompleteHandler(event:ManagerEvent):void {
-			_manager.createBuffers();
+			_chunksManager.createBuffers();
 			graphics.clear();
 			addEventListener(Event.ENTER_FRAME, renderFrame);
-			_manager.removeEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
+			_chunksManager.removeEventListener(ManagerEvent.COMPLETE, createChunksCompleteHandler);
 		}
 		
 		/**
@@ -214,15 +215,15 @@ package com.muxxu.kub3dit.views {
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(Math.max(_manager.visibleChunksX, _manager.visibleChunksY) * 3, 24) * ChunkData.CUBE_SIZE_RATIO;
+			var fogLength:int = Math.min(Math.max(_chunksManager.visibleChunksX, _chunksManager.visibleChunksY) * 3, 24) * ChunkData.CUBE_SIZE_RATIO;
 			// Number of cubes to do the fog on
-			var farplane:int = _manager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO - fogLength;//Number of cubes to start the fog at
+			var farplane:int = _chunksManager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO - fogLength;//Number of cubes to start the fog at
 			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
 			
 			_ground.render();
 			_preview.render();
-			_manager.render(m, W, H);
+			_chunksManager.render(m, W, H);
 			
 			_context3D.present();
 			

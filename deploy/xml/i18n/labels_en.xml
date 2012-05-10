@@ -114,6 +114,7 @@
 		<label code="helpToolsImport"><![CDATA[Import a Kub3dit or Sandkube map]]></label>
 		<label code="helpToolsImg"><![CDATA[Generate from bitmap]]></label>
 		<label code="helpToolsSelect"><![CDATA[Selection (m)]]></label>
+		<label code="helpToolsReplace"><![CDATA[Replace kubes]]></label>
 		<label code="helpSyncCam"><![CDATA[Synch the grid's level<br />and the camera's postion]]></label>
 		
 		<label code="axisSelector"><![CDATA[Axe :]]></label>

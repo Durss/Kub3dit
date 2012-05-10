@@ -1,8 +1,9 @@
 package com.muxxu.kub3dit.controler {
-	import flash.utils.ByteArray;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.model.Model;
 
 	import flash.errors.IllegalOperationError;
+	import flash.utils.ByteArray;
 	
 	
 	/**
@@ -41,6 +42,13 @@ package com.muxxu.kub3dit.controler {
 		public static function getInstance():FrontControler {
 			if(_instance == null)_instance = new  FrontControler(new SingletonEnforcer());
 			return _instance;	
+		}
+		
+		/**
+		 * Sets the chuncks manager's reference
+		 */
+		public function set chunksManager(value:ChunksManager):void {
+			_model.chunksManager = value;
 		}
 
 
@@ -100,9 +108,9 @@ package com.muxxu.kub3dit.controler {
 		/**
 		 * Downloads the map's levels
 		 */
-		public function downloadMapLevels():void {
-			_model.downloadMapLevels();
-		}
+//		public function downloadMapLevels():void {
+//			_model.downloadMapLevels();
+//		}
 		
 		/**
 		 * Downloads the map
@@ -130,6 +138,13 @@ package com.muxxu.kub3dit.controler {
 		 */
 		public function exportSelection(data:ByteArray, width:int, height:int, depth:int):void {
 			_model.exportSelection(data, width, height, depth);
+		}
+		
+		/**
+		 * Replaces a kube by an other one in the whole map.
+		 */
+		public function replaceKubes(replacer:int, replaced:int):void {
+			_model.replaceKubes(replacer, replaced);
 		}
 
 

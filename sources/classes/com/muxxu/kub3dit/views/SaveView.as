@@ -1,14 +1,13 @@
 package com.muxxu.kub3dit.views {
-	import com.muxxu.kub3dit.commands.ISaveView;
 	import gs.TweenLite;
 
+	import com.muxxu.kub3dit.commands.ISaveView;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.form.UploadForm;
 	import com.muxxu.kub3dit.components.window.PromptWindow;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.muxxu.kub3dit.graphics.DownloadIcon;
-	import com.muxxu.kub3dit.graphics.LevelsIcon;
 	import com.muxxu.kub3dit.model.Model;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
@@ -31,7 +30,7 @@ package com.muxxu.kub3dit.views {
 		private var _content:Sprite;
 		private var _disableLayer:Sprite;
 		private var _downloadBt:DisplayObject;
-		private var _levelsBt:ButtonKube;
+//		private var _levelsBt:ButtonKube;
 		private var _uploadForm:UploadForm;
 		private var _editableMap:Boolean;
 		private var _mapId:String;
@@ -107,11 +106,12 @@ package com.muxxu.kub3dit.views {
 			visible = false;
 			_disableLayer = addChild(new Sprite()) as Sprite;
 			_content	= new Sprite();
-			_levelsBt	= _content.addChild(new ButtonKube(Label.getLabel("prompt-mapDownloadLevels"), true, new LevelsIcon())) as ButtonKube;
+//			_levelsBt	= _content.addChild(new ButtonKube(Label.getLabel("prompt-mapDownloadLevels"), true, new LevelsIcon())) as ButtonKube;
 			_downloadBt	= _content.addChild(new ButtonKube(Label.getLabel("prompt-mapDownload"), true, new DownloadIcon())) as ButtonKube;
 			_uploadForm	= _content.addChild(new UploadForm()) as UploadForm;
 			
-			_levelsBt.width = _downloadBt.width = _uploadForm.width = 250;
+//			_levelsBt.width = 
+			_downloadBt.width = _uploadForm.width = 250;
 			
 			_window = addChild(new PromptWindow(Label.getLabel("prompt-mapSave"), _content)) as PromptWindow;
 			
@@ -128,8 +128,8 @@ package com.muxxu.kub3dit.views {
 				TweenLite.to(this, .25, {autoAlpha:0});
 			}else if(event.target == _downloadBt) {
 				FrontControler.getInstance().downloadMap();
-			}else if(event.target == _levelsBt) {
-				FrontControler.getInstance().downloadMapLevels();
+//			}else if(event.target == _levelsBt) {
+//				FrontControler.getInstance().downloadMapLevels();
 			}
 		}
 		
@@ -146,7 +146,8 @@ package com.muxxu.kub3dit.views {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
-			PosUtils.vPlaceNext(5, _levelsBt, _downloadBt, _uploadForm);
+			PosUtils.vPlaceNext(5, _downloadBt, _uploadForm);
+//			PosUtils.vPlaceNext(5, _levelsBt, _downloadBt, _uploadForm);
 			_window.updateSizes();
 			PosUtils.centerInStage(_window);
 			_disableLayer.graphics.clear();

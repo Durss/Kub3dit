@@ -1,9 +1,6 @@
 package com.muxxu.kub3dit.model {
 	import by.blooddy.crypto.image.PNGEncoder;
 
-	import nochump.util.zip.ZipEntry;
-	import nochump.util.zip.ZipOutput;
-
 	import com.asual.swfaddress.SWFAddress;
 	import com.asual.swfaddress.SWFAddressEvent;
 	import com.muxxu.kub3dit.commands.AddKubeCmd;
@@ -11,8 +8,10 @@ package com.muxxu.kub3dit.model {
 	import com.muxxu.kub3dit.commands.GenerateRadarAndLevelsCmd;
 	import com.muxxu.kub3dit.commands.InitTexturesCmd;
 	import com.muxxu.kub3dit.commands.LoadMapCmd;
+	import com.muxxu.kub3dit.commands.ReplaceKubeCmd;
 	import com.muxxu.kub3dit.commands.UploadMapCmd;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.events.LightModelEvent;
@@ -52,6 +51,8 @@ package com.muxxu.kub3dit.model {
 		private var _loadMapCmd:LoadMapCmd;
 		private var _ignoreLoadId:String;
 		private var _ignoreNextURLChange:Boolean;
+		private var _replaceCmd:ReplaceKubeCmd;
+		private var _chunksManager:ChunksManager;
 		
 		
 		
@@ -85,6 +86,13 @@ package com.muxxu.kub3dit.model {
 		 * Gets if the 3D view is ready
 		 */
 		public function get view3DReady():Boolean { return _view3DReady; }
+		
+		/**
+		 * Sets the chuncks manager's reference
+		 */
+		public function set chunksManager(value:ChunksManager):void {
+			_chunksManager = value;
+		}
 
 
 
@@ -164,21 +172,21 @@ package com.muxxu.kub3dit.model {
 		/**
 		 * Downloads the map's levels
 		 */
-		public function downloadMapLevels():void {
-			var i:int, len:int;
-			len = _saveCmd.levelsData.length;
-			var zipOut:ZipOutput = new ZipOutput();
-			for(i = 0; i < len; ++i) {
-				var fileName:String = (i+1)+".png";
-				var ze:ZipEntry = new ZipEntry(fileName);
-				zipOut.putNextEntry(ze);
-				zipOut.write( _saveCmd.levelsData[i] );
-				zipOut.closeEntry();
-			}
-			zipOut.finish();
-			var fr:FileReference = new FileReference();
-			fr.save(zipOut.byteArray, "kub3dit-map.zip");
-		}
+//		public function downloadMapLevels():void {
+//			var i:int, len:int;
+//			len = _saveCmd.levelsData.length;
+//			var zipOut:ZipOutput = new ZipOutput();
+//			for(i = 0; i < len; ++i) {
+//				var fileName:String = (i+1)+".png";
+//				var ze:ZipEntry = new ZipEntry(fileName);
+//				zipOut.putNextEntry(ze);
+//				zipOut.write( _saveCmd.levelsData[i] );
+//				zipOut.closeEntry();
+//			}
+//			zipOut.finish();
+//			var fr:FileReference = new FileReference();
+//			fr.save(zipOut.byteArray, "kub3dit-map.zip");
+//		}
 		
 		/**
 		 * Downloads the map
@@ -225,6 +233,17 @@ package com.muxxu.kub3dit.model {
 			_saveCmd.execute();
 			lock();
 		}
+		
+		/**
+		 * Replaces a kube by an other one in the whole map.
+		 */
+		public function replaceKubes(replacer:int, replaced:int):void {
+			_replaceCmd.replacerID = replacer;
+			_replaceCmd.replacedID = replaced;
+			_replaceCmd.map = _map;
+			_replaceCmd.chunksManager = _chunksManager;
+			_replaceCmd.execute();
+		}
 
 
 		
@@ -237,6 +256,10 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function initialize():void {
 			_currentKubeId = "3";//Defaulty selected kube
+			_replaceCmd = new ReplaceKubeCmd();
+//			_replaceCmd.addEventListener(CommandEvent.COMPLETE, replaceCompleteHandler);
+//			_replaceCmd.addEventListener(CommandEvent.ERROR, replaceErrorHandler);
+			_replaceCmd.addEventListener(ProgressiveCommandEvent.PROGRESS, commandProgressHandler);
 		}
 		
 		/**

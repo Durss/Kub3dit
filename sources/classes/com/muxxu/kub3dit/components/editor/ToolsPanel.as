@@ -8,12 +8,14 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.components.editor.toolpanels.ImportPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.PencilPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.RectanglePanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.ReplacePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.SelectionPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.SpherePanel;
 	import com.muxxu.kub3dit.events.ButtonEditorToolEvent;
 	import com.muxxu.kub3dit.events.ToolsPanelEvent;
 	import com.muxxu.kub3dit.graphics.ImageIcon;
 	import com.muxxu.kub3dit.graphics.ImportIcon;
+	import com.muxxu.kub3dit.graphics.ReplaceIcon;
 	import com.muxxu.kub3dit.graphics.RubberIcon;
 	import com.muxxu.kub3dit.graphics.SelectionIcon;
 	import com.muxxu.kub3dit.graphics.Tool1Icon;
@@ -62,6 +64,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _import:ButtonEditorTool;
 		private var _select:ButtonEditorTool;
 		private var _imgBt:ButtonEditorTool;
+		private var _replace:ButtonEditorTool;
 		
 		
 		
@@ -120,6 +123,7 @@ package com.muxxu.kub3dit.components.editor {
 			_import	= addChild(new ButtonEditorTool( new ImportIcon(), false, Label.getLabel("helpToolsImport"), true)) as ButtonEditorTool;
 			_imgBt	= addChild(new ButtonEditorTool( new ImageIcon(), false, Label.getLabel("helpToolsImg"), true)) as ButtonEditorTool;
 			_select	= addChild(new ButtonEditorTool( new SelectionIcon(), false, Label.getLabel("helpToolsSelect"), true)) as ButtonEditorTool;
+			_replace= addChild(new ButtonEditorTool( new ReplaceIcon(), false, Label.getLabel("helpToolsReplace"), true)) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
 			
 			_group = new FormComponentGroup();
@@ -133,6 +137,7 @@ package com.muxxu.kub3dit.components.editor {
 			_tools.push(_import);
 			_tools.push(_imgBt);
 			_tools.push(_select);
+			_tools.push(_replace);
 			
 //			_select.enabled = false;
 			
@@ -146,6 +151,7 @@ package com.muxxu.kub3dit.components.editor {
 			_buttonToClassType[_import] = ImportPanel;
 			_buttonToClassType[_imgBt] = ImageGenPanel;
 			_buttonToClassType[_select] = SelectionPanel;
+			_buttonToClassType[_replace] = ReplacePanel;
 			
 			var i:int, len:int;
 			len = _tools.length;
@@ -178,6 +184,7 @@ package com.muxxu.kub3dit.components.editor {
 			_import.y += 10;
 			_imgBt.y += 10;
 			_select.y += 10;
+			_replace.y += 10;
 			
 			_helpBt.y = Math.round(last.y + last.height + 10);
 		}

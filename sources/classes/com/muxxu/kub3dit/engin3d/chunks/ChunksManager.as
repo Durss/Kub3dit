@@ -65,7 +65,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _visibleCubes:int;
 		private var _visibleChunksX:Number;
 		private var _visibleChunksY:Number;
-		private var _bounds : Rectangle;
+		private var _bounds:Rectangle;
 		
 		
 		

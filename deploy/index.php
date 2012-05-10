@@ -199,7 +199,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "16.2.19";
+	$version= "16.3";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";
