@@ -80,10 +80,10 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Updates a specific tile
 		 */
 		public function updateTile(xloc:int, yloc:int, zloc:int, value:uint):void {
-			if(xloc * yloc * zloc < _map.length) {
+//			if(xloc * yloc * zloc < _map.length) {
 				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
 				_map.writeByte(value);
-			}
+//			}
 		}
 		
 		/**

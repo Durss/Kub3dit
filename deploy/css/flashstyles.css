@@ -1,5 +1,6 @@
 ﻿.debug { font-family:Verdana; font-size:12; color:#CC0000; flash-glow:[1.3,10,ffffff]}
 .error { font-family:Verdana; font-size:12; color:#CC0000; }
+.errorBig { font-family:Verdana; font-weight:bold; font-size:14; color:#cc0000; }
 
 .splashScreenInputLabel { font-family:Verdana; font-size:30; font-weight:bold; color:#47A9D1; flash-charcase:upper; }
 .splashScreenButton { font-family:Verdana; font-size:50; font-weight:bold; color:#ffffff; flash-alpha:1; flash-charcase:upper; text-align:center; }

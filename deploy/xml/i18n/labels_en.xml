@@ -5,6 +5,7 @@
 		<label code="loadKubeError"><![CDATA[Kube's loading has failed.<br />Make sure the ID is valid.]]></label>
 		<label code="uploadMapError"><![CDATA[An error has occured during loading.<br />Please try again.<br /><br />If problem persists, contact <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
 		<label code="maxCustomKubesError"><![CDATA[You can't add more than ${VALUE} custom kubes.]]></label>
+		<label code="accelerationDisabledWarning"><![CDATA[Hardware acceleration isn't available!<br />3D rendering quality has been reduced to keep decent performances.]]></label>
 		
 		
 		<!-- Splash screen -->
@@ -103,7 +104,7 @@
 		<label code="addKubeDescription"><![CDATA[You can add custom kubes to the list. To do that, please use the <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> to create some then specify the IDs in the input below.<br />The ID can be found on it's details window.]]></label>
 		<label code="invalidKubeId"><![CDATA[Invalid ID]]></label>
 		
-		<label code="helpTools"><![CDATA[• Keep space bar pressed to be able to drag the grid.<br />• Press Ctrl key to display a cell's coordinates.<br />• Shift+Mouse Wheel to zoom the grid]]></label>
+		<label code="helpTools"><![CDATA[• Keep space bar pressed to be able to drag the grid.<br />• Press Ctrl key to display a cell's coordinates.<br />• Shift+Mouse Wheel to zoom the grid<br />• CTRL+Z/CTR+Y undo/redo<br />• + - to change rendering distance]]></label>
 		<label code="helpToolsRubber"><![CDATA[Toggles the current tool to rubber (E)]]></label>
 		<label code="helpTools1"><![CDATA[Pencil (1)]]></label>
 		<label code="helpTools2"><![CDATA[Paint bucket (2)]]></label>

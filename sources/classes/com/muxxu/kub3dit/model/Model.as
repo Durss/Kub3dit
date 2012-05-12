@@ -244,6 +244,27 @@ package com.muxxu.kub3dit.model {
 			_replaceCmd.chunksManager = _chunksManager;
 			_replaceCmd.execute();
 		}
+		
+		/**
+		 * Undo the last action
+		 */
+		public function undo():void {
+			_chunksManager.undo();
+		}
+		
+		/**
+		 * Redo the last action
+		 */
+		public function redo():void {
+			_chunksManager.redo();
+		}
+		
+		/**
+		 * Saves the current modification history
+		 */
+		public function saveHistory():void {
+			_chunksManager.saveCurrentHistory();
+		}
 
 
 		

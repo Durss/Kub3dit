@@ -146,6 +146,27 @@ package com.muxxu.kub3dit.controler {
 		public function replaceKubes(replacer:int, replaced:int):void {
 			_model.replaceKubes(replacer, replaced);
 		}
+		
+		/**
+		 * Undo the last action
+		 */
+		public function undo():void {
+			_model.undo();
+		}
+		
+		/**
+		 * Redo the last action
+		 */
+		public function redo():void {
+			_model.redo();
+		}
+		
+		/**
+		 * Saves the current modification history
+		 */
+		public function saveHistory():void {
+			_model.saveHistory();
+		}
 
 
 		

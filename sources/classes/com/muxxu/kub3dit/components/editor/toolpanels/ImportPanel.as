@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.buttons.GraphicButtonKube;
@@ -141,7 +142,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			var i:int, px:int, py:int, pz:int, tile:int, reg:int;
 			var max:int = _colors.length;
 			while(_data.bytesAvailable) {
-				tile = _data.readByte();
+				tile = _data.readUnsignedByte();
 				if(tile > 0 && tile < max) {
 					px = i%_width;
 					py = Math.floor(i/_width)%_height;
@@ -228,6 +229,14 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_cmd = new BrowseForFileCmd("Sandkube / Kub3dit map", "*.png;*.jpg;*.jpeg");
 			_cmd.addEventListener(CommandEvent.COMPLETE, loadImageCompleteHandler);
 			addEventListener(MouseEvent.CLICK, clickButtonHandler);
+			Textures.getInstance().addEventListener(TextureEvent.CHANGE_SPRITESHEET, spriteSeetChangeHandler);
+		}
+		
+		/**
+		 * Called when spritesheet changes
+		 */
+		private function spriteSeetChangeHandler(event:TextureEvent):void {
+			_colors = Textures.getInstance().levelColors;
 		}
 		
 		/**
@@ -300,7 +309,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				pz = _depth-1;
 				while(pz>=0) {
 					_data.position = px + py*_width + pz*_width*_height;
-					tile = _data.readByte();
+					tile = _data.readUnsignedByte();
 					if(tile > 0) {
 						if(tile < max) {
 							_bmd.setPixel32(px, py, _colors[tile][pz]);
