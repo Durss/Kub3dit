@@ -1,4 +1,8 @@
 package com.muxxu.kub3dit {
+	import gs.plugins.RemoveChildPlugin;
+	import gs.plugins.TweenPlugin;
+	import flash.ui.Keyboard;
+	import flash.events.KeyboardEvent;
 	import com.muxxu.kub3dit.views.Build3rView;
 	import com.muxxu.kub3dit.views.StatsView;
 	import com.muxxu.kub3dit.controler.FrontControler;
@@ -73,6 +77,7 @@ package com.muxxu.kub3dit {
 		 */
 		private function initialize():void {
 			_model = new Model();
+			TweenPlugin.activate([RemoveChildPlugin]);
 			FrontControler.getInstance().initialize(_model);
 			ViewLocator.getInstance().initialise(_model);
 
@@ -105,7 +110,23 @@ package com.muxxu.kub3dit {
 			
 			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			stage.addEventListener(Event.RESIZE, computePositions);
+			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
 			computePositions();
+		}
+		
+		/**
+		 * Called when a key is released
+		 */
+		private function keyUpHandler(event:KeyboardEvent):void {
+			if(event.keyCode == Keyboard.Z && event.ctrlKey) {
+				FrontControler.getInstance().undo();
+			}else
+			if(event.keyCode == Keyboard.Y && event.ctrlKey) {
+				FrontControler.getInstance().redo();
+			}else
+			if(event.keyCode == Keyboard.S && event.ctrlKey) {
+				FrontControler.getInstance().saveMap();
+			}
 		}
 				
 		/**

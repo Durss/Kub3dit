@@ -1,4 +1,7 @@
 package com.muxxu.kub3dit.views {
+	import flash.filters.DropShadowFilter;
+	import gs.TweenLite;
+	import com.nurun.structure.environnement.label.Label;
 	import com.muxxu.kub3dit.engin3d.preview.PreviewCursor;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.background.Background;
@@ -143,6 +146,18 @@ package com.muxxu.kub3dit.views {
 			
 			initChunksManager();
 			FrontControler.getInstance().chunksManager = _chunksManager;
+			
+			if (!_accelerated) {
+				var tfError:CssTextField = addChild(new CssTextField("errorBig")) as CssTextField;
+				tfError.background = true;
+				tfError.backgroundColor = 0x47A9D1;
+				tfError.text = Label.getLabel("accelerationDisabledWarning");
+				tfError.y = stage.stageHeight + 10;
+				tfError.filters = [new DropShadowFilter(5, -90, 0, .5, 5, 5, 1.2, 3)];
+				PosUtils.hCenterIn(tfError, stage);
+				TweenLite.to(tfError, .5, {y:stage.stageHeight-tfError.height, delay:2});
+				TweenLite.to(tfError, .5, {y:stage.stageHeight + 10, delay:10, removeChild:true});
+			}
 		}
 		
 		/**

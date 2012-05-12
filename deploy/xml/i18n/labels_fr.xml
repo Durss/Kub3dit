@@ -5,6 +5,7 @@
 		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
 		<label code="uploadMapError"><![CDATA[Une erreur est survenue lors de l'upload.<br />Merci de ré-essayer.<br /><br />Si le problème persiste, contactez <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
 		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kubes personnalisés.]]></label>
+		<label code="accelerationDisabledWarning"><![CDATA[L'accélération matérielle n'est pas disponible!<br />La qualité du rendu 3D a été réduite afin que l'éditeur reste à peu près fluide.]]></label>
 		
 		<!-- Splash screen -->
 		<label code="splashDefault"><![CDATA[Carte ${X}x${Y}]]></label>
@@ -36,7 +37,7 @@
 		<label code="kube16"><![CDATA[Bois Clair]]></label>
 		<label code="kube17"><![CDATA[Feuilles Roses]]></label>
 		<label code="kube18"><![CDATA[Racines]]></label>
-		<label code="kube19"><![CDATA[Bois geant]]></label>
+		<label code="kube19"><![CDATA[Bois géant]]></label>
 		<label code="kube20"><![CDATA[Feuilles Géantes]]></label>
 		<label code="kube21"><![CDATA[Terre-Neige]]></label>
 		<label code="kube22"><![CDATA[Bois de sapin]]></label>
@@ -63,7 +64,7 @@
 		<label code="kube43"><![CDATA[Pâturage]]></label>
 		<label code="kube44"><![CDATA[Fleur Blanche]]></label>
 		<label code="kube45"><![CDATA[Fleur rose]]></label>
-		<label code="kube46"><![CDATA[Stonedge]]></label>
+		<label code="kube46"><![CDATA[Stonehenge]]></label>
 		<label code="kube47"><![CDATA[Savane]]></label>
 		<label code="kube48"><![CDATA[Arbuste Sec]]></label>
 		<label code="kube49"><![CDATA[Zèbre]]></label>
@@ -88,7 +89,7 @@
 		<label code="kube68"><![CDATA[Lumière]]></label>
 		<label code="kube69"><![CDATA[Or]]></label>
 		<label code="kube70"><![CDATA[Forum]]></label>
-		<label code="kube71"><![CDATA[Téléporteur]]></label>
+		<label code="kube71"><![CDATA[Téléport]]></label>
 		<label code="kube72"><![CDATA[Ressort]]></label>
 		<label code="kube73"><![CDATA[Coffre]]></label>
 		<label code="kube74"><![CDATA[Rubix]]></label>
@@ -102,7 +103,7 @@
 		<label code="addKubeDescription"><![CDATA[Vous pouvez ici ajouter des kubes personnalisés à la liste existante de kubes. Pour cela il vous faudra utiliser l'application <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a> afin de créer des kubes puis en renseigner l'ID dans le champs ci-dessous.<br />L'ID d'un kube est disponible sur sa fiche de détail]]></label>
 		<label code="invalidKubeId"><![CDATA[ID invalide]]></label>
 		
-		<label code="helpTools"><![CDATA[• Gardez la barre d'espace appuyée pour déplacer la grille.<br />• Ctrl pour afficher les coordonnées d'une cellule.<br />• Shift+Molette pour zoomer la grille]]></label>
+		<label code="helpTools"><![CDATA[• Gardez la barre d'espace appuyée pour déplacer la grille.<br />• Ctrl pour afficher les coordonnées d'une cellule.<br />• Shift+Molette pour zoomer la grille<br />• CTRL+Z/CTR+Y annuler/répéter<br />• + - pour modifier la distance visible]]></label>
 		<label code="helpToolsRubber"><![CDATA[Bascule l'outil courant en mode gomme (E)]]></label>
 		<label code="helpTools1"><![CDATA[Pinceau (1)]]></label>
 		<label code="helpTools2"><![CDATA[Pot de peinture (2)]]></label>

@@ -1,6 +1,4 @@
 package com.muxxu.kub3dit.engin3d.chunks {
-	import flash.geom.Rectangle;
-	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.events.MapEvent;
@@ -9,6 +7,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeVertexShader;
 	import com.muxxu.kub3dit.events.LightModelEvent;
+	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.math.MathUtils;
 
@@ -22,8 +21,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix3D;
+	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
+	
+	[Event(name="renderProgress", type="com.muxxu.kub3dit.engin3d.events.ManagerEvent")]
+	[Event(name="renderComplete", type="com.muxxu.kub3dit.engin3d.events.ManagerEvent")]
+	[Event(name="internalUpdate", type="com.muxxu.kub3dit.engin3d.events.ManagerEvent")]
 
 	
 	/**
@@ -66,6 +70,12 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _visibleChunksX:Number;
 		private var _visibleChunksY:Number;
 		private var _bounds:Rectangle;
+		private var _historyUndo:Vector.<Array>;
+		private var _currentHistory:Array;
+		private var _currentHistoryCoordsDone:Object;
+		private var _historyUndoPointer:int;
+		private var _historyRedo : Vector.<Array>;
+		private var _lockHistorySave : Boolean;
 		
 		
 		
@@ -78,6 +88,11 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 */
 		public function ChunksManager(map:Map) {
 			_map = map;
+			_historyUndo = new Vector.<Array>();
+			_historyRedo = new Vector.<Array>();
+			_currentHistory = [];
+			_currentHistoryCoordsDone = {};
+			_historyUndoPointer = 0;
 		}
 
 		
@@ -182,6 +197,76 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				cube = _invalidateStack.pop();
 				update(cube.px, cube.py, cube.pz, cube.tile);
 			}
+			dispatchEvent(new ManagerEvent(ManagerEvent.INTERNAL_UPDATE));
+		}
+		
+		/**
+		 * Savec the current modification history
+		 */
+		public function saveCurrentHistory():void {
+			//If nothing has changed, ignore.
+			if(_currentHistory.length == 0) return;
+			
+			//remove all the histories from the pointer's position to the end
+			if(_historyUndoPointer < _historyUndo.length) {
+				var i:int, len:int;
+				len = _historyUndo.length;
+				for(i = _historyUndoPointer; i < len; ++i) {
+					_historyUndo.pop();
+				}
+				//Clear redo history
+				while(_historyRedo.length > 0) _historyRedo.pop();
+			}
+			
+			_historyUndo.push(_currentHistory);
+			_historyUndoPointer = _historyUndo.length;
+			_currentHistory = [];
+			_currentHistoryCoordsDone = {};
+			if(_historyUndo.length > 50) _historyUndo.shift();
+		}
+		
+		/**
+		 * Undo a modification
+		 */
+		public function undo():void {
+			setHistory(_historyUndoPointer - 1);
+		}
+		
+		/**
+		 * Redo the last undone action
+		 */
+		public function redo():void {
+			setHistory(_historyUndoPointer + 1, true);
+		}
+		
+		private function setHistory(index:int, isRedo:Boolean = false):void {
+			if((!isRedo && (index < 0 || index >= _historyUndo.length))
+				|| (isRedo && _historyRedo.length == 0)) return;
+			
+			_currentHistory = [];
+			_currentHistoryCoordsDone = {};
+			_historyUndoPointer = index;
+			
+			var i:int, len:int, entry:Object, x:int, y:int, z:int;
+			var history:Array = isRedo? _historyRedo[_historyRedo.length-1] : _historyUndo[_historyUndoPointer];
+			len = history.length;
+			for(i = 0; i < len; ++i) {
+				entry = history[i];
+				x = entry["x"];
+				y = entry["y"];
+				z = entry["z"];
+				if(!isRedo) _currentHistory.push({x:x, y:y, z:z, t:_map.getTile(x, y, z)});
+				_invalidateStack.push(new InvalidatableCube(x, y, z, entry["t"]));
+			}
+			if(!isRedo) {
+				_historyRedo.push(_currentHistory);
+				_currentHistory = [];
+			}else{
+				_historyRedo.pop();
+			}
+			_lockHistorySave = true;
+			invalidate();
+			_lockHistorySave = false;
 		}
 		
 		/**
@@ -192,6 +277,12 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			if(x < 0 || x > _map.mapSizeX-1
 			|| y < 0 || y > _map.mapSizeY-1
 			|| z < 0 || z > _map.mapSizeZ-1) return;
+			
+			//Save previous state if not saved yet
+			if(_currentHistoryCoordsDone[x+","+y+","+z] == undefined && !_lockHistorySave && value != _map.getTile(x, y, z)) {
+				_currentHistoryCoordsDone[x+","+y+","+z] = true;
+				_currentHistory.push({x:x,y:y,z:z,t:_map.getTile(x, y, z)});
+			}
 			
 			_map.updateTile(x, y, z, value);
 			var px:int = Math.floor(x / _chunkSize)*_chunkSize;

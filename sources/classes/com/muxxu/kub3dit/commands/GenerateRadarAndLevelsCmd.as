@@ -140,7 +140,7 @@ package com.muxxu.kub3dit.commands {
 //					if(tile > 0) {
 //						_levels[pz].setPixel32(px, py, 0xff000000 + _colors[tile][pz]);
 //					}
-					if(upperTile == 0 && tile > 0) {
+					if(upperTile == 0 && tile > 0 && tile != 61) {
 						upperTile = tile;
 						upperTileZ = pz;
 						break;//TODO, remove this if setting levels generation back.

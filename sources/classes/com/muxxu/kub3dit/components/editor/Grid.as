@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
+	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
@@ -175,8 +177,17 @@ package com.muxxu.kub3dit.components.editor {
 			_gridHolder.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
 			_radarBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_SELECTION_CHANGE, kubeSelectionChangeHandler);
+			_3dView.manager.addEventListener(ManagerEvent.INTERNAL_UPDATE, updateMapRendering);
 			
 			_gridHolder.scrollRect = new Rectangle(0,0,_size*_cellSize,_size*_cellSize);
+		}
+		
+		/**
+		 * Forces grid's rendering when a map update is made by something else
+		 * thand this view (selection cut, CTRL+Z, CTRL+Y)
+		 */
+		private function updateMapRendering(event:Event = null):void {
+			_subLevelsDrawn = false;
 		}
 		
 		/**
@@ -343,13 +354,15 @@ package com.muxxu.kub3dit.components.editor {
 		 * Draw one single grid's level
 		 */
 		public function drawLevel(ox:int, oy:int, oz:int, alpha:Number = 1):void {
+			if(oz < 0) return;
+			
 			var i:int, len:int, px:int, py:int, tile:int;
 			len = _size * _size;
 			for(i = 0; i < len; ++i) {
 				py = Math.floor(i/_size);
 				px = i - py*_size;
 				tile = _map.getTile(ox+px, oy+py, oz);
-				if(tile > 0) {
+				if(tile > 0 && tile != 61) {
 					_bmdGrid.setPixel32(px, py, ((alpha*0xff) << 24) + (_colors[tile][oz] & 0xffffff));
 				}
 			}
@@ -443,6 +456,7 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function mouseUpHandler(event:MouseEvent):void {
 			_pressed = false;
+			FrontControler.getInstance().saveHistory();
 		}
 		
 		/**

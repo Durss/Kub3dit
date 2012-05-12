@@ -11,6 +11,7 @@ package com.muxxu.kub3dit.engin3d.events {
 		
 		public static const PROGRESS:String = "renderProgress";
 		public static const COMPLETE:String = "renderComplete";
+		public static const INTERNAL_UPDATE:String = "internalUpdate";
 		private var _progressionPercent:Number;
 		
 		

@@ -13,11 +13,11 @@ if (document.getElementById('swf_kube') != null) {
 	panelRef = unsafeWindow.document.getElementById('panel');
 	
 	var mapRef = unsafeWindow.document.getElementById('swf_minimap');
-	/*var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
+	var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
 	if(isChrome && mapRef.getElementsByTagName("embed")[0].getAttribute("wmode") != "direct") {
 		mapRef.getElementsByTagName("embed")[0].setAttribute("wmode", "opaque");
 		with (mapRef.parentNode) appendChild(removeChild(mapRef));
-	}*/
+	}
 	
 	function showBuild3r() {
 		document.getElementById("build3rApp").getElementsByTagName("embed")[0].style.width = "191px";
