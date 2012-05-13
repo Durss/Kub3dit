@@ -69,18 +69,18 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var vertexOffset:Number = .5 * cubeSizeRatio;
 			var px:int = _x * cubeSizeRatio;
 			var py:int = _y * cubeSizeRatio;
-//			var wasCubeOver:Boolean;
-//			var dropShadow:Boolean;
+			var wasCubeOver:Boolean;
+			var dropShadow:Boolean;
 			var transparent:Array = Textures.getInstance().transparencies;
 			var translucide:Array = Textures.getInstance().translucide;
 			var cubesFrameCoos:Array = Textures.getInstance().cubesFrames;
 			//FIXME shadow casting broken due to modified loop order.
-			for(zloc = 0; zloc < _sizeZ; zloc++) {
+//			for(zloc = 0; zloc < _sizeZ; zloc++) {
 				for(yloc = 0; yloc < _sizeY; ++yloc) {
 					for (xloc = 0; xloc < _sizeX; ++xloc) {
-//					dropShadow = false;
-//					wasCubeOver = false;
-//					for(zloc = _sizeZ-1; zloc > -1; --zloc) {
+					dropShadow = false;
+					wasCubeOver = false;
+					for(zloc = _sizeZ-1; zloc > -1; --zloc) {
 					
 						var tile:int = _data[zloc][yloc][xloc];
 						var xLoc2:int = xloc * cubeSizeRatio;
@@ -107,9 +107,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							var overCube:int	= _map.getTile(xloc + _x, yloc + _y, zloc + 1);
 							
 							var alpha:Number = translucide[tile]===true? .4 : 1;
-//							if(!dropShadow && wasCubeOver && overCube == 0) dropShadow = true;
-//							var brightness:Number = dropShadow? .85: 1;
-							var brightness:Number = 1;
+							if(!dropShadow && wasCubeOver && overCube == 0) dropShadow = true;
+							var brightness:Number = dropShadow? (tile==2? .75 : .88): 1;
+//							var brightness:Number = 1;
 //							brightness += (_x+_y)%16 == 0? 1 : 0;
 						
 							
@@ -131,7 +131,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX; //U
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY; //V
 								buffer[index++] = alpha;//Alpha
-								buffer[index++] = brightness - .2;//Brightness
+								buffer[index++] = .9;//Brightness
 								
 								buffer[index++] = -vertexOffset + xLoc2 + px;
 								buffer[index++] = vertexOffset + yLoc2 + py;
@@ -139,7 +139,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 								
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = vertexOffset + yLoc2 + py;
@@ -147,7 +147,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 							
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = vertexOffset + yLoc2 + py;
@@ -155,7 +155,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 								
 //								_faces.push(new Face(buffer, index, 7, false));
 //								_faces.push(new Face(buffer, index, 7, true));
@@ -180,7 +180,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX  + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 								
 								buffer[index++] = -vertexOffset + xLoc2 + px;
 								buffer[index++] = -vertexOffset + yLoc2 + py;
@@ -188,7 +188,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = -vertexOffset + yLoc2 + py;
@@ -196,7 +196,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 								
 								buffer[index++] = vertexOffset + xLoc2 + px;
 								buffer[index++] = -vertexOffset + yLoc2 + py;
@@ -204,7 +204,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 								buffer[index++] = tileSideX + textureStretchX;
 								buffer[index++] = tileSideY + textureStretchY;
 								buffer[index++] = alpha;
-								buffer[index++] = brightness - .2;
+								buffer[index++] = .9;
 								
 //								_faces.push(new Face(buffer, index, 7, false));
 //								_faces.push(new Face(buffer, index, 7, true));
@@ -412,7 +412,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 //								_faces.push(new Face(buffer, index, 7, true));
 							}
 						
-//							wasCubeOver = true;
+							if(zloc < _sizeZ-1) wasCubeOver = true;
 						}
 						
 						if(buffer.length + 7*4*6 >= 65535) {
