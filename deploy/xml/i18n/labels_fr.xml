@@ -3,6 +3,7 @@
 	<labels>
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
+		<label code="loadKubeErrorSize"><![CDATA[Seuls kubes en 16x16 peuvent être importés.]]></label>
 		<label code="uploadMapError"><![CDATA[Une erreur est survenue lors de l'upload.<br />Merci de ré-essayer.<br /><br />Si le problème persiste, contactez <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
 		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kubes personnalisés.]]></label>
 		<label code="accelerationDisabledWarning"><![CDATA[L'accélération matérielle n'est pas disponible!<br />La qualité du rendu 3D a été réduite afin que l'éditeur reste à peu près fluide.]]></label>

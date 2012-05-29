@@ -2,9 +2,10 @@
 	<labels>
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Error en la carga.<br />La ID no es valida.]]></label>
+		<label code="loadKubeErrorSize"><![CDATA[Sólo los cubos cuadrados se pueden importar.]]></label>
 		<label code="uploadMapError"><![CDATA[Un error ocurrio durante la carga.<br />Por favor intente de nuevo.<br /><br />Si el problema persiste por favor contactar <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
 		<label code="maxCustomKubesError"><![CDATA[No se puede agregar mas de ${VALUE} cubos.]]></label>
-		<label code="accelerationDisabledWarning"><![CDATA[La aceleración por hardware no está disponible!<br />La calidad ha sido reducido para que el editor permanece más o menos eficiente.]]></label>
+		<label code="accelerationDisabledWarning"><![CDATA[La aceleración por hardware no está disponible!<br />La calidad ha sido reducida para que el editor permanezca más o menos eficiente.]]></label>
 		
 		<!-- Splash screen -->
 		<label code="splashDefault"><![CDATA[Mapa ${X}x${Y}]]></label>
@@ -13,8 +14,8 @@
 		<label code="submitMapSize"><![CDATA[Generar]]></label>
 		<label code="cancelMapSize"><![CDATA[Cancelar]]></label>
 		<label code="inputMapSize"><![CDATA[Zonas :]]></label>
-		<label code="defaultHelp"><![CDATA[Mueve la rueda del mouse para aumentar y decrementar el tamaño.<br />Para otros tamaños personalizados usa el boton de abajo.]]></label>
-		<label code="titleMapSize"><![CDATA[Ingresa el numero de zonas <br />que queres para el mapa.]]></label>
+		<label code="defaultHelp"><![CDATA[Mueve la rueda del mouse para aumentar y reducir el tamaño.<br />Para otros tamaños personalizados usa el boton de abajo.]]></label>
+		<label code="titleMapSize"><![CDATA[Ingresa el numero de zonas <br />que quieres para el mapa.]]></label>
 		<label code="unkownSaveFileType"><![CDATA[Tipo invalido de archivo]]></label>
 		
 		<!-- Editor -->
@@ -58,7 +59,7 @@
 		<label code="kube38"><![CDATA[Roca fria]]></label>
 		<label code="kube39"><![CDATA[Roca Volcanica]]></label>
 		<label code="kube40"><![CDATA[Cenizas]]></label>
-		<label code="kube41"><![CDATA[Arenicas]]></label>
+		<label code="kube41"><![CDATA[Arenisca]]></label>
 		<label code="kube42"><![CDATA[Totem Antiguo]]></label>
 		<label code="kube43"><![CDATA[Pasto]]></label>
 		<label code="kube44"><![CDATA[Flor Blanca]]></label>
@@ -98,12 +99,12 @@
 		<label code="kubesList"><![CDATA[Lista de Kubos]]></label>
 		<label code="addKubeButton"><![CDATA[Añadir kubo]]></label>
 		<label code="submitKube"><![CDATA[Añadir kubo]]></label>
-		<label code="addKubeDescription"><![CDATA[Podes agregar cubos personalizados a la lista. Para hacerlo, usa <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a>  para crear algun cubo especifico y copia el ID debajo.<br />El ID se encuentra en la ventana de detalles.]]></label>
+		<label code="addKubeDescription"><![CDATA[Puedes agregar cubos personalizados a la lista. Para hacerlo, usa <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a>  para crear algun cubo especifico y copia el ID debajo.<br />El ID se encuentra en la ventana de detalles.]]></label>
 		<label code="invalidKubeId"><![CDATA[ID Invalido]]></label>
-		<label code="helpTools"><![CDATA[• Mantene la barra apretada para mover la grilla.<br />• Pulse la tecla Ctrl para mostrar las coordenadas de una celda.<br />• Shift+Ruleta para ampliar la red.<br />• CTRL+Z/CTR+Y cancelar/repetir<br />• + - para cambiar la distancia de representación]]></label>
+		<label code="helpTools"><![CDATA[• Manten la barra apretada para mover la grilla.<br />• Pulsa la tecla Ctrl para mostrar las coordenadas de una celda.<br />• Shift+Ruleta para ampliar la red.<br />• CTRL+Z/CTR+Y cancelar/repetir<br />• + - para cambiar la distancia de representación]]></label>
 		<label code="helpToolsRubber"><![CDATA[Cambia la herramienta actual a borrador (E)]]></label>
 		<label code="helpTools1"><![CDATA[Lapiz (1)]]></label>
-		<label code="helpTools2"><![CDATA[Balde de pintura (2)]]></label>
+		<label code="helpTools2"><![CDATA[Cubo de pintura (2)]]></label>
 		<label code="helpTools3"><![CDATA[Circulo (3)]]></label>
 		<label code="helpTools5"><![CDATA[Rectangulo (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cubo (5)]]></label>
@@ -141,7 +142,7 @@
 		
 		<label code="toolConfig-import-load"><![CDATA[Cargar]]></label>
 		<label code="toolConfig-import-clear"><![CDATA[Borrar]]></label>
-		<label code="toolConfig-import-rotate"><![CDATA[Rotacion]]></label>
+		<label code="toolConfig-import-rotate"><![CDATA[Rotar]]></label>
 		<label code="toolConfig-import-flip"><![CDATA[Voltear]]></label>
 		
 		<label code="toolConfig-imageGen-load"><![CDATA[Cargar]]></label>
@@ -149,14 +150,14 @@
 		<label code="toolConfig-imageGen-levels"><![CDATA[Multiples niveles]]></label>
 		
 		<label code="toolConfig-selector-disabledHelp"><![CDATA[Dibuja un rectangulo en el mapa<br />para definir la zona a copiar/cortar/exportar.]]></label>
-		<label code="toolConfig-selector-depthHelp"><![CDATA[Numero de niveles a copiar <br />empezando del nivel actual del mapa.]]></label>
+		<label code="toolConfig-selector-depthHelp"><![CDATA[Numero de niveles a copiar <br />empezando por el nivel actual del mapa.]]></label>
 		<label code="toolConfig-selector-exportHelp"><![CDATA[Exportar la selección.]]></label>
 		<label code="toolConfig-selector-copy"><![CDATA[Copiar]]></label>
 		<label code="toolConfig-selector-cut"><![CDATA[Cortar]]></label>
 		<label code="toolConfig-selector-cancel"><![CDATA[Cancelar]]></label>
 		<label code="toolConfig-selector-export"><![CDATA[Exportar]]></label>
 		<label code="toolConfig-selector-depth"><![CDATA[Niveles]]></label>
-		<label code="toolConfig-selector-rotate"><![CDATA[Rotacion]]></label>
+		<label code="toolConfig-selector-rotate"><![CDATA[Rotar]]></label>
 		<label code="toolConfig-selector-flip"><![CDATA[Voltear]]></label>
 		
 		<label code="syncLevels"><![CDATA[Alinear con la camara]]></label>
@@ -171,22 +172,22 @@
 		<label code="build3r-title"><![CDATA[Build3r]]></label>
 		<label code="build3r-detailsNext"><![CDATA[Siguiente &gt;]]></label>
 		<label code="build3r-detailsPrev"><![CDATA[&lt; Anterior]]></label>
-		<label code="build3r-details-page0"><![CDATA[The <b>Build3r</b> is a GreaseMonkey script that allows you to synch a Kub3dit's map with the game.<br /><br />To make it work you just have to use Chrome or Firefox <i>(with <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" class="link">GreaseMonkey</a> plugin)</i> and to install <b>Build3r</b> extension by clicking on the following link :<br /><a href="http://fevermap.org/kub3dit/gm/build3r.user.js" class="link">http://fevermap.org/kub3dit/gm/build3r.user.js</a><br /><br />Once installed check if the following button appears under the minimap :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rBT.jpg" align="center" width="178" height="139" /></p><br /><br />Click on it to open the <b>Build3r</b>.<br />For more details about it, go to the next page.]]></label>
-		<label code="build3r-details-page1"><![CDATA[Once you opened the panel, you'll have the choice to load a map from a kub3dit's file or by it's URL's <b>ID</b> if you've uploaded it on the server<br /><br />For this first test, let's load a map with the ID "<b>1f</b>" <i>(no password)</i>. The map represents a 3D heart.<br />You should have the following screen :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rSynch.jpg" align="center" width="193" height="312" /></p>This screen lets you synch the game with the map. Even if this manipulation looks unclear, it's actually quite simple.<br /><br />You simply have to click a cell of the grid, for example the red one of the 1st level which is the heart's base, then, in the game, place a forum kube where you want this kube <i>(the heart's base)</i> to be.<br />Then click on the forum. You should hear an acute sound meaning that the map is synchronized with the game.<br /><br />Click on the <b>OK</b> button at the bottom right to see and use the map.]]></label>
-		<label code="build3r-details-page2"><![CDATA[By default you'll see a 2D representation of the map. You can use the sliders to scale, rotate or change level of the map.<br /><br />Now click on the <b>2D</b> button at the top to get an isometric view that will give you a better representation of the construction. You should get this :<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rISO.jpg" align="center" width="193" height="312" /></p>Note nonetheless that the 2D rendering is more readable.<br />Now you just have to reproduce the map.<br /><br /><b>BUT</b> what makes the <b>Build3r</b>'s power isn't to just get the map aside the game, but to help building it.<br />Indeed, at one time or another you will get a doubt about where or what type of kube you should put. In this case, you have two solutions. Look at the map in details during more or less time, <b>OR</b> simply put a forum kube and touch it so that the <b>Build3r</b> will tell you which kube you have to put at this place.<br /><br />Try to reproduce the heart now ;)<br /><br /><br /><br /><br /><i>PS : Think about the U key to remove the forum without loosing energy ;)</i>]]></label>
+		<label code="build3r-details-page0"><![CDATA[El <b>Build3r</b> es un script de GreaseMonkey que te permite sincronizar un mapa de Kub3dit con el juego.<br /><br />Para que funcione sólo tienes que usar Chrome o Firefox. <i>(con un plugin de <a href="https://addons.mozilla.org/fr/firefox/addon/greasemonkey/" class="link">GreaseMonkey</a>)</i> e instalar la extensión <b>Build3r</b> clickando en el siguiente enlace:<br /><a href="http://fevermap.org/kub3dit/gm/build3r.user.js" class="link">http://fevermap.org/kub3dit/gm/build3r.user.js</a><br /><br />Una vez instalado comprueba que el siguiente botón aparezca bajo el minimapa:<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rBT.jpg" align="center" width="178" height="139" /></p><br /><br />Clicka en él para abrir <b>Build3r</b>.<br />Para más detalles al respecto, ve a la siguiente página.]]></label>
+		<label code="build3r-details-page1"><![CDATA[Una vez has abierto el panel, tendrás que elegir cargar un mapa desde un archivo Kub3dit o por la <b>ID</b> de su URL si lo has subido al servidor.<br /><br />Para este primer test, carga un mapa con la ID "<b>1f</b>" <i>(sin contraseña)</i>. El mapa representa un corazón 3D.<br />Deberías ver esta pantalla:<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rSynch.jpg" align="center" width="193" height="312" /></p>Esta pantalla te permite sincronizar el juego con el mapa. Incluso si el proceso no parece clara, es muy simple.<br /><br />YSimplemente clicka en una celda de la grilla, por ejemplo la roja del 1er nivel la cual es la base del corazón, luego, en el juego, pon un cubo Foro donde quieras este cubo <i>(la base del corazón)</i>.<br />Luego clicka el cubo. Deberías oír un sonido agudo que significa que el mapa está sincronizado con el juego.<br /><br />Clicka en el botón <b>OK</b> abajo a la derecha para ver y usar el mapa.]]></label>
+		<label code="build3r-details-page2"><![CDATA[Por defecto verás una representación 2D del mapa. Podrás usar los reguladores para la escala, rotación o cambio del nivel del mapa.<br /><br />Ahora clicka en el botón <b>2D</b> de arriba para tener una vista isométrica que te dará una mejor representación de la construcción. Deberías tener esto:<br /><p align="center"><img src="http://fevermap.org/kub3dit/images/build3rISO.jpg" align="center" width="193" height="312" /></p>Sin embargo ten en cuenta que la representación 2D es más fácil de leer.<br />Ahora sólo tienes que reproducir el mapa.<br /><br /><b>PERO</b> lo que hace el poder del <b>Build3r</b> no es solo tener el mapa a un lado del juego, sino ayudar a construirlo.<br />En efecto, alguna que otra vez tendrás dudas sobre dónde o qué tipo de cubo deberías poner. En este caso, tienes dos soluciones. Mira el mapa detallado durante más o menos tiempo, <b>O</b> simplemente pon un cubo Foro y tócalo para que el <b>Build3r</b> te diga qué cubo debes poner ahí.<br /><br />Intenta hacer el corazón ahora ;)<br /><br /><br /><br /><br /><i>PS : Pulsa la tecla U para remover el cubo Foro sin perder energía ;)</i>]]></label>
 		
 		<!-- Stats -->
 		<label code="stats-title"><![CDATA[Estadisticas]]></label>
-		<label code="stats-details"><![CDATA[Este mapa esta compuesto de<b>{TOTAL}</b> kubss.<br />Esta realizacion tardaria <b>{DAYS}</b> dias o aguas minerales(<b>{PRICE}</b>€)]]></label>
-		<label code="stats-copy"><![CDATA[Copiar en formato texto]]></label>
+		<label code="stats-details"><![CDATA[Este mapa esta compuesto de <b>{TOTAL}</b> kubos.<br />Esta realizacion tardaria <b>{DAYS}</b> dias o aguas minerales (<b>{PRICE}</b>€)]]></label>
+		<label code="stats-copy"><![CDATA[Copiar en formato de texto]]></label>
 		
 		<!-- Save/upload/load -->
 		<label code="prompt-save"><![CDATA[Guardar]]></label>
 		<label code="prompt-mapDownload"><![CDATA[Descargar]]></label>
 		<label code="prompt-mapUpload"><![CDATA[Subir]]></label>
-		<label code="prompt-mapUploadHelp"><![CDATA[Si va a modificar su mapa a menudo, por favor especifique<br />como <span class="tooltipContentWarn">editables</span> y protegerlo con una <span class="tooltipContentWarn">contraseña</span><br />para evitar que otros lo modifiquen.]]></label>
+		<label code="prompt-mapUploadHelp"><![CDATA[Si vas a modificar tu mapa a menudo, por favor marcalo<br />como <span class="tooltipContentWarn">editable</span> y protegelo con una <span class="tooltipContentWarn">contraseña</span><br />para evitar que otros lo modifiquen.]]></label>
 		<label code="prompt-mapUpdate"><![CDATA[Actualizar]]></label>
-		<label code="prompt-mapUploadInfo"><![CDATA[Esta opcion es solamente<br />para mapas mas pequeños que{SIZE_MAX}Ko<br />El mapa actual es de  {SIZE}Ko.]]></label>
+		<label code="prompt-mapUploadInfo"><![CDATA[Esta opcion es solamente<br />para mapas mas pequeños de {SIZE_MAX}Ko<br />El mapa actual es de {SIZE}Ko.]]></label>
 		<label code="prompt-mapDownloadLevels"><![CDATA[Descargar niveles]]></label>
 		<label code="prompt-mapSave"><![CDATA[Guardar]]></label>
 		<label code="prompt-mapUploadCopyLink"><![CDATA[Copiar URL]]></label>

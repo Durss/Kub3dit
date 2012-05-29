@@ -187,7 +187,7 @@ package com.muxxu.build3r.model {
 		 */
 		public function pickUpKube():void {
 			if(ExternalInterface.available) {
-				ExternalInterface.call("removeKube", _position.x, _position.y, _position.z+1);
+				ExternalInterface.call("removeKube", _position.x, _position.y, _position.z);
 			}
 		}
 		

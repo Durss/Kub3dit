@@ -3,6 +3,7 @@
 	<labels>
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Kube's loading has failed.<br />Make sure the ID is valid.]]></label>
+		<label code="loadKubeErrorSize"><![CDATA[Only 16x16 sized kubes can be imported.]]></label>
 		<label code="uploadMapError"><![CDATA[An error has occured during loading.<br />Please try again.<br /><br />If problem persists, contact <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
 		<label code="maxCustomKubesError"><![CDATA[You can't add more than ${VALUE} custom kubes.]]></label>
 		<label code="accelerationDisabledWarning"><![CDATA[Hardware acceleration isn't available!<br />3D rendering quality has been reduced to keep decent performances.]]></label>
