@@ -1,8 +1,12 @@
 package com.muxxu.kub3dit.commands {
+	import com.nurun.structure.environnement.configuration.Config;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.exceptions.Kub3ditException;
+	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
 	import com.muxxu.kub3dit.vo.CubeData;
 	import com.nurun.core.commands.Command;
 	import com.nurun.core.commands.events.CommandEvent;
+	import com.nurun.structure.environnement.label.Label;
 
 	import flash.events.Event;
 	import flash.events.EventDispatcher;
@@ -54,7 +58,7 @@ package com.muxxu.kub3dit.commands {
 		 * Must dispatch the CommandEvent.COMPLETE event when done.
 		 */
 		public function execute():void {
-			var request:URLRequest = new URLRequest("http://fevermap.org/kubebuilder/php/ws/getKubes.php");
+			var request:URLRequest = new URLRequest(Config.getPath("loadKubePath"));
 			var urlVars:URLVariables = new URLVariables();
 			urlVars["kubeId"] = _kubeId;
 			urlVars["start"] = 0;
@@ -94,6 +98,13 @@ package com.muxxu.kub3dit.commands {
 			if(xml.child("result")[0] == "0") {
 				_data = new CubeData();
 				_data.populate(XML(xml.child("kubes")[0]).child("kube")[0]);
+				if(_data.kub.faceTop.width > 16 || _data.kub.faceTop.height > 16 ||
+				_data.kub.faceSides.width > 16 || _data.kub.faceSides.height > 16 ||
+				_data.kub.faceBottom.width > 16 || _data.kub.faceBottom.height > 16) {
+					dispatchEvent(new CommandEvent(CommandEvent.ERROR));
+					throw new Kub3ditException(Label.getLabel("loadKubeErrorSize"), Kub3ditExceptionSeverity.MINOR);
+					return;
+				}
 				
 				Textures.getInstance().addKube(_data);
 				

@@ -1,4 +1,5 @@
 package com.muxxu.build3r.components {
+	import flash.display.Shape;
 	import com.muxxu.build3r.i18n.LabelBuild3r;
 	import com.muxxu.build3r.vo.LightMapData;
 	import com.muxxu.build3r.vo.Metrics;
@@ -45,6 +46,7 @@ package com.muxxu.build3r.components {
 		private var _dragMode:Boolean;
 		private var _cacheISO:Array;
 		private var _rotationSlider:Build3rSlider;
+		private var _northArrow:Shape;
 		
 		
 		
@@ -118,6 +120,15 @@ package com.muxxu.build3r.components {
 			_emptyBmd = new BitmapData(16, 16, true, 0);
 			_levelSlider = addChild(new Build3rSlider(1, 31, LabelBuild3r.getl("build-level"))) as Build3rSlider;
 			_rotationSlider = addChild(new Build3rSlider(0, 360, LabelBuild3r.getl("build-rotation"), 22.5)) as Build3rSlider;
+			
+			_northArrow = _holder.addChild(new Shape()) as Shape;
+			
+			_northArrow.graphics.beginFill(0xcc0000, 1);
+			_northArrow.graphics.moveTo(0, -10);
+			_northArrow.graphics.lineTo(5, 0);
+			_northArrow.graphics.lineTo(-5, 0);
+			_northArrow.graphics.lineTo(0, -10);
+			_northArrow.graphics.endFill();
 			
 			_levelSlider.width = Metrics.STAGE_WIDTH;
 			_rotationSlider.width = Metrics.STAGE_WIDTH;
@@ -319,6 +330,9 @@ package com.muxxu.build3r.components {
 					_holder.graphics.lineStyle(0,0,.5);
 				}
 			}
+			
+			_northArrow.x = w * _width * .5;
+			_northArrow.y = 0;
 			
 			replaceElements();
 		}

@@ -27,6 +27,7 @@
 		<path code="levelColors"><![CDATA[{v_root}kubes/levelColors.png?v={v_version}]]></path>
 		<path code="uploadMapPath"><![CDATA[{v_root}php/uploadMap.php]]></path>
 		<path code="loadMapPath"><![CDATA[{v_root}php/loadMap.php]]></path>
+		<path code="loadKubePath"><![CDATA[/kubebuilder/php/ws/getKubes.php]]></path>
 	</paths>
 	
 	<dependencies />
