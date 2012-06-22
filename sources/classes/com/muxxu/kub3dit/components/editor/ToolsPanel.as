@@ -7,6 +7,7 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.components.editor.toolpanels.ImageGenPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.ImportPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.PencilPanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.PipetaPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.RectanglePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.ReplacePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.SelectionPanel;
@@ -24,6 +25,7 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.graphics.Tool5Icon;
 	import com.muxxu.kub3dit.graphics.Tool7Icon;
 	import com.muxxu.kub3dit.graphics.Tool8Icon;
+	import com.muxxu.kub3dit.graphics.Tool9Icon;
 	import com.muxxu.kub3dit.vo.KeyboardConfigs;
 	import com.nurun.components.form.FormComponentGroup;
 	import com.nurun.components.form.events.FormComponentGroupEvent;
@@ -65,6 +67,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _select:ButtonEditorTool;
 		private var _imgBt:ButtonEditorTool;
 		private var _replace:ButtonEditorTool;
+		private var _pipeta:ButtonEditorTool;
 		
 		
 		
@@ -120,6 +123,7 @@ package com.muxxu.kub3dit.components.editor {
 			_rect	= addChild(new ButtonEditorTool( new Tool5Icon(), true, Label.getLabel("helpTools5") )) as ButtonEditorTool;
 			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true, Label.getLabel("helpTools7") )) as ButtonEditorTool;
 			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
+			_pipeta	= addChild(new ButtonEditorTool( new Tool9Icon(), true, Label.getLabel("helpTools9") )) as ButtonEditorTool;
 			_import	= addChild(new ButtonEditorTool( new ImportIcon(), false, Label.getLabel("helpToolsImport"), true)) as ButtonEditorTool;
 			_imgBt	= addChild(new ButtonEditorTool( new ImageIcon(), false, Label.getLabel("helpToolsImg"), true)) as ButtonEditorTool;
 			_select	= addChild(new ButtonEditorTool( new SelectionIcon(), false, Label.getLabel("helpToolsSelect"), true)) as ButtonEditorTool;
@@ -134,6 +138,7 @@ package com.muxxu.kub3dit.components.editor {
 			_tools.push(_rect);
 			_tools.push(_cube);
 			_tools.push(_sphere);
+			_tools.push(_pipeta);
 			_tools.push(_import);
 			_tools.push(_imgBt);
 			_tools.push(_select);
@@ -148,6 +153,7 @@ package com.muxxu.kub3dit.components.editor {
 			_buttonToClassType[_rect] = RectanglePanel;
 			_buttonToClassType[_cube] = CubePanel;
 			_buttonToClassType[_sphere] = SpherePanel;
+			_buttonToClassType[_pipeta] = PipetaPanel;
 			_buttonToClassType[_import] = ImportPanel;
 			_buttonToClassType[_imgBt] = ImageGenPanel;
 			_buttonToClassType[_select] = SelectionPanel;

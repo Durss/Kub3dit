@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.events.ToolTipEvent;
+	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.commands.BrowseForFileCmd;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
@@ -54,6 +56,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _width:int;
 		private var _height:int;
 		private var _depth:int;
+		private var _mergeMode:CheckBoxKube;
 		
 		
 		
@@ -141,9 +144,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_data.position = 0;
 			var i:int, px:int, py:int, pz:int, tile:int, reg:int;
 			var max:int = _colors.length;
+			var merge:Boolean = _mergeMode.selected;
 			while(_data.bytesAvailable) {
 				tile = _data.readUnsignedByte();
-				if(tile > 0 && tile < max) {
+				if((tile > 0 || !merge) && tile < max) {
 					px = i%_width;
 					py = Math.floor(i/_width)%_height;
 					pz = oz + Math.floor(i/(_width*_height));
@@ -199,6 +203,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_rCwBt = addChild(new GraphicButtonKube(new RotationCWIcon())) as GraphicButtonKube;
 			_rCcwBt = addChild(new GraphicButtonKube(new RotationCCWIcon())) as GraphicButtonKube;
 			_rotationLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
+			_mergeMode = addChild(new CheckBoxKube(Label.getLabel("toolConfig-import-merge"))) as CheckBoxKube;
 			
 			_flipLabel = addChild(new CssTextField("inputToolsConfLabel")) as CssTextField;
 			_hFlipBt = addChild(new GraphicButtonKube(new FLipHorizontalIcon())) as GraphicButtonKube;
@@ -208,7 +213,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_flipLabel.text = Label.getLabel("toolConfig-import-flip");
 			
 			_clearBt.x = Math.round(_loadBt.x + _loadBt.width + 5);
-			_rotationLabel.y = Math.round(_clearBt.y + _clearBt.height + 5);
+			_mergeMode.y = Math.round(_clearBt.y + _clearBt.height + 5);;
+			_rotationLabel.y = Math.round(_mergeMode.y + _mergeMode.height + 5);
 			_rCcwBt.x = _rotationLabel.x + Math.max(_flipLabel.width, _rotationLabel.width) + 10;
 			_rCwBt.x = _rCcwBt.x + _rCcwBt.width + 10;
 			_rCwBt.y = _rCcwBt.y = _rotationLabel.y;
@@ -217,6 +223,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_hFlipBt.x = _rCcwBt.x;
 			_vFlipBt.x = _hFlipBt.x + _hFlipBt.width + 10;
 			_vFlipBt.y = _hFlipBt.y = _flipLabel.y;
+			
+			_mergeMode.selected = true;
 			
 			var i:int, len:int = numChildren;
 			for(i = 0; i < len; ++i) {
@@ -229,7 +237,15 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_cmd = new BrowseForFileCmd("Sandkube / Kub3dit map", "*.png;*.jpg;*.jpeg");
 			_cmd.addEventListener(CommandEvent.COMPLETE, loadImageCompleteHandler);
 			addEventListener(MouseEvent.CLICK, clickButtonHandler);
+			_mergeMode.addEventListener(MouseEvent.ROLL_OVER, overMergeHandler);
 			Textures.getInstance().addEventListener(TextureEvent.CHANGE_SPRITESHEET, spriteSeetChangeHandler);
+		}
+		
+		/**
+		 * Called when merge button is rolled over to display its help.
+		 */
+		private function overMergeHandler(event:MouseEvent):void {
+			_mergeMode.dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, Label.getLabel("toolConfig-import-mergeHelp")));
 		}
 		
 		/**

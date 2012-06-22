@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import flash.utils.Dictionary;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 
@@ -47,6 +48,7 @@ package com.muxxu.kub3dit.views {
 		private var _addKubeForm:AddKubeForm;
 		private var _selectedKubeId:String;
 		private var _selectMode:Boolean;
+		private var _kubeIdToButton:Dictionary;
 		
 		
 		
@@ -113,7 +115,19 @@ package com.muxxu.kub3dit.views {
 			return ret;
 		}
 		
+		/**
+		 * Gets the currently selected kube ID
+		 */
 		public function get currentKubeId():int { return parseInt(_selectedKubeId); }
+		
+		/**
+		 * Sets the currently selected kube ID
+		 */
+		public function set currentKubeId(value:int):void {
+			KubeSelectorButton(_kubeIdToButton[value]).selected = true;
+			_selectedKubeId = value.toString();
+			FrontControler.getInstance().changeKubeId(_selectedKubeId);
+		}
 
 
 
@@ -213,6 +227,7 @@ package com.muxxu.kub3dit.views {
 			}
 			_group.removeAll();
 			_kubes = new Vector.<KubeSelectorButton>();
+			_kubeIdToButton = new Dictionary();
 			_group.removeEventListener(FormComponentGroupEvent.CHANGE, changeSelectionHandler);
 			
 			var frames:Array = Textures.getInstance().cubesFrames;
@@ -226,6 +241,7 @@ package com.muxxu.kub3dit.views {
 				_kubes.push(bt);
 				_holder.addChild(bt);
 				_group.add(bt);
+				_kubeIdToButton[k] = bt;
 				if(k == _selectedKubeId) {
 					bt.selected = true;
 				}

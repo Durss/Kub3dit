@@ -1,12 +1,10 @@
 package com.muxxu.kub3dit {
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TweenPlugin;
-	import flash.ui.Keyboard;
-	import flash.events.KeyboardEvent;
-	import com.muxxu.kub3dit.views.Build3rView;
-	import com.muxxu.kub3dit.views.StatsView;
+
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.model.Model;
+	import com.muxxu.kub3dit.views.Build3rView;
 	import com.muxxu.kub3dit.views.EditorView;
 	import com.muxxu.kub3dit.views.ExceptionView;
 	import com.muxxu.kub3dit.views.LockView;
@@ -15,6 +13,7 @@ package com.muxxu.kub3dit {
 	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.views.SplashScreenView;
 	import com.muxxu.kub3dit.views.Stage3DView;
+	import com.muxxu.kub3dit.views.StatsView;
 	import com.muxxu.kub3dit.views.ToolTipView;
 	import com.nurun.structure.mvc.views.ViewLocator;
 
@@ -22,8 +21,11 @@ package com.muxxu.kub3dit {
 
 	import flash.display.MovieClip;
 	import flash.display.StageAlign;
+	import flash.display.StageDisplayState;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
+	import flash.events.KeyboardEvent;
+	import flash.ui.Keyboard;
 
 	/**
 	 * Bootstrap class of the application.
@@ -126,6 +128,11 @@ package com.muxxu.kub3dit {
 			}else
 			if(event.keyCode == Keyboard.S && event.ctrlKey) {
 				FrontControler.getInstance().saveMap();
+			}else
+			if(event.keyCode == Keyboard.F && event.ctrlKey) {
+				if(StageDisplayState["FULL_SCREEN_INTERACTIVE"] != undefined) {
+					stage.displayState = StageDisplayState["FULL_SCREEN_INTERACTIVE"];
+				}
 			}
 		}
 				

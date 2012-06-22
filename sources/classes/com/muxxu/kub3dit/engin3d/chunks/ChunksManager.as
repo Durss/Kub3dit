@@ -219,10 +219,10 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			}
 			
 			_historyUndo.push(_currentHistory);
+			if(_historyUndo.length > 50) _historyUndo.shift();
 			_historyUndoPointer = _historyUndo.length;
 			_currentHistory = [];
 			_currentHistoryCoordsDone = {};
-			if(_historyUndo.length > 50) _historyUndo.shift();
 		}
 		
 		/**

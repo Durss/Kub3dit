@@ -113,6 +113,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphere (6)]]></label>
+		<label code="helpTools9"><![CDATA[Pipeta (7)]]></label>
 		<label code="helpToolsImport"><![CDATA[Import a Kub3dit or Sandkube map]]></label>
 		<label code="helpToolsImg"><![CDATA[Generate from bitmap]]></label>
 		<label code="helpToolsSelect"><![CDATA[Selection (m)]]></label>
@@ -149,6 +150,8 @@
 		<label code="toolConfig-import-clear"><![CDATA[Clear]]></label>
 		<label code="toolConfig-import-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-import-flip"><![CDATA[Flip]]></label>
+		<label code="toolConfig-import-merge"><![CDATA[Merge mode]]></label>
+		<label code="toolConfig-import-mergeHelp"><![CDATA[If checked, the empty kubes of the loaded map<br />will not erase the existing kubes<br />of the current map.]]></label>
 		
 		<label code="toolConfig-imageGen-load"><![CDATA[Load]]></label>
 		<label code="toolConfig-imageGen-clear"><![CDATA[Clear]]></label>

@@ -78,7 +78,8 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_timer = (_timer+1)%(16/2);
 			_inc = _inc%16;
 
-			var size:Number = _manager.bounds.width;
+			var width:Number = _manager.bounds.width;
+			var height:Number = _manager.bounds.height;
 			
 			//Init vertices
 			var index:int = 0;
@@ -94,27 +95,27 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
-			_vertexBuffer[index++] = offsetX+size * cubeSizeRatio;
+			_vertexBuffer[index++] = offsetX+width * cubeSizeRatio;
 			_vertexBuffer[index++] = offsetY;
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;
-			_vertexBuffer[index++] = size;
+			_vertexBuffer[index++] = width;
 			_vertexBuffer[index++] = _inc;
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
-			_vertexBuffer[index++] = offsetX+size * cubeSizeRatio;
-			_vertexBuffer[index++] = offsetY+size * cubeSizeRatio;
+			_vertexBuffer[index++] = offsetX+width * cubeSizeRatio;
+			_vertexBuffer[index++] = offsetY+height * cubeSizeRatio;
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;
-			_vertexBuffer[index++] = size;
-			_vertexBuffer[index++] = size+_inc;
+			_vertexBuffer[index++] = width;
+			_vertexBuffer[index++] = height+_inc;
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
 			_vertexBuffer[index++] = offsetX;
-			_vertexBuffer[index++] = offsetY+size * cubeSizeRatio;
+			_vertexBuffer[index++] = offsetY+height * cubeSizeRatio;
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = 0;
-			_vertexBuffer[index++] = size+_inc;
+			_vertexBuffer[index++] = height+_inc;
 			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
