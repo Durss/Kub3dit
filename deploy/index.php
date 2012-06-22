@@ -171,7 +171,11 @@
 			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
 			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
 		  })();
-
+		  
+		window.onbeforeunload = confirmExit;
+		function confirmExit() {
+			return "";
+		}
 		</script>
     </head>
     <body>
@@ -199,7 +203,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "16.4.6";
+	$version= "16.5.7";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";
@@ -212,12 +216,32 @@
 			
 			var params = {};
 			params['allowFullScreen'] = 'true';
+			params['allowFullScreenInteractive'] = 'true';
 			params['menu'] = 'false';
 			params['wmode'] = 'direct';
 			
-			swfobject.embedSWF("swf/application.swf?v=<?php echo $version; ?>", "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
-			
-			//swffit.fit("externalDynamicContent", 800, 700, 2000, 2000, true, true);
+			var browserWinWidth = 0, browserWinHeight = 0;
+			if( typeof( window.innerWidth ) == 'number' ) {
+				//Non-IE
+				browserWinWidth = window.innerWidth;
+				browserWinHeight = window.innerHeight;
+			} else if( document.documentElement && ( document.documentElement.clientWidth || document.documentElement.clientHeight ) ) {
+				//IE 6+ in 'standards compliant mode'
+				browserWinWidth = document.documentElement.clientWidth;
+				browserWinHeight = document.documentElement.clientHeight;
+			} else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) ) {
+				//IE 4 compatible
+				browserWinWidth = document.body.clientWidth;
+				browserWinHeight = document.body.clientHeight;
+			}
+			if(browserWinHeight > 710) {
+				swfobject.embedSWF("swf/application.swf?v=<?php echo $version; ?>", "content", "100%", "100%", "11", "swf/expressinstall.swf", flashvars, params, attributes);
+			}else{
+				document.getElementsByTagName('html')[0].style.overflow = "auto";
+				document.getElementsByTagName('body')[0].style.overflow = "auto";
+				swfobject.embedSWF("swf/application.swf?v=<?php echo $version; ?>", "content", "100%", "710", "11", "swf/expressinstall.swf", flashvars, params, attributes);
+			}
+			//swffit.fit("externalDynamicContent", 800, 710, 2000, 2000, true, true);
 		</script>
 	</body>
 </html>

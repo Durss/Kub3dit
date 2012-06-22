@@ -1,5 +1,6 @@
 package  
 com.muxxu.kub3dit.engin3d.camera {
+	import flash.display.StageDisplayState;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.map.Map;
 
@@ -80,7 +81,7 @@ com.muxxu.kub3dit.engin3d.camera {
 			if (rotationX>360)	rotationX-=360;
 			
 			var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
-			var moveZ:Number = Math.cos((Camera3D.rotationY+90)*Math.PI/180) * 15 * _forward * coeff;
+			var moveZ:Number = Math.cos((rotationY+90)*Math.PI/180) * 15 * _forward * coeff;
 			dist -= Math.abs(moveZ);
 			moveZ *= .01;
 			var radians1:Number = rotationX / 180 * Math.PI;
@@ -109,20 +110,20 @@ com.muxxu.kub3dit.engin3d.camera {
 //			}
 		}
 		
-		private function onKeyDown(e:KeyboardEvent):void {
-			if(e.target is TextField || e.ctrlKey) return;
+		private function onKeyDown(event:KeyboardEvent):void {
+			if(event.target is TextField || event.ctrlKey) return;
 			
-			if(e.keyCode == Keyboard.SPACE) _spc = true;
-			if(e.shiftKey || e.keyCode == Keyboard.SHIFT) _shift = true;
-			if(e.keyCode == Keyboard.UP || e.keyCode == Keyboard.Z || e.keyCode == Keyboard.W) {
+			if(event.keyCode == Keyboard.SPACE) _spc = true;
+			if(event.shiftKey || event.keyCode == Keyboard.SHIFT) _shift = true;
+			if(event.keyCode == Keyboard.UP || event.keyCode == Keyboard.Z || event.keyCode == Keyboard.W) {
 				_forward = 1;
 			}
-			if(e.keyCode == Keyboard.DOWN || e.keyCode == Keyboard.S) {
+			if(event.keyCode == Keyboard.DOWN || event.keyCode == Keyboard.S) {
 				_forward = -1;
 			}
-			if (e.keyCode == Keyboard.RIGHT || e.keyCode == Keyboard.D) {
+			if (event.keyCode == Keyboard.RIGHT || event.keyCode == Keyboard.D) {
 				_strafe = -1;
-			} else if (e.keyCode == Keyboard.LEFT || e.keyCode == Keyboard.Q || e.keyCode == Keyboard.A) {
+			} else if (event.keyCode == Keyboard.LEFT || event.keyCode == Keyboard.Q || event.keyCode == Keyboard.A) {
 				_strafe = 1;
 			}
 		}
@@ -144,13 +145,18 @@ com.muxxu.kub3dit.engin3d.camera {
 		
 		private function mouseDown(e:MouseEvent):void {
 			if(e.target is Stage) {
-				_stage.addEventListener(MouseEvent.MOUSE_UP, mouseUp);
+				_stage.addEventListener(MouseEvent.MOUSE_UP, mouseUp, false, 0xffffff);
 				_stage.addEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
 				
 				_lookOffset.x = _stage.mouseX;
 				_lookOffset.y = _stage.mouseY;
 				
 				_mouseView = true;
+				if(_stage.displayState != StageDisplayState.NORMAL && _stage.hasOwnProperty("mouseLock")) {
+					_stage["mouseLock"] = true;
+					_lookOffset.x -= _stage.stageWidth*.5;
+					_lookOffset.y -= _stage.stageHeight*.5;
+				}
 			}
 		}
 		
@@ -168,10 +174,17 @@ com.muxxu.kub3dit.engin3d.camera {
 		
 		private function mouseMove(e:MouseEvent):void {
 			if (_mouseView) {
-				rotationX += (_stage.mouseX-_lookOffset.x) * .25;
-				rotationY += (_stage.mouseY-_lookOffset.y) * .25;
-				_lookOffset.x = _stage.mouseX;
-				_lookOffset.y = _stage.mouseY;
+				if(_stage.hasOwnProperty("mouseLock") && _stage["mouseLock"]) {
+					rotationX += (e["movementX"]-_lookOffset.x) * .25;
+					rotationY += (e["movementY"]-_lookOffset.y) * .25;
+					_lookOffset.x = 0;
+					_lookOffset.y = 0;
+				}else{
+					rotationX += (_stage.mouseX-_lookOffset.x) * .25;
+					rotationY += (_stage.mouseY-_lookOffset.y) * .25;
+					_lookOffset.x = _stage.mouseX;
+					_lookOffset.y = _stage.mouseY;
+				}
 				rotationY = (rotationY<-90)? -90 : (rotationY>90)? 90 : rotationY;
 			}
 		}
@@ -180,6 +193,9 @@ com.muxxu.kub3dit.engin3d.camera {
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, mouseUp);
 			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
 			_mouseView = false;
+			if(_stage.displayState != StageDisplayState.NORMAL && _stage.hasOwnProperty("mouseLock")) {
+				_stage["mouseLock"] = false;
+			}
 		}
 
 		public static function setPosition(vector3D:Vector3D):void {

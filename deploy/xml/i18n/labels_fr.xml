@@ -112,6 +112,7 @@
 		<label code="helpTools5"><![CDATA[Rectangle (4)]]></label>
 		<label code="helpTools7"><![CDATA[Cube (5)]]></label>
 		<label code="helpTools8"><![CDATA[Sphère (6)]]></label>
+		<label code="helpTools9"><![CDATA[Pipette (7)]]></label>
 		<label code="helpToolsImport"><![CDATA[Importer une carte Kub3dit ou Sandkube]]></label>
 		<label code="helpToolsImg"><![CDATA[Générer depuis une image]]></label>
 		<label code="helpToolsSelect"><![CDATA[Sélection (m)]]></label>
@@ -148,6 +149,8 @@
 		<label code="toolConfig-import-clear"><![CDATA[Effacer]]></label>
 		<label code="toolConfig-import-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-import-flip"><![CDATA[Renverser]]></label>
+		<label code="toolConfig-import-merge"><![CDATA[Mode fusion]]></label>
+		<label code="toolConfig-import-mergeHelp"><![CDATA[Si coché, les kubes vides du plan chargé<br />n'écraseront pas les kubes existants<br />de la carte courrante.]]></label>
 		
 		<label code="toolConfig-imageGen-load"><![CDATA[Charger]]></label>
 		<label code="toolConfig-imageGen-clear"><![CDATA[Effacer]]></label>
