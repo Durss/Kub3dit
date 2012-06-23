@@ -1,4 +1,8 @@
 package com.muxxu.kub3dit {
+	import com.nurun.structure.environnement.label.Label;
+	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
+	import com.muxxu.kub3dit.exceptions.Kub3ditException;
+	import flash.external.ExternalInterface;
 	import gs.plugins.RemoveChildPlugin;
 	import gs.plugins.TweenPlugin;
 
@@ -140,6 +144,17 @@ package com.muxxu.kub3dit {
 		 * Resize and replace the elements.
 		 */
 		private function computePositions(event:Event = null):void {
+			if(ExternalInterface.available) {
+				var js:XML = 
+			 	   <script><![CDATA[
+			            function(){ return DetectZoom.ratios().zoom; }
+			        ]]></script>;
+			    
+		        var value:Number = parseFloat(ExternalInterface.call(js.toString())); 
+				if(value > 1) {
+					throw new Kub3ditException(Label.getLabel("zoomLevelError").replace(/\{ZOOM\}/gi, value), Kub3ditExceptionSeverity.INFO);
+				}
+			}
 			
 		}
 		

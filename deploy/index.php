@@ -159,6 +159,7 @@
 		<script type="text/javascript" src="js/SWFAddress.js"></script>
 		<script type="text/javascript" src="js/swfwheel.js"></script>
 		<script type="text/javascript" src="js/swffit.js"></script>
+		<script type="text/javascript" src="js/detect-zoom.js"></script>
 		<script type="text/javascript">
 			
 		  var _gaq = _gaq || [];
@@ -203,7 +204,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "16.5.7";
+	$version= "16.5.8";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";
@@ -241,6 +242,7 @@
 				document.getElementsByTagName('body')[0].style.overflow = "auto";
 				swfobject.embedSWF("swf/application.swf?v=<?php echo $version; ?>", "content", "100%", "710", "11", "swf/expressinstall.swf", flashvars, params, attributes);
 			}
+			
 			//swffit.fit("externalDynamicContent", 800, 710, 2000, 2000, true, true);
 		</script>
 	</body>
