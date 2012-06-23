@@ -7,6 +7,7 @@
 		<label code="uploadMapError"><![CDATA[An error has occured during loading.<br />Please try again.<br /><br />If problem persists, contact <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
 		<label code="maxCustomKubesError"><![CDATA[You can't add more than ${VALUE} custom kubes.]]></label>
 		<label code="accelerationDisabledWarning"><![CDATA[Hardware acceleration isn't available!<br />3D rendering quality has been reduced to keep decent performances.]]></label>
+		<label code="zoomLevelError"><![CDATA[Your browser's page is zoomed <b>{ZOOM} times</b>.<br /><br />This can cause some rendering problem in specific cases.<br /><br />You should reset this value to "1" by pressing Ctrl+0 in the adress bar, then refresh the page.]]></label>
 		
 		
 		<!-- Splash screen -->
