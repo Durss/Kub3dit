@@ -206,9 +206,10 @@ package com.muxxu.kub3dit.views {
 			_holder.y = Math.round(_title.height + 2);
 			
 			_addKube.height = _title.height = 20;
+			_addKube.height -= 2;
 			_addKube.x = _width - _addKube.width;
 			_addKubeForm.width = _width;
-			_addKubeForm.y = _title.height;
+			_addKubeForm.y = Math.round(_title.height);
 			
 			graphics.clear();
 			graphics.beginFill(0xff0000, 0);

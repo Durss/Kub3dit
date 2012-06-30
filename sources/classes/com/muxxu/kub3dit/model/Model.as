@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.model {
+	import flash.utils.setTimeout;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;
@@ -53,6 +54,7 @@ package com.muxxu.kub3dit.model {
 		private var _ignoreNextURLChange:Boolean;
 		private var _replaceCmd:ReplaceKubeCmd;
 		private var _chunksManager:ChunksManager;
+		private var _lastLoadedMapID:String;
 		
 		
 		
@@ -265,7 +267,23 @@ package com.muxxu.kub3dit.model {
 		public function saveHistory():void {
 			_chunksManager.saveCurrentHistory();
 		}
-
+		
+		/**
+		 * Plays a path by its ID.
+		 */
+		public function playPathByID(id:String):void {
+			var mapId:String = (_lastLoadedMapID == null)? "--" : _lastLoadedMapID;
+			var value:String = mapId+"/"+id;
+			var currentValue:String = SWFAddress.getValue();
+			while(currentValue.charAt(0) == "/") currentValue = currentValue.slice(1);
+			
+			if(value != currentValue) {
+				SWFAddress.setValue(value);
+			}else{
+				_map.followPathById(parseInt(id));
+			}
+		}
+		
 
 		
 		
@@ -299,17 +317,27 @@ package com.muxxu.kub3dit.model {
 				_ignoreNextURLChange = false;
 				return;
 			}
-			var id:String = SWFAddress.getValue().replace(/[^A-Za-z0-9]/g, "");
-//			id="1Z";//TODO REMOVE
-			if(id.length > 0 && _ignoreLoadId != id) {
-//				lock();
+			var value:String = SWFAddress.getValue();
+			while(value.charAt(0) == "/") value = value.slice(1);
 
+			var chunks:Array = value.split("/");
+//			chunks[0] = "e8";
+//			chunks[1] = "4";
+			
+			var id:String = String(chunks[0]).replace(/[^A-Za-z0-9]/g, "");
+			if(id.length > 0 && _ignoreLoadId != id && id != _lastLoadedMapID) {
+//				lock();
+				_lastLoadedMapID = id;
 				var passView:MapPasswordView = ViewLocator.getInstance().locateViewByType(MapPasswordView) as MapPasswordView;
 				var saveView:SaveView = ViewLocator.getInstance().locateViewByType(SaveView) as SaveView;
-				_loadMapCmd = new LoadMapCmd(id, passView, saveView);
+				_loadMapCmd = new LoadMapCmd(id, passView, saveView, chunks[1]);
 				_loadMapCmd.addEventListener(CommandEvent.COMPLETE, loadMapCompleteHandler);
 				_loadMapCmd.addEventListener(CommandEvent.ERROR, loadMapErrorHandler);
 				_loadMapCmd.execute();
+			}else{
+				if(chunks[1] != null) {
+					_map.followPathById(parseInt(chunks[1]));
+				}
 			}
 			_ignoreLoadId = null;
 		}
@@ -359,7 +387,18 @@ package com.muxxu.kub3dit.model {
 			}
 			Textures.getInstance().removeCustomKubes();
 			_map = MapDataParser.parse(event.data as ByteArray, true, true, _map);
+			
+			
+			if(event.currentTarget is LoadMapCmd) {
+				var id:String = LoadMapCmd(event.currentTarget).camPathToLoad;
+				if(id != null) {
+//					setTimeout(_map.followPathById, 1500, id);
+					_map.followPathById(parseInt(id));
+				}
+			}
+			
 			update();
+			dispatchEvent(new LightModelEvent(LightModelEvent.NEW_MAP_LOADED));
 		}
 		
 		/**
@@ -373,6 +412,11 @@ package com.muxxu.kub3dit.model {
 			
 			throw new Kub3ditException(event.data as String, Kub3ditExceptionSeverity.MINOR);
 		}
+		
+		
+		
+		
+		//__________________________________________________________ CUSTOM KUBES
 		
 		/**
 		 * Called when custom kube add completes
@@ -404,7 +448,7 @@ package com.muxxu.kub3dit.model {
 			
 			var ba:ByteArray = new ByteArray();
 			//============FILE TYPE============
-			ba.writeByte(Constants.MAP_FILE_TYPE_2);
+			ba.writeByte(Constants.MAP_FILE_TYPE_3);
 			
 			//============CUSTOM CUBES============
 			var i:int, len:int;
@@ -422,6 +466,9 @@ package com.muxxu.kub3dit.model {
 			ba.writeUnsignedInt(Camera3D.rotationX);
 			ba.writeInt(Camera3D.rotationY);
 			
+			//============CAMERA PATHS============
+			ba.writeObject(_map.cameraPaths);
+			
 			//============MAP SIZES============
 			ba.writeShort(cmd.width);
 			ba.writeShort(cmd.height);
@@ -430,6 +477,9 @@ package com.muxxu.kub3dit.model {
 			//============MAP DATA============
 			cmd.data.position = 0;
 			cmd.data.readBytes(ba,ba.length);
+			
+			
+			//Compression and save
 			ba.compress();
 			ba.position = 0;
 			_saveData = PNGEncoder.encode(bmd);
@@ -473,6 +523,7 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function uploadErrorHandler(event:CommandEvent):void {
 			unlock();
+			dispatchEvent(new LightModelEvent(LightModelEvent.MAP_UPLOAD_ERROR));
 			throw new Kub3ditException(Label.getLabel("uploadMapError"), Kub3ditExceptionSeverity.MINOR);
 		}
 		

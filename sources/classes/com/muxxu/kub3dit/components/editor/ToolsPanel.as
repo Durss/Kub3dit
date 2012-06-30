@@ -1,4 +1,8 @@
 package com.muxxu.kub3dit.components.editor {
+	import com.muxxu.kub3dit.components.editor.toolpanels.TerragenPanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.CamPathPanel;
+	import com.muxxu.kub3dit.graphics.CamPathIcon;
+	import com.muxxu.kub3dit.graphics.TerragenIcon;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
 	import com.muxxu.kub3dit.components.editor.toolpanels.BucketPanel;
@@ -68,6 +72,8 @@ package com.muxxu.kub3dit.components.editor {
 		private var _imgBt:ButtonEditorTool;
 		private var _replace:ButtonEditorTool;
 		private var _pipeta:ButtonEditorTool;
+		private var _terragN:ButtonEditorTool;
+		private var _camPath:ButtonEditorTool;
 		
 		
 		
@@ -123,11 +129,13 @@ package com.muxxu.kub3dit.components.editor {
 			_rect	= addChild(new ButtonEditorTool( new Tool5Icon(), true, Label.getLabel("helpTools5") )) as ButtonEditorTool;
 			_cube	= addChild(new ButtonEditorTool( new Tool7Icon(), true, Label.getLabel("helpTools7") )) as ButtonEditorTool;
 			_sphere	= addChild(new ButtonEditorTool( new Tool8Icon(), true, Label.getLabel("helpTools8") )) as ButtonEditorTool;
-			_pipeta	= addChild(new ButtonEditorTool( new Tool9Icon(), true, Label.getLabel("helpTools9") )) as ButtonEditorTool;
+			_pipeta	= addChild(new ButtonEditorTool( new Tool9Icon(), false, Label.getLabel("helpTools9") )) as ButtonEditorTool;
 			_import	= addChild(new ButtonEditorTool( new ImportIcon(), false, Label.getLabel("helpToolsImport"), true)) as ButtonEditorTool;
 			_imgBt	= addChild(new ButtonEditorTool( new ImageIcon(), false, Label.getLabel("helpToolsImg"), true)) as ButtonEditorTool;
 			_select	= addChild(new ButtonEditorTool( new SelectionIcon(), false, Label.getLabel("helpToolsSelect"), true)) as ButtonEditorTool;
 			_replace= addChild(new ButtonEditorTool( new ReplaceIcon(), false, Label.getLabel("helpToolsReplace"), true)) as ButtonEditorTool;
+			_camPath= addChild(new ButtonEditorTool( new CamPathIcon(), false, Label.getLabel("helpToolsCamPath"), true)) as ButtonEditorTool;
+			_terragN= addChild(new ButtonEditorTool( new TerragenIcon(), false, Label.getLabel("helpToolsTerragen"), true)) as ButtonEditorTool;
 			_helpBt	= addChild(new ButtonHelp( Label.getLabel("helpTools") )) as ButtonHelp;
 			
 			_group = new FormComponentGroup();
@@ -143,6 +151,8 @@ package com.muxxu.kub3dit.components.editor {
 			_tools.push(_imgBt);
 			_tools.push(_select);
 			_tools.push(_replace);
+			_tools.push(_camPath);
+			_tools.push(_terragN);
 			
 //			_select.enabled = false;
 			
@@ -158,6 +168,8 @@ package com.muxxu.kub3dit.components.editor {
 			_buttonToClassType[_imgBt] = ImageGenPanel;
 			_buttonToClassType[_select] = SelectionPanel;
 			_buttonToClassType[_replace] = ReplacePanel;
+			_buttonToClassType[_camPath] = CamPathPanel;
+			_buttonToClassType[_terragN] = TerragenPanel;
 			
 			var i:int, len:int;
 			len = _tools.length;
@@ -187,10 +199,12 @@ package com.muxxu.kub3dit.components.editor {
 			PosUtils.vPlaceNext(0, VectorUtils.toArray(_tools));
 			var last:ButtonEditorTool = _tools[ _tools.length - 1 ];
 			
-			_import.y += 10;
-			_imgBt.y += 10;
-			_select.y += 10;
-			_replace.y += 10;
+			var i:int, len:int, add:Boolean;
+			len = _tools.length;
+			for(i = 0; i < len; ++i) {
+				if(_tools[i] == _import) add = true;
+				if(add) _tools[i].y += 10;
+			}
 			
 			_helpBt.y = Math.round(last.y + last.height + 10);
 		}
@@ -210,7 +224,7 @@ package com.muxxu.kub3dit.components.editor {
 				}
 			}
 			if(event.keyCode == Keyboard.M) {
-				_tools[ _tools.length-1 ].selected = true;
+				_select.selected = true;
 				dispatchEvent(new ToolsPanelEvent(ToolsPanelEvent.OPEN_PANEL));
 			}
 		}

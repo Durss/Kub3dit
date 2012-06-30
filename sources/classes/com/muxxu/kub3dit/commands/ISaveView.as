@@ -6,7 +6,6 @@ package com.muxxu.kub3dit.commands {
 		/**
 		 * Specifies if the last loaded map is editable or not.
 		 * 
-		 * FIXME This way to define if a map is editable or not will have to be
 		 * modified if someday i add an option to create a new map without
 		 * reloading the whole application.
 		 */

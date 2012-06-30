@@ -33,7 +33,7 @@ package com.muxxu.kub3dit.components.buttons {
 			super(_hasBackground? new ButtonSkin() : createRect(0), icon);
 			if(icon is Validable) Validable(icon).validate();
 			contentMargin = new Margin(2, 1, 2, 1);
-			iconAlign = IconAlign.LEFT;
+			iconAlign = IconAlign.CENTER;
 			if(_hasBackground) {
 				applyDefaultFrameVisitorNoTween(this, background);
 			}

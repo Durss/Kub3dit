@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.form {
+	import flash.filters.ColorMatrixFilter;
 	import gs.TweenLite;
 
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
@@ -21,6 +22,8 @@ package com.muxxu.kub3dit.components.form {
 	import flash.events.Event;
 	import flash.events.MouseEvent;
 	import flash.utils.ByteArray;
+	
+	[Event(name="resize", type="flash.events.Event")]
 	
 	/**
 	 * @author Francois
@@ -66,6 +69,8 @@ package com.muxxu.kub3dit.components.form {
 		 * Sets the model's reference.
 		 */
 		public function set model(value:Model):void {
+			value.addEventListener(LightModelEvent.NEW_MAP_LOADED, newMapHandler);
+			value.addEventListener(LightModelEvent.MAP_UPLOAD_ERROR, uploadMapErrorHandler);
 			value.addEventListener(LightModelEvent.MAP_UPLOAD_COMPLETE, uploadMapCompleteHandler);
 			value.addEventListener(LightModelEvent.SAVE_MAP_GENERATION_COMPLETE, saveMapCompleteHandler);
 		}
@@ -126,6 +131,13 @@ package com.muxxu.kub3dit.components.form {
 			_passInput.enabled = false;
 			_passLabel.alpha = .4;
 			
+			//Green color
+			var m:Array = [0.6467894315719604, 1.1897121667861938, -0.8365015983581543, 0, 0,
+							0.013973236083984375, 0.6644432544708252, 0.32158347964286804, 0, 0,
+							0.9033367037773132, -0.177803635597229, 0.27446693181991577, 0, 0,
+							0, 0, 0, 1, 0];
+			_updateBt.filters = [new ColorMatrixFilter(m)];
+			
 			_uploadBt.addEventListener(MouseEvent.ROLL_OVER, overUploadHandler);
 			_protectCB.addEventListener(Event.CHANGE, toggleProtectHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
@@ -158,12 +170,17 @@ package com.muxxu.kub3dit.components.form {
 			graphics.endFill();
 		}
 		
+		
+		
+		//__________________________________________________________ BUTTONS HANDLERS
+		
 		/**
 		 * Called when disable layer is clicked.
 		 * Closes the view.
 		 */
 		private function clickHandler(event:MouseEvent):void {
 			if(event.target == _uploadBt) {
+				mouseEnabled = mouseChildren = tabEnabled = tabChildren = false;
 				if(_uploadBt.icon == _uploadIcon) {
 					FrontControler.getInstance().uploadMap(_modifyCB.selected, _protectCB.selected? _passInput.text : "");
 				}else{
@@ -171,6 +188,7 @@ package com.muxxu.kub3dit.components.form {
 				}
 			}else if(event.target == _updateBt) {
 				FrontControler.getInstance().updateUploadedMap(_mapId);
+				mouseEnabled = mouseChildren = tabEnabled = tabChildren = false;
 			}
 		}
 		
@@ -186,6 +204,7 @@ package com.muxxu.kub3dit.components.form {
 		 * Called when map file genereration completes.
 		 */
 		private function saveMapCompleteHandler(event:LightModelEvent):void {
+			mouseEnabled = mouseChildren = tabEnabled = tabChildren = true;
 			_uploadBt.icon = _uploadIcon;
 			_uploadBt.label = Label.getLabel("prompt-mapUpload");
 			TweenLite.to(this, .25, {autoAlpha:1});
@@ -209,13 +228,34 @@ package com.muxxu.kub3dit.components.form {
 			}
 		}
 		
+		
+		
+		//__________________________________________________________ UPLOAD HANDLERS
+		
 		/**
 		 * Called when map's upload completes
 		 */
 		private function uploadMapCompleteHandler(event:LightModelEvent):void {
+			mouseEnabled = mouseChildren = tabEnabled = tabChildren = true;
 			_mapUrl = event.data as String;
 			_uploadBt.icon = _submitIcon;
 			_uploadBt.label = Label.getLabel("prompt-mapUploadCopyLink");
+			editableMap = _modifyCB.selected;
+			dispatchEvent(new Event(Event.RESIZE));
+		}
+		
+		/**
+		 * Called if map upload fails
+		 */
+		private function uploadMapErrorHandler(event:LightModelEvent):void {
+			mouseEnabled = mouseChildren = tabEnabled = tabChildren = true;
+		}
+		
+		/**
+		 * Called when a new map is loaded
+		 */
+		private function newMapHandler(event:LightModelEvent):void {
+			editableMap = false;
 		}
 		
 	}

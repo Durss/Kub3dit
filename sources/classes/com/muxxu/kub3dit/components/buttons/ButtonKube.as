@@ -34,7 +34,7 @@ package com.muxxu.kub3dit.components.buttons {
 		public function ButtonKube(label:String, big:Boolean = false, icon:DisplayObject = null, build3r:Boolean = false) {
 			super(label, big? "buttonBig" : build3r? "b-button" : "button", build3r? new Build3rButtonSkin() : new ButtonSkin(), icon);
 			if(icon is Validable) Validable(icon).validate();
-			contentMargin = big? new Margin(5, 5, 5, 5) : new Margin(2, 1, 2, 1);
+			contentMargin = big? new Margin(5, 5, 5, 5) : new Margin(icon==null? 2 : 5, 1, 2, 1);
 			textBoundsMode = false;
 			iconAlign = IconAlign.LEFT;
 			textAlign = icon == null || big? TextAlign.CENTER : TextAlign.LEFT;
@@ -83,6 +83,11 @@ package com.muxxu.kub3dit.components.buttons {
 		/* ******* *
 		 * PRIVATE *
 		 * ******* */
+		override protected function computePositions():void {
+			super.computePositions();
+			_backgroundMc.width = Math.round(_backgroundMc.width);
+			_backgroundMc.height = Math.round(_backgroundMc.height);
+		}
 		
 	}
 }

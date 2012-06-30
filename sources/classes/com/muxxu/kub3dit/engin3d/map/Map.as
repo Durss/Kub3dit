@@ -1,8 +1,9 @@
 package com.muxxu.kub3dit.engin3d.map {
-	import com.nurun.structure.environnement.configuration.Config;
+	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.events.MapEvent;
-	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
+	import com.nurun.structure.environnement.configuration.Config;
 
 	import flash.events.EventDispatcher;
 	import flash.utils.ByteArray;
@@ -24,6 +25,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _mapSizeZ:int;
 		private var _map:ByteArray;
 		private var _adaptSizes:Boolean;
+		private var _cameraPaths:Array;
 		
 		
 		
@@ -59,6 +61,10 @@ package com.muxxu.kub3dit.engin3d.map {
 
 		public function get mapSizeZ():int {
 			return _mapSizeZ;
+		}
+		
+		public function get cameraPaths():Array {
+			return _cameraPaths == null? [] : _cameraPaths;
 		}
 
 
@@ -211,6 +217,39 @@ package com.muxxu.kub3dit.engin3d.map {
 			}
 			
 			dispatchEvent(new MapEvent(MapEvent.LOAD));
+		}
+		
+		/**
+		 * Adds a camera's path to the map.
+		 */
+		public function addCameraPath(path:Array, name:String):void {
+			if(_cameraPaths == null) _cameraPaths = [];
+			var id:int = 0;
+			var i:int, len:int;
+			len = _cameraPaths.length;
+			for(i = 0; i < len; ++i) {
+				id = Math.max(_cameraPaths[i]["id"], id);
+			}
+			_cameraPaths.push({name:name, path:path, id:id+1});
+		}
+		
+		/**
+		 * Sets the camera's paths registered on the map.
+		 */
+		public function setCameraPaths(value:Array):void {
+			_cameraPaths = value;
+		}
+
+		public function followPathById(value:int):void {
+			var i:int, len:int;
+			len = _cameraPaths.length;
+			for(i = 0; i < len; ++i) {
+				if(_cameraPaths[i]["id"] == value) {
+					Camera3D.path = _cameraPaths[i]["path"];
+					Camera3D.followCurrentPath();
+					break;
+				}
+			}
 		}
 
 

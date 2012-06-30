@@ -74,7 +74,6 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var transparent:Array = Textures.getInstance().transparencies;
 			var translucide:Array = Textures.getInstance().translucide;
 			var cubesFrameCoos:Array = Textures.getInstance().cubesFrames;
-			//FIXME shadow casting broken due to modified loop order.
 //			for(zloc = 0; zloc < _sizeZ; zloc++) {
 				for(yloc = 0; yloc < _sizeY; ++yloc) {
 					for (xloc = 0; xloc < _sizeX; ++xloc) {
