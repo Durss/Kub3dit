@@ -94,23 +94,23 @@ package com.muxxu.kub3dit.views {
 			
 			switch(_alignType){
 				case ToolTipAlign.TOP_LEFT:
-					_toolTip.x = mouseX - _toolTip.width - 10 - _margin;
-					_toolTip.y = mouseY - _toolTip.height - 10 - _margin;
+					_toolTip.x = mouseX - _toolTip.width - _margin;
+					_toolTip.y = mouseY - _toolTip.height - _margin;
 					break;
 					
 				case ToolTipAlign.TOP:
 					_toolTip.x = mouseX - _toolTip.width * .5;
-					_toolTip.y = mouseY - _toolTip.height - 10 - _margin;
+					_toolTip.y = mouseY - _toolTip.height - _margin;
 					break;
 					
 				case ToolTipAlign.TOP_RIGHT:
 					_toolTip.x = mouseX + 12 + _margin;
-					_toolTip.y = mouseY - _toolTip.height - 10 - _margin;
+					_toolTip.y = mouseY - _toolTip.height - _margin;
 					break;
 					
 				
 				case ToolTipAlign.LEFT:
-					_toolTip.x = mouseX - _toolTip.width - 10 - _margin;
+					_toolTip.x = mouseX - _toolTip.width - _margin;
 					_toolTip.y = mouseY - _toolTip.height * .5;
 					break;
 					
@@ -125,7 +125,7 @@ package com.muxxu.kub3dit.views {
 					break;
 				
 				case ToolTipAlign.BOTTOM_LEFT:
-					_toolTip.x = mouseX - _toolTip.width - 10 - _margin;
+					_toolTip.x = mouseX - _toolTip.width - _margin;
 					_toolTip.y = mouseY + 12 + _margin;
 					break;
 					

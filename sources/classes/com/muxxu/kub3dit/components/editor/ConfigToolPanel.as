@@ -149,6 +149,7 @@ package com.muxxu.kub3dit.components.editor {
 			var dispObj:DisplayObject = _panel as DisplayObject;
 			_back.width = _mask.width = _width;
 			_back.height = _mask.height = dispObj.height + 10;
+			_closeBt.width = _closeBt.height = 15;
 			PosUtils.centerIn(dispObj, _back);
 			PosUtils.alignToRightOf(_closeBt, _back);
 		}

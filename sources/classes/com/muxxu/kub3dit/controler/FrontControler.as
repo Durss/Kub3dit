@@ -167,6 +167,13 @@ package com.muxxu.kub3dit.controler {
 		public function saveHistory():void {
 			_model.saveHistory();
 		}
+		
+		/**
+		 * Plays a path by its ID.
+		 */
+		public function playPathByID(id:String):void {
+			_model.playPathByID(id);
+		}
 
 
 		

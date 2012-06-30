@@ -117,6 +117,7 @@ package com.muxxu.kub3dit.views {
 			
 			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			addEventListener(MouseEvent.CLICK, clickHandler);
+			_uploadForm.addEventListener(Event.RESIZE, computePositions);
 		}
 		
 		/**

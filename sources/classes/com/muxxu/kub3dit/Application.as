@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit {
+	import gs.plugins.BezierThroughPlugin;
 	import com.nurun.structure.environnement.label.Label;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
 	import com.muxxu.kub3dit.exceptions.Kub3ditException;
@@ -83,7 +84,7 @@ package com.muxxu.kub3dit {
 		 */
 		private function initialize():void {
 			_model = new Model();
-			TweenPlugin.activate([RemoveChildPlugin]);
+			TweenPlugin.activate([RemoveChildPlugin, BezierThroughPlugin]);
 			FrontControler.getInstance().initialize(_model);
 			ViewLocator.getInstance().initialise(_model);
 

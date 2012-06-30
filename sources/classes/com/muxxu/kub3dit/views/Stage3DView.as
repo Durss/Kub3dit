@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.engin3d.campath.CameraPath;
 	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
 	import com.nurun.structure.environnement.label.Label;
@@ -53,6 +54,7 @@ package com.muxxu.kub3dit.views {
 		private var _log:CssTextField;
 		private var _map:Map;
 		private var _preview:PreviewCursor;
+		private var _camPath:CameraPath;
 		
 		
 		
@@ -130,7 +132,6 @@ package com.muxxu.kub3dit.views {
 			_chunksManager = new ChunksManager(_map);
 			_context3D = _stage3D.context3D;
 			_context3D.enableErrorChecking = true;
-			_context3D.setCulling(Context3DTriangleFace.BACK);
 			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			_accelerated = _context3D.driverInfo.toLowerCase().indexOf("software") == -1;
@@ -138,6 +139,7 @@ package com.muxxu.kub3dit.views {
 			_background	= new Background(_context3D);
 			_ground		= new Ground(_context3D, _accelerated, _chunksManager);
 			_preview	= new PreviewCursor(_context3D, _accelerated);
+			_camPath	= new CameraPath(_context3D);
 			
 			FrontControler.getInstance().view3DReady();
 			stage.addEventListener(Event.RESIZE, resizeHandler);
@@ -216,6 +218,7 @@ package com.muxxu.kub3dit.views {
 			var W:int = stage.stageWidth&~1;
 			var H:int = stage.stageHeight&~1;
 			_context3D.clear();
+			_context3D.setCulling(Context3DTriangleFace.BACK);
 			
 			//compute transformation matrix
 			var m:Matrix3D = new Matrix3D();
@@ -240,11 +243,10 @@ package com.muxxu.kub3dit.views {
 			_preview.render();
 			_chunksManager.render(m, W, H);
 			
-			_context3D.present();
+			_context3D.setCulling(Context3DTriangleFace.NONE);
+			_camPath.render();
 			
-//			var invert:Matrix3D = m.clone();
-//			m.invert();
-//			var unprojected:Matrix3D = new Matrix3D();
+			_context3D.present();
 			
 			PosUtils.centerInStage(_log);
 		}

@@ -29,6 +29,7 @@ package com.muxxu.kub3dit.commands {
 		private var _passView:IPassView;
 		private var _saveView:ISaveView;
 		private var _password:String;
+		private var _camPathToLoad:String;
 		
 		
 		
@@ -36,10 +37,12 @@ package com.muxxu.kub3dit.commands {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function  LoadMapCmd(id:String, passView:IPassView, saveView:ISaveView = null) {
+
+		public function  LoadMapCmd(id:String, passView:IPassView, saveView:ISaveView = null, camPathToLoad:String = null) {
 			_id = id;
 			_passView = passView;
 			_saveView = saveView;
+			_camPathToLoad = camPathToLoad;
 			super();
 			_loader = new URLLoader();
 			_loader.dataFormat = URLLoaderDataFormat.BINARY;
@@ -70,6 +73,11 @@ package com.muxxu.kub3dit.commands {
 		 * Sets the map's password.
 		 */
 		public function set password(value:String):void { _password = value; }
+		
+		/**
+		 * Gets the camera path ID to load after map's loading completes.
+		 */
+		public function get camPathToLoad():String { return _camPathToLoad; }
 
 
 

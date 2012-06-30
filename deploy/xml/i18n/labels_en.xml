@@ -19,7 +19,7 @@
 		<label code="inputMapSize"><![CDATA[Zones :]]></label>
 		<label code="defaultHelp"><![CDATA[Use the mouse wheel to change the sizes.<br />To get more customed sizes use<br />the button right under.]]></label>
 		<label code="titleMapSize"><![CDATA[Enter the number of zones<br />you want the map to be.]]></label>
-		<label code="unkownSaveFileType"><![CDATA[Invalid file type.]]></label>
+		<label code="unkownSaveFileType"><![CDATA[The selected file isn't a Kub3dit map.]]></label>
 		
 		<!-- Editor -->
 		<label code="kube1"><![CDATA[Béton]]></label>
@@ -119,6 +119,8 @@
 		<label code="helpToolsImg"><![CDATA[Generate from bitmap]]></label>
 		<label code="helpToolsSelect"><![CDATA[Selection (m)]]></label>
 		<label code="helpToolsReplace"><![CDATA[Replace kubes]]></label>
+		<label code="helpToolsTerragen"><![CDATA[Generate a terrain]]></label>
+		<label code="helpToolsCamPath"><![CDATA[Manage tours]]></label>
 		<label code="helpSyncCam"><![CDATA[Synch the grid's level<br />and the camera's postion]]></label>
 		
 		<label code="axisSelector"><![CDATA[Axe :]]></label>
@@ -168,6 +170,17 @@
 		<label code="toolConfig-selector-depth"><![CDATA[Depth]]></label>
 		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-selector-flip"><![CDATA[Flip]]></label>
+		
+		<label code="toolConfig-campath-capture"><![CDATA[Capture my moves]]></label>
+		<label code="toolConfig-campath-addPoint"><![CDATA[Add a custom point]]></label>
+		<label code="toolConfig-campath-inputDefault"><![CDATA[path name...]]></label>
+		<label code="toolConfig-campath-save"><![CDATA[Save the current path]]></label>
+		<label code="toolConfig-campath-helpClear"><![CDATA[Clear all the current points]]></label>
+		<label code="toolConfig-campath-helpCapture"><![CDATA[Automatically puts points every<br />3 kubes while you move the camera.]]></label>
+		<label code="toolConfig-campath-helpAddPoint"><![CDATA[Puts a point at the current<br />camera's place. <i>(F3)</i>]]></label>
+		<label code="toolConfig-campath-defaultName"><![CDATA[Point of view]]></label>
+		<label code="toolConfig-campath-helpFollow"><![CDATA[Follow path]]></label>
+		<label code="toolConfig-campath-helpDelete"><![CDATA[Delete path]]></label>
 		
 		<label code="syncLevels"><![CDATA[Synch with cam]]></label>
 		<label code="drawFullRadar"><![CDATA[Draw full radar]]></label>

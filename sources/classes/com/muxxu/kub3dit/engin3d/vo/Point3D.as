@@ -57,6 +57,13 @@ package com.muxxu.kub3dit.engin3d.vo {
 		public function equals(point:Point3D):Boolean{
 			return point.x == x && point.y == y && point.z == z;
 		}
+		
+		/**
+		 * Gets the distance between this point and an other one.
+		 */
+		public function distance(point:Point3D):Number {
+			return Math.sqrt( Math.pow(x-point.x, 2) + Math.pow(y-point.y, 2) + Math.pow(z-point.z, 2) );
+		}
 
 
 		

@@ -77,12 +77,15 @@ package com.muxxu.kub3dit.vo {
 				return null;
 			}
 			var fileVersion:int = data.readByte();
+			var parsePaths:Boolean;
 			switch(fileVersion){
 					
 				case Constants.MAP_FILE_TYPE_1:
 					map.load(data);
 					break;
 				
+				case Constants.MAP_FILE_TYPE_3:
+					parsePaths = true;
 				case Constants.MAP_FILE_TYPE_2:
 					var customs:uint = data.readUnsignedByte();
 					var i:int, len:int, cube:CubeData;
@@ -96,7 +99,12 @@ package com.muxxu.kub3dit.vo {
 					if(configureCamera) {
 						Camera3D.configure(data);
 					}else{
-						data.position += 2*3 + 4 + 4;
+						data.position += 2*3 + 4 + 4;//Skip camera infos
+					}
+					
+					if(parsePaths) {
+						var paths:Array = data.readObject();
+						map.setCameraPaths( paths );
 					}
 					
 					map.load(data);

@@ -18,7 +18,7 @@
 		<label code="inputMapSize"><![CDATA[Zones :]]></label>
 		<label code="defaultHelp"><![CDATA[Utilisez la roulette pour changer les dimensions.<br />Pour des tailles plus peronnalisées utilisez<br />le bouton en-dessous de celui-ci.]]></label>
 		<label code="titleMapSize"><![CDATA[Entrez ici les dimensions souhaitées<br />pour la carte en nombre de zones.]]></label>
-		<label code="unkownSaveFileType"><![CDATA[Le fichier séléctionné n'est pas un fichier de carte valide.]]></label>
+		<label code="unkownSaveFileType"><![CDATA[Le fichier séléctionné n'est pas une carte Kub3dit.]]></label>
 		
 		<!-- Editor -->
 		<label code="kube1"><![CDATA[Béton]]></label>
@@ -118,6 +118,8 @@
 		<label code="helpToolsImg"><![CDATA[Générer depuis une image]]></label>
 		<label code="helpToolsSelect"><![CDATA[Sélection (m)]]></label>
 		<label code="helpToolsReplace"><![CDATA[Remplacer des kubes]]></label>
+		<label code="helpToolsTerragen"><![CDATA[Générer un terrain]]></label>
+		<label code="helpToolsCamPath"><![CDATA[Gérer des visites guidées]]></label>
 		<label code="helpSyncCam"><![CDATA[Synchronise le niveau d'affichage de<br />la grille et la position de la caméra.]]></label>
 		
 		<label code="axisSelector"><![CDATA[Axe :]]></label>
@@ -167,6 +169,17 @@
 		<label code="toolConfig-selector-depth"><![CDATA[Niveaux]]></label>
 		<label code="toolConfig-selector-rotate"><![CDATA[Rotation]]></label>
 		<label code="toolConfig-selector-flip"><![CDATA[Renverser]]></label>
+		
+		<label code="toolConfig-campath-capture"><![CDATA[Capturer mes déplacements]]></label>
+		<label code="toolConfig-campath-addPoint"><![CDATA[Ajouter un point]]></label>
+		<label code="toolConfig-campath-inputDefault"><![CDATA[nom du chemin...]]></label>
+		<label code="toolConfig-campath-save"><![CDATA[Enregistrer le chemin actuel]]></label>
+		<label code="toolConfig-campath-helpClear"><![CDATA[Effacer tous les points actuels]]></label>
+		<label code="toolConfig-campath-helpCapture"><![CDATA[Pose des points de repère automatiquement<br />tous les 3 kubes durant le déplacement de la caméra.]]></label>
+		<label code="toolConfig-campath-helpAddPoint"><![CDATA[Pose un point de repère à l'emplacement<br />actuel de la caméra. <i>(F3)</i>]]></label>
+		<label code="toolConfig-campath-defaultName"><![CDATA[Point de vue]]></label>
+		<label code="toolConfig-campath-helpFollow"><![CDATA[Parcourir le chemin]]></label>
+		<label code="toolConfig-campath-helpDelete"><![CDATA[Supprimer le chemin]]></label>
 		
 		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>

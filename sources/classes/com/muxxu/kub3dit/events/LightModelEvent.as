@@ -17,6 +17,8 @@ package com.muxxu.kub3dit.events {
 		public static const UNLOCK:String = "UNLOCK";
 		
 		public static const PROGRESS:String = "PROGRESS";
+		public static const NEW_MAP_LOADED:String = "NEW_MAP_LOADED";
+		public static const MAP_UPLOAD_ERROR:String = "MAP_UPLOAD_ERROR";
 		public static const MAP_UPLOAD_COMPLETE:String = "MAP_UPLOAD_COMPLETE";
 		public static const SAVE_MAP_GENERATION_COMPLETE:String = "SAVE_MAP_GENERATION_COMPLETE";
 		
