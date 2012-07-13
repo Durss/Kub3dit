@@ -87,8 +87,8 @@ package com.muxxu.kub3dit.views {
 			if(event.error is Kub3ditException) {
 				_label.text = Kub3ditException(event.error).message;
 				_submitBt.visible = Kub3ditException(event.error).severity != Kub3ditExceptionSeverity.FATAL;
-			}else{
-				_label.text = Error(event.error).message;
+			}else if(event.error != null){
+				_label.text = Error(event.error).getStackTrace();
 				_submitBt.visible = false;
 			}
 			open();

@@ -1,13 +1,17 @@
 package com.muxxu.kub3dit.components.form.input {
+	import flash.ui.MouseCursor;
+	import flash.ui.Mouse;
 	import com.muxxu.kub3dit.graphics.Build3rInputSkin;
-	import com.muxxu.kub3dit.graphics.InputSkinBig;
-	import com.nurun.utils.text.CssManager;
-	import flash.events.MouseEvent;
-	import com.nurun.utils.math.MathUtils;
-	import flash.events.Event;
 	import com.muxxu.kub3dit.graphics.InputSkin;
+	import com.muxxu.kub3dit.graphics.InputSkinBig;
 	import com.nurun.components.form.Input;
 	import com.nurun.components.vo.Margin;
+	import com.nurun.utils.math.MathUtils;
+	import com.nurun.utils.text.CssManager;
+
+	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.geom.Point;
 	
 	/**
 	 * 
@@ -18,6 +22,7 @@ package com.muxxu.kub3dit.components.form.input {
 		private var _isNumeric:Boolean;
 		private var _minNumValue:int;
 		private var _maxNumValue:int;
+		private var _dragOffset:Point;
 		
 		
 		
@@ -43,6 +48,9 @@ package com.muxxu.kub3dit.components.form.input {
 				addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheelHandler);
 			}else{
 				width = 10 * (parseInt(CssManager.getInstance().styleSheet.getStyle("."+style)["fontSize"])+1) + locMargins.width;
+			}
+			if(isNumeric) {
+				addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
 			}
 		}
 
@@ -92,6 +100,49 @@ package com.muxxu.kub3dit.components.form.input {
 			var v:int = parseInt(text) + event.delta/Math.abs(event.delta);
 			v = MathUtils.restrict(v, _minNumValue, _maxNumValue);
 			text = v.toString();
+			dispatchEvent(new Event(Event.CHANGE));
+		}
+		
+		/**
+		 * Called when the stage is available.
+		 */
+		private function addedToStageHandler(event:Event):void {
+			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			addEventListener(MouseEvent.MOUSE_DOWN, mouseDownHandler);
+			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
+			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
+			stage.addEventListener(MouseEvent.MOUSE_UP, mouseUpHandler);
+			
+			_dragOffset = new Point();
+		}
+
+		private function rollHandler(event:MouseEvent):void {
+			if (event.type == MouseEvent.ROLL_OVER) {
+				Mouse.cursor = MouseCursor.HAND;
+			}else{
+				Mouse.cursor = MouseCursor.AUTO;
+			}
+		}
+
+		private function mouseDownHandler(event:MouseEvent):void {
+			_dragOffset.x = mouseX;
+			_dragOffset.y = mouseY;
+			addEventListener(Event.ENTER_FRAME, enterFrameHandler);
+		}
+
+		private function mouseUpHandler(event:MouseEvent):void {
+			if(hasEventListener(Event.ENTER_FRAME)) {
+				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
+			}
+		}
+
+		private function enterFrameHandler(event:Event):void {
+			var dist:Number = (mouseX - _dragOffset.x) + (mouseY - _dragOffset.y);//Math.sqrt(Math.pow(mouseX - _dragOffset.x, 2) + Math.pow(mouseY - _dragOffset.y, 2));
+			var v:int = parseInt(textfield.text) + Math.round(dist);
+			v = MathUtils.restrict(v, _minNumValue, _maxNumValue);
+			text = v.toString();
+			_dragOffset.x = mouseX;
+			_dragOffset.y = mouseY;
 			dispatchEvent(new Event(Event.CHANGE));
 		}
 		

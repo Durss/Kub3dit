@@ -1,13 +1,17 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
-	import flash.events.MouseEvent;
-	import com.muxxu.kub3dit.components.form.input.InputKube;
+	import com.muxxu.kub3dit.components.buttons.ButtonKube;
+	import com.muxxu.kub3dit.components.editor.toolpanels.terragen.GenerateTerrainStep;
+	import com.muxxu.kub3dit.components.editor.toolpanels.terragen.GroundRatioStep;
+	import com.muxxu.kub3dit.components.editor.toolpanels.terragen.PerlinNoiseMapStep;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
+	import com.nurun.structure.environnement.label.Label;
+	import com.nurun.utils.pos.roundPos;
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.events.MouseEvent;
+	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Point;
 	
 	/**
@@ -16,15 +20,15 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 	 * @date 1 juil. 2012;
 	 */
 	public class TerragenPanel extends Sprite implements IToolPanel {
-		private var _bmp:Bitmap;
-		private var _seedInput:InputKube;
-		private var _threshold:InputKube;
-		private var _widthInput:InputKube;
-		private var _heightInput:InputKube;
-		private var _hit:Sprite;
-		private var _offset:Point;
-		private var _mouseOffset:Point;
-		private var _dragOffset:Point;
+		private var _step1:PerlinNoiseMapStep;
+		private var _step2:GroundRatioStep;
+		private var _nextBt:ButtonKube;
+		private var _prevBt:ButtonKube;
+		private var _currentStep:int;
+		private var _steps:Array;
+		private var _step3:GenerateTerrainStep;
+		private var _landMark:Shape;
+		private var _chunksManager:ChunksManager;
 		
 		
 		
@@ -45,18 +49,44 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * GETTERS / SETTERS *
 		 * ***************** */
 
+		/**
+		 * @inheritDoc
+		 */
 		public function set eraseMode(value:Boolean):void {
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function get eraseMode():Boolean {
 			return false;
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function set level(value:int):void {
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function get fixedLandmark():Boolean {
 			return false;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function set chunksManager(value:ChunksManager):void {
+			_chunksManager = value;
+		}
+
+		/**
+		 * @inheritDoc
+		 */
+		public function get landmark():Shape {
+			return _landMark;
 		}
 
 
@@ -64,18 +94,26 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		/* ****** *
 		 * PUBLIC *
 		 * ****** */
-
+		
+		/**
+		 * @inheritDoc
+		 */
 		public function dispose():void {
 		}
 
+		/**
+		 * @inheritDoc
+		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
+			if(_currentStep == _steps.length-1) {
+				_step3.generate(ox, oy, oz, kubeID, gridOffset, _chunksManager);
+			}
 		}
-
-		public function set chunksManager(value:ChunksManager):void {
-		}
-
-		public function get landmark():Shape {
-			return null;
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function onNewMapLoaded():void {
 		}
 
 
@@ -88,89 +126,82 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Initialize the class.
 		 */
 		private function initialize():void {
-			_seedInput = addChild(new InputKube("42", false, true, 0, 9999999999)) as InputKube;
-			_threshold = addChild(new InputKube("176", false, true, 0, 255)) as InputKube;
-			_widthInput = addChild(new InputKube("64", false, true, 1, 1600)) as InputKube;
-			_heightInput = addChild(new InputKube("64", false, true, 1, 1600)) as InputKube;
-			_bmp = addChild(new Bitmap()) as Bitmap;
-			_hit = addChild(new Sprite()) as Sprite;
+			_landMark = new Shape();
+			var contrast:ColorMatrixFilter = setContrast(70);
 			
-			_offset = new Point();
-			_dragOffset = new Point();
-			_mouseOffset = new Point();
+			_step1 = addChild(new PerlinNoiseMapStep(contrast)) as PerlinNoiseMapStep;
+			_step2 = new GroundRatioStep();
+			_step3 = new GenerateTerrainStep(_step1, _step2, _landMark, contrast);
+			_nextBt = addChild(new ButtonKube(Label.getLabel("toolConfig-terragen-nextStep"))) as ButtonKube;
+			_prevBt = addChild(new ButtonKube(Label.getLabel("toolConfig-terragen-prevStep"))) as ButtonKube;
+			
+			_step1.addEventListener(Event.RESIZE, computePositions);
+			_step2.addEventListener(Event.RESIZE, computePositions);
+			_step3.addEventListener(Event.RESIZE, computePositions);
+			
+			_steps = [];
+			_steps.push(_step1);
+			_steps.push(_step2);
+			_steps.push(_step3);
+			
+			_prevBt.enabled = false;
 			
 			computePositions();
-			
-			updateBitmap();
-			_seedInput.addEventListener(Event.CHANGE, changeHandler);
-			_threshold.addEventListener(Event.CHANGE, changeHandler);
-			_widthInput.addEventListener(Event.CHANGE, changeHandler);
-			_heightInput.addEventListener(Event.CHANGE, changeHandler);
-			_hit.addEventListener(MouseEvent.MOUSE_DOWN, pressHandler);
-			addEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
+			_nextBt.addEventListener(MouseEvent.CLICK, nextPrevHandler);
+			_prevBt.addEventListener(MouseEvent.CLICK, nextPrevHandler);
 		}
 		
 		/**
-		 * Called when the stage is available.
+		 * sets contrast value available are -100 ~ 100 @default is 0
+		 * @param 		value:int	contrast value
+		 * @return		ColorMatrixFilter
 		 */
-		private function addedToStageHandler(event:Event):void {
-			removeEventListener(Event.ADDED_TO_STAGE, addedToStageHandler);
-			stage.addEventListener(MouseEvent.MOUSE_UP, releaseHandler);
+		public static function setContrast(value:Number):ColorMatrixFilter {
+			value /= 100;
+			var s: Number = value + 1;
+    		var o : Number = 128 * (1 - s);
+
+			var m:Array = new Array();
+			m = m.concat([s, 0, 0, 0, o]);	// red
+			m = m.concat([0, s, 0, 0, o]);	// green
+			m = m.concat([0, 0, s, 0, o]);	// blue
+			m = m.concat([0, 0, 0, 1, 0]);	// alpha
+
+			return new ColorMatrixFilter(m);
 		}
 		
 		/**
-		 * Resizes and replaces the elements.
+		 * Called when prev/next button is clicked
 		 */
-		private function computePositions():void {
-			_seedInput.width = 100;
-			_threshold.width = 40;
-			_widthInput.width = 50;
-			_heightInput.width = 50;
-			_threshold.x = _seedInput.width + 10;
-			_widthInput.x = _threshold.x + _threshold.width + 10;
-			_heightInput.x = _widthInput.x + _widthInput.width + 10;
-			_bmp.y = _seedInput.height;
+		private function nextPrevHandler(event:MouseEvent):void {
+			_currentStep += (event.currentTarget == _nextBt)? 1 : -1;
+			_prevBt.enabled = _currentStep > 0;
+			_nextBt.enabled = _currentStep < _steps.length-1;
+			
+			var i:int, len:int;
+			len = _steps.length;
+			for(i = 0; i < len; ++i) {
+				if(i != _currentStep) {
+					if(contains(_steps[i])) {
+						removeChild(_steps[i]);
+					}
+				}else{
+					addChild(_steps[i]);
+				}
+			}
+			computePositions();
+			dispatchEvent(new Event(Event.RESIZE));
 		}
 		
 		/**
-		 * Called when an input's value changes
+		 * Resizes and replaces the elements
 		 */
-		private function changeHandler(event:Event):void {
-			updateBitmap();
-		}
-
-		private function updateBitmap():void {
-			var v:int = parseInt(_threshold.text);
-			var threshold:int = v | (v<<8) | (v<<16);
-			var bmd:BitmapData = new BitmapData(parseInt(_widthInput.text), parseInt(_heightInput.text), true, 0);
-			bmd.perlinNoise(100,100, 7, parseInt(_seedInput.text), false, true, 1, true, [_offset,_offset,_offset,_offset,_offset,_offset,_offset]);
-//			_bmdSource.applyFilter(_bmdSource, _drawRect, _emptyPoint, _contrast);
-			bmd.threshold(bmd, bmd.rect, new Point(), "<", threshold, 0, 0xffffff);
+		private function computePositions(event:Event = null):void {
+			var currentStepTarget:Sprite = _steps[_currentStep];
+			_prevBt.y = _nextBt.y = currentStepTarget.height + 10;
+			_nextBt.x = currentStepTarget.width - _nextBt.width;
 			
-			_bmp.bitmapData = bmd;
-			_bmp.scaleY = _bmp.scaleX = Math.min(300/bmd.width, 300/bmd.height);
-			
-			_hit.graphics.beginFill(0xff0000, 0);
-			_hit.graphics.drawRect(_bmp.x, _bmp.y, _bmp.width, _bmp.height);
-			_hit.graphics.endFill();
-		}
-
-		private function releaseHandler(event:MouseEvent):void {
-			removeEventListener(Event.ENTER_FRAME, moveHandler);
-		}
-
-		private function pressHandler(event:MouseEvent):void {
-			_mouseOffset.x = mouseX;
-			_mouseOffset.y = mouseY;
-			_dragOffset.x = _offset.x;
-			_dragOffset.y = _offset.y;
-			addEventListener(Event.ENTER_FRAME, moveHandler);
-		}
-
-		private function moveHandler(event:Event):void {
-			_offset.x = _dragOffset.x + (_mouseOffset.x - mouseX);
-			_offset.y = _dragOffset.y + (_mouseOffset.y - mouseY);
-			updateBitmap();
+			roundPos(_nextBt, _prevBt);
 		}
 		
 	}

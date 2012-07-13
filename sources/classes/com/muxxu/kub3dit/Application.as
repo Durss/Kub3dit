@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit {
+	import com.asual.swfaddress.SWFAddress;
 	import gs.plugins.BezierThroughPlugin;
 	import com.nurun.structure.environnement.label.Label;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
@@ -136,7 +137,7 @@ package com.muxxu.kub3dit {
 			}else
 			if(event.keyCode == Keyboard.F && event.ctrlKey) {
 				if(StageDisplayState["FULL_SCREEN_INTERACTIVE"] != undefined) {
-					stage.displayState = StageDisplayState["FULL_SCREEN_INTERACTIVE"];
+					stage.displayState = stage.displayState == StageDisplayState.NORMAL? StageDisplayState["FULL_SCREEN_INTERACTIVE"] : StageDisplayState.NORMAL;
 				}
 			}
 		}

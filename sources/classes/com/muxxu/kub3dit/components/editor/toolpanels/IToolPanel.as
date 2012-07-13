@@ -21,6 +21,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * @param oy				Y position under the mouse
 		 * @param oz				Z position of the grid
 		 * @param gridSize			size of the grid
+		 * @param gridOffset		scroll offset of the grid
 		 */
 		function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void;
 		
@@ -60,5 +61,10 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Gets the sizes of the 3D landmark
 		 */
 //		function get landmark3DSize():CubeSize;
+		
+		/**
+		 * Called when a new map is loaded by the user
+		 */
+		function onNewMapLoaded():void;
 	}
 }

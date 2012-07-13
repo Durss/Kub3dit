@@ -107,6 +107,12 @@ package com.muxxu.kub3dit.components.editor {
 			TweenLite.to(_mask, .25, {height:0});
 		}
 
+		public function onNewMapLoaded():void {
+			for each (var i:IToolPanel in _panelTypeToPanel) {
+				i.onNewMapLoaded();
+			}
+		}
+
 
 		
 		

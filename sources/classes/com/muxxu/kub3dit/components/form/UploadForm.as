@@ -69,7 +69,6 @@ package com.muxxu.kub3dit.components.form {
 		 * Sets the model's reference.
 		 */
 		public function set model(value:Model):void {
-			value.addEventListener(LightModelEvent.NEW_MAP_LOADED, newMapHandler);
 			value.addEventListener(LightModelEvent.MAP_UPLOAD_ERROR, uploadMapErrorHandler);
 			value.addEventListener(LightModelEvent.MAP_UPLOAD_COMPLETE, uploadMapCompleteHandler);
 			value.addEventListener(LightModelEvent.SAVE_MAP_GENERATION_COMPLETE, saveMapCompleteHandler);
@@ -86,6 +85,7 @@ package com.muxxu.kub3dit.components.form {
 		 * Specifies if the last loaded map is editable or not.
 		 */
 		public function set editableMap(value:Boolean):void {
+			trace('value: ' + (value));
 			_editableMap = value;
 			addChild(_updateBt);
 			if(!value) removeChild(_updateBt);
@@ -249,13 +249,6 @@ package com.muxxu.kub3dit.components.form {
 		 */
 		private function uploadMapErrorHandler(event:LightModelEvent):void {
 			mouseEnabled = mouseChildren = tabEnabled = tabChildren = true;
-		}
-		
-		/**
-		 * Called when a new map is loaded
-		 */
-		private function newMapHandler(event:LightModelEvent):void {
-			editableMap = false;
 		}
 		
 	}

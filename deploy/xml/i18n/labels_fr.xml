@@ -61,7 +61,7 @@
 		<label code="kube38"><![CDATA[Roche froide]]></label>
 		<label code="kube39"><![CDATA[Roche volcanique]]></label>
 		<label code="kube40"><![CDATA[Cendres]]></label>
-		<label code="kube41"><![CDATA[Grais]]></label>
+		<label code="kube41"><![CDATA[Grès]]></label>
 		<label code="kube42"><![CDATA[Totem Antique]]></label>
 		<label code="kube43"><![CDATA[Pâturage]]></label>
 		<label code="kube44"><![CDATA[Fleur Blanche]]></label>
@@ -180,6 +180,15 @@
 		<label code="toolConfig-campath-defaultName"><![CDATA[Point de vue]]></label>
 		<label code="toolConfig-campath-helpFollow"><![CDATA[Parcourir le chemin]]></label>
 		<label code="toolConfig-campath-helpDelete"><![CDATA[Supprimer le chemin]]></label>
+		
+		<label code="toolConfig-terragen-nextStep"><![CDATA[Etape suivante]]></label>
+		<label code="toolConfig-terragen-prevStep"><![CDATA[Etape précédente]]></label>
+		<label code="toolConfig-terragen-perlinSeed"><![CDATA[Forme du terrain]]></label>
+		<label code="toolConfig-terragen-perlinThreshold"><![CDATA[Niveau de l'océan]]></label>
+		<label code="toolConfig-terragen-perlinWidth"><![CDATA[Largeur du terrain]]></label>
+		<label code="toolConfig-terragen-perlinHeight"><![CDATA[Profondeur du terrain]]></label>
+		<label code="toolConfig-terragen-ratios"><![CDATA[Définissez la hauteur maximum du terrain]]></label>
+		<label code="toolConfig-terragen-generate"><![CDATA[Cliquez sur la grille pour générer le terrain.]]></label>
 		
 		<label code="syncLevels"><![CDATA[Synchroniser avec la caméra]]></label>
 		<label code="drawFullRadar"><![CDATA[Radar complet]]></label>
