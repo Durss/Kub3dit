@@ -1,5 +1,4 @@
 package com.muxxu.kub3dit.model {
-	import flash.utils.setTimeout;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;
@@ -284,6 +283,18 @@ package com.muxxu.kub3dit.model {
 			}
 		}
 		
+		/**
+		 * Shows up the progress bar and locks the UI
+		 */
+		public function showProgress(percent:Number):void {
+			dispatchEvent(new LightModelEvent(LightModelEvent.PROGRESS, percent));
+			if(percent < 1) {
+				lock();
+			}else{
+				unlock();
+			}
+		}
+		
 
 		
 		
@@ -321,6 +332,7 @@ package com.muxxu.kub3dit.model {
 			while(value.charAt(0) == "/") value = value.slice(1);
 
 			var chunks:Array = value.split("/");
+//			chunks[0] = "z";
 //			chunks[0] = "e8";
 //			chunks[1] = "4";
 			
@@ -336,7 +348,11 @@ package com.muxxu.kub3dit.model {
 				_loadMapCmd.execute();
 			}else{
 				if(chunks[1] != null) {
-					_map.followPathById(parseInt(chunks[1]));
+					if(_map != null) {
+						_map.followPathById(parseInt(chunks[1]));
+					}else{
+						_loadMapCmd.updateCamPath(chunks[1]);
+					}
 				}
 			}
 			_ignoreLoadId = null;

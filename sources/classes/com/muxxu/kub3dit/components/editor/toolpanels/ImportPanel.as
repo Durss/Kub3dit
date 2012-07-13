@@ -184,6 +184,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			}
 			_chunksManager.invalidate();
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function onNewMapLoaded():void {
+		}
 
 
 		

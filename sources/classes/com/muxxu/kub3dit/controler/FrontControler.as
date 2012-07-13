@@ -174,6 +174,13 @@ package com.muxxu.kub3dit.controler {
 		public function playPathByID(id:String):void {
 			_model.playPathByID(id);
 		}
+		
+		/**
+		 * Shows up the progress bar and locks the UI
+		 */
+		public function showProgress(percent:Number):void {
+			_model.showProgress(percent);
+		}
 
 
 		

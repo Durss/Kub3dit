@@ -151,6 +151,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				}
 			}
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function onNewMapLoaded():void {
+		}
 
 
 		

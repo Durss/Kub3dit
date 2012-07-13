@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import com.muxxu.kub3dit.events.LightModelEvent;
 	import gs.TweenLite;
 	import gs.easing.Sine;
 
@@ -70,6 +71,7 @@ package com.muxxu.kub3dit.views {
 				_kubeSelector.update(event);
 				_grid.setMap(model.map);
 				_grid.currentKube = model.currentKubeId;
+				model.addEventListener(LightModelEvent.NEW_MAP_LOADED, newMapHandler);
 				computePositions();
 			}
 		}
@@ -206,6 +208,13 @@ package com.muxxu.kub3dit.views {
 //			computePositions();
 			TweenLite.killTweensOf(this);
 			TweenLite.to(this, .25, {x:stage.stageWidth-width, ease:Sine.easeInOut});
+		}
+		
+		/**
+		 * Called when a new map is loaded
+		 */
+		private function newMapHandler(event:LightModelEvent):void {
+			_config.onNewMapLoaded();
 		}
 		
 	}

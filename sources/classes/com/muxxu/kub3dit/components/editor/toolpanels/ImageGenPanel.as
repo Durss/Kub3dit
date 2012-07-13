@@ -156,6 +156,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 				removeChildAt(0);
 			}
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function onNewMapLoaded():void {
+		}
 
 
 		

@@ -186,5 +186,9 @@ package com.muxxu.kub3dit.commands {
 				execute();
 			}
 		}
+
+		public function updateCamPath(id:String):void {
+			_camPathToLoad = id;
+		}
 	}
 }

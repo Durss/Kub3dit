@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.chunks {
+	import flash.utils.setTimeout;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.events.MapEvent;
@@ -193,11 +194,15 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 */
 		public function invalidate():void {
 			var cube:InvalidatableCube;
-			while(_invalidateStack.length > 0) {
+			var s:int = getTimer();
+			while(_invalidateStack.length > 0 && getTimer()-s < 10) {
 				cube = _invalidateStack.pop();
 				update(cube.px, cube.py, cube.pz, cube.tile);
 			}
 			dispatchEvent(new ManagerEvent(ManagerEvent.INTERNAL_UPDATE));
+			if(_invalidateStack.length > 0) {
+				setTimeout(invalidate, 20);
+			}
 		}
 		
 		/**

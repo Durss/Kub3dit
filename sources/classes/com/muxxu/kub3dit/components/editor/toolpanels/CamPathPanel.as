@@ -138,6 +138,18 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function onNewMapLoaded():void {
+			_path = [];
+			_prevPos = null;
+			Camera3D.path = _path;
+			updateList();
+			computePositions();
+			dispatchEvent(new Event(Event.RESIZE));
+		}
 
 
 		

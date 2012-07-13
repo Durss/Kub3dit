@@ -95,6 +95,12 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 */
 		public function draw(ox:int, oy:int, oz:int, kubeID:int, gridSize:int, gridOffset:Point):void {
 		}
+		
+		/**
+		 * @inheritDoc
+		 */
+		public function onNewMapLoaded():void {
+		}
 
 
 		

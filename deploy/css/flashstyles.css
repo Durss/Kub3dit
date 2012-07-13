@@ -64,6 +64,7 @@
 .statsNumber { font-family:Verdana; font-size:10; font-weight:bold; color:#888888; flash-glow:[1.5,10,ffffff]; }
 .statsDetails { font-family:Verdana; font-size:12; color:#ffffff; }
 
+.tool-label{ font-family:Verdana; font-size:12; color:#ffffff; }
 .tool-campath-entry { font-family:Verdana; font-size:12; color:#ffffff; }
 
 /******* BUILD3R ********/

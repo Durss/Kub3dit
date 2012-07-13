@@ -182,6 +182,15 @@
 		<label code="toolConfig-campath-helpFollow"><![CDATA[Follow path]]></label>
 		<label code="toolConfig-campath-helpDelete"><![CDATA[Delete path]]></label>
 		
+		<label code="toolConfig-terragen-nextStep"><![CDATA[Next step]]></label>
+		<label code="toolConfig-terragen-prevStep"><![CDATA[Prev step]]></label>
+		<label code="toolConfig-terragen-perlinSeed"><![CDATA[Terrain's shape]]></label>
+		<label code="toolConfig-terragen-perlinThreshold"><![CDATA[Ocean's level]]></label>
+		<label code="toolConfig-terragen-perlinWidth"><![CDATA[Terrain's width]]></label>
+		<label code="toolConfig-terragen-perlinHeight"><![CDATA[Terrain's depth]]></label>
+		<label code="toolConfig-terragen-ratios"><![CDATA[Define the maximum height of the terrain]]></label>
+		<label code="toolConfig-terragen-generate"><![CDATA[Click on the grid to generate.]]></label>
+		
 		<label code="syncLevels"><![CDATA[Synch with cam]]></label>
 		<label code="drawFullRadar"><![CDATA[Draw full radar]]></label>
 		

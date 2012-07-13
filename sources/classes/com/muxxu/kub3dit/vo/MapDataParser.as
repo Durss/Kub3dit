@@ -105,6 +105,8 @@ package com.muxxu.kub3dit.vo {
 					if(parsePaths) {
 						var paths:Array = data.readObject();
 						map.setCameraPaths( paths );
+					}else{
+						map.setCameraPaths( [] );
 					}
 					
 					map.load(data);

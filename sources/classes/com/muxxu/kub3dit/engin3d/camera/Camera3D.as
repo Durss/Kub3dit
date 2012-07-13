@@ -251,7 +251,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		}
 		
 		/**
-		 * Makes the camera follow the current path.
+		 * Makes the camera 	 the current path.
 		 */
 		public static function followCurrentPath():void {
 			if(path != null && path.length > 0) {

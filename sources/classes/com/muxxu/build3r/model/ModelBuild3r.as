@@ -308,6 +308,7 @@ package com.muxxu.build3r.model {
 				loadView.typeError();
 				return;
 			}
+			var parsePaths:Boolean;
 			var fileVersion:int = data.readByte();
 			switch(fileVersion){
 					
@@ -315,6 +316,8 @@ package com.muxxu.build3r.model {
 					_map = new LightMapData(data.readShort(), data.readShort(), data.readShort(), data);
 					break;
 				
+				case Constants.MAP_FILE_TYPE_3:
+					parsePaths = true;
 				case Constants.MAP_FILE_TYPE_2:
 					Textures.getInstance().removeCustomKubes();
 					var customs:uint = data.readUnsignedByte();
@@ -325,6 +328,11 @@ package com.muxxu.build3r.model {
 					}
 					
 					data.position += 2+2+2+4+4;
+					
+					if(parsePaths) {
+						data.readObject();
+					}
+					
 					_map = new LightMapData(data.readShort(), data.readShort(), data.readShort(), data);
 					break;
 				

@@ -62,8 +62,9 @@ package com.muxxu.build3r.components {
 		 */
 		override public function set width(value:Number):void {
 			_width = value;
+			var prevValue:Number = _value;
 			computePositions();
-			updateButtonState(_min);
+			updateButtonState(prevValue);
 		}
 		
 		/**
@@ -86,6 +87,13 @@ package com.muxxu.build3r.components {
 		public function set maxValue(value:Number):void {
 			_max = value;
 			computePositions();
+		}
+
+		/**
+		 * Gets the max value
+		 */
+		public function get maxValue():Number {
+			return _max;
 		}
 
 
@@ -222,7 +230,7 @@ package com.muxxu.build3r.components {
 		private function clickButtonHandler(event:MouseEvent):void {
 			var lvl:Number = Math.round((Math.floor((_bar.mouseX / _width) * _max) + _min)/_step)*_step;
 			updateLevel( lvl );
-			updateButtonState( lvl );
+			updateButtonState(lvl);
 		}
 		
 	}

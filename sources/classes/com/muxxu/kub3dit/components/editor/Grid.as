@@ -78,6 +78,7 @@ package com.muxxu.kub3dit.components.editor {
 		private var _ox:int;
 		private var _oy:int;
 		private var _displayCoords:Boolean;
+		private var _over:Boolean;
 		
 		
 		
@@ -178,8 +179,17 @@ package com.muxxu.kub3dit.components.editor {
 			_radarBt.addEventListener(MouseEvent.CLICK, clickButtonHandler);
 			ViewLocator.getInstance().addEventListener(LightModelEvent.KUBE_SELECTION_CHANGE, kubeSelectionChangeHandler);
 			_3dView.manager.addEventListener(ManagerEvent.INTERNAL_UPDATE, updateMapRendering);
+			addEventListener(MouseEvent.ROLL_OVER, rollHandler);
+			addEventListener(MouseEvent.ROLL_OUT, rollHandler);
 			
 			_gridHolder.scrollRect = new Rectangle(0,0,_size*_cellSize,_size*_cellSize);
+		}
+		
+		/**
+		 * Called when the grid is rolled over/out
+		 */
+		private function rollHandler(event:MouseEvent):void {
+			_over = event.type == MouseEvent.ROLL_OVER;
 		}
 		
 		/**
@@ -276,8 +286,7 @@ package com.muxxu.kub3dit.components.editor {
 			_lookAt.rotation = Camera3D.rotationX;
 			
 			//DRAWING MANAGEMENT
-			//Detect if curosor is over the gris
-			if(_gridHolder.mouseX >= 0 && _gridHolder.mouseY >= 0 && _gridHolder.mouseX < _size*_cellSize && _gridHolder.mouseY < _size*_cellSize) {
+			if(_over) {
 				_mousePos.x = Math.floor(_gridHolder.mouseX/_cellSize);
 				_mousePos.y = Math.floor(_gridHolder.mouseY/_cellSize);
 				_globalMousePos.x = _ox + _mousePos.x;
@@ -331,8 +340,6 @@ package com.muxxu.kub3dit.components.editor {
 			if(_displayCoords) {
 				dispatchEvent(new ToolTipEvent(ToolTipEvent.OPEN, (_ox-_map.mapSizeX*.5+_mousePos.x)+","+(_oy-_map.mapSizeY*.5+_mousePos.y)));
 			}
-			
-			updateCursor();
 		}
 		
 		/**
@@ -379,18 +386,6 @@ package com.muxxu.kub3dit.components.editor {
 				drawLevel(ox, oy, oz-i, .6 - i*alphaStep);
 			}
 		}
-		
-		/**
-		 * Updates the cursor depending on the action to do
-		 */
-		private function updateCursor():void {
-			if(_dragMode && _gridHolder.mouseX >= 0 && _gridHolder.mouseY >= 0 &&
-				_gridHolder.mouseX < _size*_cellSize && _gridHolder.mouseY < _size*_cellSize) {
-				Mouse.cursor = MouseCursor.HAND;
-			}else if(Mouse.cursor == MouseCursor.HAND){
-				Mouse.cursor = MouseCursor.AUTO;
-			}
-		}
 
 		
 		
@@ -406,6 +401,9 @@ package com.muxxu.kub3dit.components.editor {
 		private function keyHandler(event:KeyboardEvent):void {
 			if(event.type == KeyboardEvent.KEY_DOWN) {
 				_dragMode = event.keyCode == Keyboard.SPACE;
+				if(_dragMode && _over) {
+					Mouse.cursor = MouseCursor.HAND;
+				}
 				//Coords tooltip
 				if (event.keyCode == Keyboard.CONTROL) {
 					if(_gridHolder.mouseX >= 0 && _gridHolder.mouseY >= 0 && _gridHolder.mouseX < _size*_cellSize && _gridHolder.mouseY < _size*_cellSize) {
@@ -415,6 +413,7 @@ package com.muxxu.kub3dit.components.editor {
 			}else {
 				if(event.keyCode == Keyboard.SPACE){
 					_dragMode = false;
+					Mouse.cursor = MouseCursor.AUTO;
 				}
 				if (event.keyCode == Keyboard.CONTROL) {
 					_displayCoords = false;
