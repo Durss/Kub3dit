@@ -70,7 +70,6 @@ package com.muxxu.kub3dit.commands {
 		 * ******* */
 
 		private function uploadCompleteHandler(event:Event):void {
-			trace('_loader.data: ' + (_loader.data));
 			try {
 				var xml:XML = new XML(_loader.data);
 			}catch(error:Error) {
@@ -86,7 +85,6 @@ package com.muxxu.kub3dit.commands {
 		}
 
 		private function uploadErrorHandler(event:IOErrorEvent):void {
-			trace("UploadMapCmd.uploadErrorHandler(event)");
 			dispatchEvent(new CommandEvent(CommandEvent.ERROR, event.text));
 		}
 	}

@@ -85,7 +85,6 @@ package com.muxxu.kub3dit.components.form {
 		 * Specifies if the last loaded map is editable or not.
 		 */
 		public function set editableMap(value:Boolean):void {
-			trace('value: ' + (value));
 			_editableMap = value;
 			addChild(_updateBt);
 			if(!value) removeChild(_updateBt);
@@ -130,6 +129,8 @@ package com.muxxu.kub3dit.components.form {
 			
 			_passInput.enabled = false;
 			_passLabel.alpha = .4;
+			
+			_modifyCB.selected = true;
 			
 			//Green color
 			var m:Array = [0.6467894315719604, 1.1897121667861938, -0.8365015983581543, 0, 0,

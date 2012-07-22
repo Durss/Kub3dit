@@ -181,6 +181,20 @@ package com.muxxu.kub3dit.controler {
 		public function showProgress(percent:Number):void {
 			_model.showProgress(percent);
 		}
+		
+		/**
+		 * Loads the next map
+		 */
+		public function nextMap():void {
+			_model.nextMap();
+		}
+		
+		/**
+		 * Loads the prev map
+		 */
+		public function prevMap():void {
+			_model.prevMap();
+		}
 
 
 		

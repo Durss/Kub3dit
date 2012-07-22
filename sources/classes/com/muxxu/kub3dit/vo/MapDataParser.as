@@ -97,7 +97,7 @@ package com.muxxu.kub3dit.vo {
 					}
 					
 					if(configureCamera) {
-						Camera3D.configure(data);
+						Camera3D.configure(data, parsePaths);
 					}else{
 						data.position += 2*3 + 4 + 4;//Skip camera infos
 					}

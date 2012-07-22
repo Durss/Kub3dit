@@ -1,4 +1,6 @@
 package com.muxxu.kub3dit.model {
+	import flash.external.ExternalInterface;
+	import com.muxxu.kub3dit.utils.Base62;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;
@@ -295,6 +297,22 @@ package com.muxxu.kub3dit.model {
 			}
 		}
 		
+		/**
+		 * Loads the next map
+		 */
+		public function nextMap():void {
+			var next:int = Base62.decode(_lastLoadedMapID) + 1;
+			SWFAddress.setValue(Base62.encode(next));
+		}
+		
+		/**
+		 * Loads the prev map
+		 */
+		public function prevMap():void {
+			var prev:int = Base62.decode(_lastLoadedMapID) - 1;
+			SWFAddress.setValue(Base62.encode(prev));
+		}
+		
 
 		
 		
@@ -306,6 +324,7 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function initialize():void {
 			_currentKubeId = "3";//Defaulty selected kube
+			if(!ExternalInterface.available) _lastLoadedMapID = "kj";//TODO remove!
 			_replaceCmd = new ReplaceKubeCmd();
 //			_replaceCmd.addEventListener(CommandEvent.COMPLETE, replaceCompleteHandler);
 //			_replaceCmd.addEventListener(CommandEvent.ERROR, replaceErrorHandler);
@@ -403,7 +422,6 @@ package com.muxxu.kub3dit.model {
 			}
 			Textures.getInstance().removeCustomKubes();
 			_map = MapDataParser.parse(event.data as ByteArray, true, true, _map);
-			
 			
 			if(event.currentTarget is LoadMapCmd) {
 				var id:String = LoadMapCmd(event.currentTarget).camPathToLoad;
