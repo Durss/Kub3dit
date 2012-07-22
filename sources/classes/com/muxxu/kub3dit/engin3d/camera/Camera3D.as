@@ -59,18 +59,22 @@ com.muxxu.kub3dit.engin3d.camera {
 		/**
 		 * Configures the camera from a byteArray
 		 */
-		public static function configure(data:ByteArray):void {
+		public static function configure(data:ByteArray, isCamPaths:Boolean):void {
 			px = data.readShort();
 			py = data.readShort();
 			pz = data.readShort();
 			
-			rotationX = data.readUnsignedInt();
+			rotationX = data.readUnsignedInt()%360;
 			rotationY = data.readInt();
+			
+			var pos:uint = data.position;
+			if(isCamPaths) data.readObject();//Skip cam paths
 			
 			_mapWidth = data.readShort();
 			_mapDepth = data.readShort();
 			_mapHeight = data.readShort();
-			data.position -= 6;//map reads those data after camera
+			
+			data.position = pos;//map reads the sizes data after camera and the paths are parsed
 			_configured = true;
 		}
 		

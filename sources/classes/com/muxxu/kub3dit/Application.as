@@ -135,6 +135,12 @@ package com.muxxu.kub3dit {
 			if(event.keyCode == Keyboard.S && event.ctrlKey) {
 				FrontControler.getInstance().saveMap();
 			}else
+			if(event.keyCode == Keyboard.PAGE_DOWN && event.ctrlKey) {
+				FrontControler.getInstance().nextMap();
+			}else
+			if(event.keyCode == Keyboard.PAGE_UP && event.ctrlKey) {
+				FrontControler.getInstance().prevMap();
+			}else
 			if(event.keyCode == Keyboard.F && event.ctrlKey) {
 				if(StageDisplayState["FULL_SCREEN_INTERACTIVE"] != undefined) {
 					stage.displayState = stage.displayState == StageDisplayState.NORMAL? StageDisplayState["FULL_SCREEN_INTERACTIVE"] : StageDisplayState.NORMAL;
