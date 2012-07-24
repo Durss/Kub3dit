@@ -9,6 +9,7 @@
 	0 - success.
 	1 - POST var missing.
 	2 - not editable map.
+	3 - wrong password.
 
 	*/
 
@@ -26,8 +27,7 @@
 		}
 		
 		//Update mode management
-		if (isset($_GET["uid"]) && strlen($_GET["uid"])) {
-			//TODO add password protection
+		if (isset($_GET["uid"]) && strlen($_GET["uid"]) > 0) {
 			$index = Base62::convert($_GET["uid"], 62, 10);
 			$updateMode = true;
 			
@@ -43,6 +43,10 @@
 			
 			if (!$editable) {
 				$result = 2;
+			}
+			
+			if (count($chunks) > 1 && md5($_GET["pass"]) != $chunks[1]) {
+				$result = 3;
 			}
 		}else{
 			//Get last index

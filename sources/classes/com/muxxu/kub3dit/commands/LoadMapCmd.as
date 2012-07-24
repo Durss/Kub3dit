@@ -75,6 +75,11 @@ package com.muxxu.kub3dit.commands {
 		public function set password(value:String):void { _password = value; }
 		
 		/**
+		 * Gets the map's password.
+		 */
+		public function get password():String { return _password; }
+		
+		/**
 		 * Gets the camera path ID to load after map's loading completes.
 		 */
 		public function get camPathToLoad():String { return _camPathToLoad; }
@@ -183,6 +188,7 @@ package com.muxxu.kub3dit.commands {
 				dispatchEvent(new CommandEvent(CommandEvent.ERROR));
 			}else{
 				_request.data["pass"] = password;
+				_password = password;
 				execute();
 			}
 		}

@@ -1,6 +1,4 @@
 package com.muxxu.kub3dit.model {
-	import flash.external.ExternalInterface;
-	import com.muxxu.kub3dit.utils.Base62;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;
@@ -19,6 +17,7 @@ package com.muxxu.kub3dit.model {
 	import com.muxxu.kub3dit.events.LightModelEvent;
 	import com.muxxu.kub3dit.exceptions.Kub3ditException;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
+	import com.muxxu.kub3dit.utils.Base62;
 	import com.muxxu.kub3dit.views.MapPasswordView;
 	import com.muxxu.kub3dit.views.SaveView;
 	import com.muxxu.kub3dit.vo.Constants;
@@ -55,7 +54,8 @@ package com.muxxu.kub3dit.model {
 		private var _ignoreNextURLChange:Boolean;
 		private var _replaceCmd:ReplaceKubeCmd;
 		private var _chunksManager:ChunksManager;
-		private var _lastLoadedMapID:String;
+		private var _currentMapID:String;
+		private var _currentMapPass:String;
 		
 		
 		
@@ -204,6 +204,7 @@ package com.muxxu.kub3dit.model {
 		 */
 		public function uploadMap(modify:Boolean, pass:String):void {
 			lock();
+			_currentMapPass = pass;
 			_uploadCmd = new UploadMapCmd(_saveData, modify, pass);
 			_uploadCmd.addEventListener(CommandEvent.COMPLETE, uploadCompleteHandler);
 			_uploadCmd.addEventListener(CommandEvent.ERROR, uploadErrorHandler);
@@ -213,9 +214,9 @@ package com.muxxu.kub3dit.model {
 		/**
 		 * Updates the uploaded map
 		 */
-		public function updateUploadedMap(id:String):void {
+		public function updateUploadedMap():void {
 			lock();
-			_uploadCmd = new UploadMapCmd(_saveData, false, "", id);
+			_uploadCmd = new UploadMapCmd(_saveData, true, _currentMapPass, _currentMapID);
 			_uploadCmd.addEventListener(CommandEvent.COMPLETE, uploadCompleteHandler);
 			_uploadCmd.addEventListener(CommandEvent.ERROR, uploadErrorHandler);
 			_uploadCmd.execute();
@@ -273,7 +274,7 @@ package com.muxxu.kub3dit.model {
 		 * Plays a path by its ID.
 		 */
 		public function playPathByID(id:String):void {
-			var mapId:String = (_lastLoadedMapID == null)? "--" : _lastLoadedMapID;
+			var mapId:String = (_currentMapID == null)? "--" : _currentMapID;
 			var value:String = mapId+"/"+id;
 			var currentValue:String = SWFAddress.getValue();
 			while(currentValue.charAt(0) == "/") currentValue = currentValue.slice(1);
@@ -301,7 +302,7 @@ package com.muxxu.kub3dit.model {
 		 * Loads the next map
 		 */
 		public function nextMap():void {
-			var next:int = Base62.decode(_lastLoadedMapID) + 1;
+			var next:int = Base62.decode(_currentMapID) + 1;
 			SWFAddress.setValue(Base62.encode(next));
 		}
 		
@@ -309,7 +310,7 @@ package com.muxxu.kub3dit.model {
 		 * Loads the prev map
 		 */
 		public function prevMap():void {
-			var prev:int = Base62.decode(_lastLoadedMapID) - 1;
+			var prev:int = Base62.decode(_currentMapID) - 1;
 			SWFAddress.setValue(Base62.encode(prev));
 		}
 		
@@ -324,7 +325,7 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function initialize():void {
 			_currentKubeId = "3";//Defaulty selected kube
-			if(!ExternalInterface.available) _lastLoadedMapID = "kj";//TODO remove!
+//			if(!ExternalInterface.available) _currentMapID = "kj";//TODO remove!
 			_replaceCmd = new ReplaceKubeCmd();
 //			_replaceCmd.addEventListener(CommandEvent.COMPLETE, replaceCompleteHandler);
 //			_replaceCmd.addEventListener(CommandEvent.ERROR, replaceErrorHandler);
@@ -356,9 +357,9 @@ package com.muxxu.kub3dit.model {
 //			chunks[1] = "4";
 			
 			var id:String = String(chunks[0]).replace(/[^A-Za-z0-9]/g, "");
-			if(id.length > 0 && _ignoreLoadId != id && id != _lastLoadedMapID) {
+			if(id.length > 0 && _ignoreLoadId != id && id != _currentMapID) {
 //				lock();
-				_lastLoadedMapID = id;
+				_currentMapID = id;
 				var passView:MapPasswordView = ViewLocator.getInstance().locateViewByType(MapPasswordView) as MapPasswordView;
 				var saveView:SaveView = ViewLocator.getInstance().locateViewByType(SaveView) as SaveView;
 				_loadMapCmd = new LoadMapCmd(id, passView, saveView, chunks[1]);
@@ -417,18 +418,18 @@ package com.muxxu.kub3dit.model {
 		private function loadMapCompleteHandler(event:CommandEvent):void {
 			unlock();
 			
-			if(event.currentTarget is LoadMapCmd) {
-				LoadMapCmd(event.currentTarget).editable;
-			}
 			Textures.getInstance().removeCustomKubes();
 			_map = MapDataParser.parse(event.data as ByteArray, true, true, _map);
 			
 			if(event.currentTarget is LoadMapCmd) {
 				var id:String = LoadMapCmd(event.currentTarget).camPathToLoad;
 				if(id != null) {
-//					setTimeout(_map.followPathById, 1500, id);
 					_map.followPathById(parseInt(id));
 				}
+			
+				_currentMapPass = LoadMapCmd(event.currentTarget).password;
+			}else{
+				_currentMapPass = null;
 			}
 			
 			update();
@@ -547,6 +548,7 @@ package com.muxxu.kub3dit.model {
 		private function uploadCompleteHandler(event:CommandEvent):void {
 			unlock();
 			_ignoreLoadId = event.data as String;
+			_currentMapID = _ignoreLoadId;
 			dispatchEvent(new LightModelEvent(LightModelEvent.MAP_UPLOAD_COMPLETE, _ignoreLoadId));
 			SWFAddress.setValue(_ignoreLoadId);//let this at last! SWFAddress callback sets this var to null
 			_ignoreNextURLChange = true;
@@ -558,7 +560,7 @@ package com.muxxu.kub3dit.model {
 		private function uploadErrorHandler(event:CommandEvent):void {
 			unlock();
 			dispatchEvent(new LightModelEvent(LightModelEvent.MAP_UPLOAD_ERROR));
-			throw new Kub3ditException(Label.getLabel("uploadMapError"), Kub3ditExceptionSeverity.MINOR);
+			throw new Kub3ditException(Label.getLabel("uploadMapError").replace(/\{ERROR_ID\}/gi, event.data), Kub3ditExceptionSeverity.MINOR);
 		}
 		
 	}

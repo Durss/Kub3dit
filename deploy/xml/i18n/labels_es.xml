@@ -3,7 +3,7 @@
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Error en la carga.<br />La ID no es valida.]]></label>
 		<label code="loadKubeErrorSize"><![CDATA[Sólo los cubos cuadrados se pueden importar.]]></label>
-		<label code="uploadMapError"><![CDATA[Un error ocurrio durante la carga.<br />Por favor intente de nuevo.<br /><br />Si el problema persiste por favor contactar <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
+		<label code="uploadMapError"><![CDATA[Un error ocurrio durante la carga.<br />Por favor intente de nuevo.<br /><br />Si el problema persiste por favor contactar <a href="http://muxxu.com/u/Durss_89" class="link">Durss</a><br /><br />Error code : {ERROR_ID}]]></label>
 		<label code="maxCustomKubesError"><![CDATA[No se puede agregar mas de ${VALUE} cubos.]]></label>
 		<label code="accelerationDisabledWarning"><![CDATA[La aceleración por hardware no está disponible!<br />La calidad ha sido reducida para que el editor permanezca más o menos eficiente.]]></label>
 		<label code="zoomLevelError"><![CDATA[Your browser's page is zoomed <b>{ZOOM} times</b>.<br /><br />This can cause some rendering problem in specific cases.<br /><br />You should reset this value to "1" by pressing Ctrl+0 in the adress bar, then refresh the page.]]></label>
