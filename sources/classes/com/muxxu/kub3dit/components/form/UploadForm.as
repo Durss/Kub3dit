@@ -188,7 +188,7 @@ package com.muxxu.kub3dit.components.form {
 					Clipboard.generalClipboard.setData(ClipboardFormats.TEXT_FORMAT, Config.getVariable("shareUrl").replace(/\{ID\}/gi, _mapUrl));
 				}
 			}else if(event.target == _updateBt) {
-				FrontControler.getInstance().updateUploadedMap(_mapId);
+				FrontControler.getInstance().updateUploadedMap();
 				mouseEnabled = mouseChildren = tabEnabled = tabChildren = false;
 			}
 		}

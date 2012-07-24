@@ -22,6 +22,8 @@ package com.muxxu.kub3dit.commands {
 	public class UploadMapCmd extends AbstractCommand implements Command {
 		private var _loader:URLLoader;
 		private var _request:URLRequest;
+		private var _pass:String;
+		private var _idToUpdate:String;
 		
 		
 		
@@ -29,7 +31,10 @@ package com.muxxu.kub3dit.commands {
 		/* *********** *
 		 * CONSTRUCTOR *
 		 * *********** */
-		public function  UploadMapCmd(data:ByteArray, modify:Boolean, pass:String, idToUpdate:String = "") {
+
+		public function UploadMapCmd(data:ByteArray, modify:Boolean, pass:String, idToUpdate:String = "") {
+			_idToUpdate = idToUpdate;
+			_pass = pass;
 			super();
 			_loader = new URLLoader();
 			_loader.addEventListener( Event.COMPLETE, uploadCompleteHandler);
@@ -80,7 +85,7 @@ package com.muxxu.kub3dit.commands {
 			if(xml.child("result")[0] == "0"){
 				dispatchEvent(new CommandEvent(CommandEvent.COMPLETE, String(xml.child("fileName")[0])));
 			}else{
-				dispatchEvent(new CommandEvent(CommandEvent.ERROR, "Missing request data."));
+				dispatchEvent(new CommandEvent(CommandEvent.ERROR, xml.child("result")[0]));
 			}
 		}
 

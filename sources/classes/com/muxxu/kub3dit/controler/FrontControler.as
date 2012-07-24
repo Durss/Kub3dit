@@ -129,8 +129,8 @@ package com.muxxu.kub3dit.controler {
 		/**
 		 * Updates the uploaded map
 		 */
-		public function updateUploadedMap(id:String):void {
-			_model.updateUploadedMap(id);
+		public function updateUploadedMap():void {
+			_model.updateUploadedMap();
 		}
 		
 		/**

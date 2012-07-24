@@ -66,6 +66,7 @@ package com.muxxu.kub3dit.views {
 		override public function open(...args):void {
 			_loadMethod = args[0];
 			_error.visible = false;
+			_submitBt.enabled = true;
 			super.open();
 			stage.focus = _input;
 		}
@@ -75,6 +76,7 @@ package com.muxxu.kub3dit.views {
 		 */
 		public function error():void {
 			_error.visible = true;
+			_submitBt.enabled = true;
 			stage.focus = _input;
 			_input.textfield.setSelection(0, _input.textfield.length);
 			computePositions();
@@ -132,6 +134,7 @@ package com.muxxu.kub3dit.views {
 		 */
 		private function submitHandler(event:Event):void {
 			_error.visible = false;
+			_submitBt.enabled = false;
 			_loadMethod(_input.text);
 			computePositions();
 		}

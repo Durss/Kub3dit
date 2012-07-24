@@ -4,7 +4,7 @@
 		<!-- Errors -->
 		<label code="loadKubeError"><![CDATA[Le chargement du kube a échoué.<br />Assurez-vous d'avoir renseigné un ID valide.]]></label>
 		<label code="loadKubeErrorSize"><![CDATA[Seuls kubes en 16x16 peuvent être importés.]]></label>
-		<label code="uploadMapError"><![CDATA[Une erreur est survenue lors de l'upload.<br />Merci de ré-essayer.<br /><br />Si le problème persiste, contactez <a href="http://muxxu.com/u/Durss_89">Durss</a>]]></label>
+		<label code="uploadMapError"><![CDATA[Une erreur est survenue lors de l'upload.<br />Merci de ré-essayer.<br /><br />Si le problème persiste, contactez <a href="http://muxxu.com/u/Durss_89" class="link">Durss</a><br /><br />Error code : {ERROR_ID}]]></label>
 		<label code="maxCustomKubesError"><![CDATA[Vous ne pouvez pas ajouter plus de ${VALUE} kubes personnalisés.]]></label>
 		<label code="accelerationDisabledWarning"><![CDATA[L'accélération matérielle n'est pas disponible!<br />La qualité du rendu 3D a été réduite afin que l'éditeur reste à peu près fluide.]]></label>
 		<label code="zoomLevelError"><![CDATA[La page de votre navigateur est actuellement zoomé <b>{ZOOM} fois</b>.<br /><br />Ceci peut causer des problèmes de rendu dans certains cas.<br /><br />Il est conseillé de ré-initialiser cette valeur à "1" en faisant Ctrl+0 dans la barre d'adresse et de rafraichir la page.]]></label>
