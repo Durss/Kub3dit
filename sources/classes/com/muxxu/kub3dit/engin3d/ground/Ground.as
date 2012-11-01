@@ -92,7 +92,6 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;//Z
 			_vertexBuffer[index++] = 0;//U
 			_vertexBuffer[index++] = _inc;//V
-			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
 			_vertexBuffer[index++] = offsetX+width * cubeSizeRatio;
@@ -100,7 +99,6 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = width;
 			_vertexBuffer[index++] = _inc;
-			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
 			_vertexBuffer[index++] = offsetX+width * cubeSizeRatio;
@@ -108,7 +106,6 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = width;
 			_vertexBuffer[index++] = height+_inc;
-			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
 			_vertexBuffer[index++] = offsetX;
@@ -116,27 +113,24 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_vertexBuffer[index++] = .5 * cubeSizeRatio;
 			_vertexBuffer[index++] = 0;
 			_vertexBuffer[index++] = height+_inc;
-			_vertexBuffer[index++] = 1;//alpha
 			_vertexBuffer[index++] = 1;//brightness
 			
 			_context3D.setTextureAt(0, _texture);
 			_context3D.setProgram(_shaderProgram);
 			
-			var buffer:VertexBuffer3D = _context3D.createVertexBuffer(_vertexBuffer.length / 7, 7);
+			var buffer:VertexBuffer3D = _context3D.createVertexBuffer(_vertexBuffer.length / 6, 6);
 			var indexBuffer:IndexBuffer3D = _context3D.createIndexBuffer(_indexBuffer.length);
-			buffer.uploadFromVector(_vertexBuffer, 0, _vertexBuffer.length / 7);
+			buffer.uploadFromVector(_vertexBuffer, 0, _vertexBuffer.length / 6);
 			indexBuffer.uploadFromVector(_indexBuffer, 0, _indexBuffer.length);
 			
 			_context3D.setVertexBufferAt(0, buffer, 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
 			_context3D.setVertexBufferAt(1, buffer, 3, Context3DVertexBufferFormat.FLOAT_2); //uv
-			_context3D.setVertexBufferAt(2, buffer, 5, Context3DVertexBufferFormat.FLOAT_1); //alpha
-			_context3D.setVertexBufferAt(3, buffer, 6, Context3DVertexBufferFormat.FLOAT_1); //brightness
+			_context3D.setVertexBufferAt(2, buffer, 5, Context3DVertexBufferFormat.FLOAT_1); //brightness
 			
 			_context3D.drawTriangles(indexBuffer);
 			_context3D.setVertexBufferAt(0, null); //clean the buffers
 			_context3D.setVertexBufferAt(1, null); //clean the buffers
 			_context3D.setVertexBufferAt(2, null); //clean the buffers
-			_context3D.setVertexBufferAt(3, null); //clean the buffers
 		}
 
 
@@ -153,7 +147,7 @@ package com.muxxu.kub3dit.engin3d.ground {
 			_timer = 0;
 			//Init shader
 			var vs:CubeVertexShader = new CubeVertexShader();
-			var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated);
+			var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated, false);
 			_shaderProgram = _context3D.createProgram();
 			_shaderProgram.upload(vs.agalcode, fs.agalcode);
 

@@ -1,5 +1,4 @@
 package com.muxxu.kub3dit.engin3d.chunks {
-	import flash.utils.setTimeout;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.events.MapEvent;
@@ -15,6 +14,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	import flash.display.BitmapData;
 	import flash.display.Shape;
 	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
 	import flash.display3D.Context3DTextureFormat;
 	import flash.display3D.Program3D;
 	import flash.display3D.textures.Texture;
@@ -25,6 +26,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 	import flash.geom.Rectangle;
 	import flash.geom.Vector3D;
 	import flash.utils.getTimer;
+	import flash.utils.setTimeout;
 	
 	[Event(name="renderProgress", type="com.muxxu.kub3dit.engin3d.events.ManagerEvent")]
 	[Event(name="renderComplete", type="com.muxxu.kub3dit.engin3d.events.ManagerEvent")]
@@ -76,7 +78,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _currentHistoryCoordsDone:Object;
 		private var _historyUndoPointer:int;
 		private var _historyRedo : Vector.<Array>;
-		private var _lockHistorySave : Boolean;
+		private var _lockHistorySave:Boolean;
+		private var _shaderProgramTransparent:Program3D;
 		
 		
 		
@@ -150,9 +153,13 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				updateTexture();
 				
 				var vs:CubeVertexShader = new CubeVertexShader();
-				var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated);
+				var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, _accelerated, false);
 				_shaderProgram = _context3D.createProgram();
 				_shaderProgram.upload(vs.agalcode, fs.agalcode);
+				
+				fs = new CubeFragmentShader(_context3D, _accelerated, true);
+				_shaderProgramTransparent = _context3D.createProgram();
+				_shaderProgramTransparent.upload(vs.agalcode, fs.agalcode);
 				_map.addEventListener(MapEvent.LOAD, loadMapHandler);
 				updateVisibleChunks();
 			} else {
@@ -443,10 +450,26 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			drawArray.sortOn("sort", Array.NUMERIC | Array.DESCENDING);
 			
 			//Draw the chunks
+			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			var i:int, len:int;
 			len = drawArray.length;
 			for (i = 0; i < len; ++i) {
-				Chunk(drawArray[i]["chunk"]).renderBuffer();
+				Chunk(drawArray[i]["chunk"]).renderBuffer(0);
+			}
+			for (i = 0; i < len; ++i) {
+				Chunk(drawArray[i]["chunk"]).renderBuffer(1);
+			}
+			
+			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
+			_context3D.setBlendFactors(Context3DBlendFactor.ZERO, Context3DBlendFactor.ONE);
+			for (i = 0; i < len; ++i) {
+				Chunk(drawArray[i]["chunk"]).renderBuffer(2);
+			}
+			
+			_context3D.setDepthTest(true, Context3DCompareMode.EQUAL);
+			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+			for (i = 0; i < len; ++i) {
+				Chunk(drawArray[i]["chunk"]).renderBuffer(2);
 			}
 			
 			_prevOffsetX = _offsetX;
@@ -507,9 +530,11 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				_toUpdate.push(_toUpdate.shift()); // Put it at the end
 				i++; 
 			}
-			//Renders all the possible chunks. If it's taking too much time, stop
-			while(len > 0 && getTimer()-s < 10) {
-				Chunk(_toUpdate[0]["chunk"]).createBuffers();
+			//Renders all the possible chunks. If it's taking too much time, wait for next frame
+			while(len > 0 && getTimer()-s < 7) {
+				Chunk(_toUpdate[0]["chunk"]).createBuffers(0);
+				Chunk(_toUpdate[0]["chunk"]).createBuffers(1);
+				Chunk(_toUpdate[0]["chunk"]).createBuffers(2);
 				_toUpdate.splice(0, 1);
 				len--;
 			}

@@ -35,6 +35,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		private static var _mapHeight:int;
 		private static var _map:Map;
 		private static var _configured:Boolean;
+		private static var _following:Boolean;
 		
 		private var _stage:Stage;
 		private var _lookOffset:Point = new Point();
@@ -60,19 +61,19 @@ com.muxxu.kub3dit.engin3d.camera {
 		 * Configures the camera from a byteArray
 		 */
 		public static function configure(data:ByteArray, isCamPaths:Boolean):void {
-			px = data.readShort();
+			px = data.readShort();//X is negative, don't read it as an unsigned short
 			py = data.readShort();
 			pz = data.readShort();
 			
-			rotationX = data.readUnsignedInt()%360;
+			rotationX = data.readInt();
 			rotationY = data.readInt();
 			
 			var pos:uint = data.position;
 			if(isCamPaths) data.readObject();//Skip cam paths
 			
-			_mapWidth = data.readShort();
-			_mapDepth = data.readShort();
-			_mapHeight = data.readShort();
+			_mapWidth = data.readUnsignedShort();
+			_mapDepth = data.readUnsignedShort();
+			_mapHeight = data.readUnsignedShort();
 			
 			data.position = pos;//map reads the sizes data after camera and the paths are parsed
 			_configured = true;
@@ -87,8 +88,10 @@ com.muxxu.kub3dit.engin3d.camera {
 			}
 			var offy:Number = _forward * 15 * coeff;
 			var dist:Number = (Math.sqrt(offx * offx + offy * offy));
-//			if (rotationX<0)	rotationX+=360;
-//			if (rotationX>360)	rotationX-=360;
+			if(!_following) {
+				if (rotationX<0)	rotationX+=360;
+				if (rotationX>360)	rotationX-=360;
+			}
 			
 			var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
 			var moveZ:Number = Math.cos((rotationY+90)*Math.PI/180) * 15 * _forward * coeff;
@@ -101,8 +104,8 @@ com.muxxu.kub3dit.engin3d.camera {
 			px -= moveX * ratio;
 			py += moveY * ratio;
 			pz += moveZ * ratio;
-			px = Math.min(1, Math.max(px,-_mapWidth*ratio));
-			py = Math.max(-1, Math.min(py,_mapDepth*ratio));
+			px = Math.min((1+16)*ratio, Math.max(px,-(_mapWidth+16)*ratio));
+			py = Math.max((-1-16)*ratio, Math.min(py,(_mapDepth+16)*ratio));
 			pz = Math.max(Math.min(pz,_mapHeight*ratio), -ratio*.3);
 			
 			//dirty collision detection attempt
@@ -149,6 +152,7 @@ com.muxxu.kub3dit.engin3d.camera {
 //			}
 			if(e.keyCode == Keyboard.ESCAPE) {
 				TweenLite.killTweensOf(Camera3D);
+				_following = false;
 			}
 		}
 		
@@ -273,9 +277,14 @@ com.muxxu.kub3dit.engin3d.camera {
 					dz = path[i]['pz'] - path[i-1]['pz'];
 					distance += Math.sqrt(dx*dx + dy*dy + dz*dz);
 				}
-				TweenMax.to(Camera3D, distance*.001, {bezier:path, orientToBezier:false, ease:Linear.easeNone});
+				_following = true;
+				TweenMax.to(Camera3D, distance*.001, {bezier:path, orientToBezier:false, ease:Linear.easeNone, onComplete:onFollowComplete});
 				path = null;//clear triangles rendering
 			}
+		}
+
+		private static function onFollowComplete():void {
+			_following = false;
 		}
 		
 	}

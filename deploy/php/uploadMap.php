@@ -45,7 +45,7 @@
 				$result = 2;
 			}
 			
-			if (count($chunks) > 1 && md5($_GET["pass"]) != $chunks[1]) {
+			if (count($chunks) > 1 && strlen($chunks[1]) > 0 && md5($_GET["pass"]) != $chunks[1]) {
 				$result = 3;
 			}
 		}else{

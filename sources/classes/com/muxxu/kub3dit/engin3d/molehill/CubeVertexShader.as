@@ -15,11 +15,10 @@ com.muxxu.kub3dit.engin3d.molehill{
 			"m44 vt0, va0, vc0 \n" + //transform vertex x,y,z
 			"mov op, vt0 \n" +       //output vertex x,y,z
 			
-			"mov v0, va1 \n" +
-			"mov v1, va2 \n" +
-			"mov v2, va3 \n" +
-			"mov v3, va0 \n"; 
-//			"mov v3, vt0.z \n"; 
+			//Data sent to fragment shader
+			"mov v0, va1 \n" +//uv
+			"mov v1, va2 \n" +//brightness
+			"mov v2, va0 \n";// xuy
 			
 			assemble(Context3DProgramType.VERTEX, src);
 		}
