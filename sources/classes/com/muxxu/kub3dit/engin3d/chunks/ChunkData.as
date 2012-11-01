@@ -112,8 +112,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			for (var i:String in translucide) {
 				if(translucide[i] != undefined) backfaceTest[i] = translucide[i];
 			}
-			for (i in backfaceTest) {
-				if(backfaceTest[i] != undefined) backfaceTest[i] = backfaceTest[i];
+			for (i in transparent) {
+				if(transparent[i] != undefined) backfaceTest[i] = transparent[i];
 			}
 			
 			var cubesFrameCoos:Array = Textures.getInstance().cubesFrames;
