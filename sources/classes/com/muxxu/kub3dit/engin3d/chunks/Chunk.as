@@ -62,7 +62,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Gets if the chunk is ready to be used
 		 */
 		public function get isReady():Boolean {
-			return _data != null && ( (_data._buffersOpaque != null && _data._buffersOpaque.length > 0) || (_data._buffersTransparent != null && _data._buffersTransparent.length > 0) );
+			return _data != null && ( (_data._buffersOpaque != null && _data._buffersOpaque.length > 0) || (_data._buffersTransparent != null && _data._buffersTransparent.length > 0) || (_data._buffersTranslucide != null && _data._buffersTranslucide.length > 0) );
 		}
 		
 		/**
@@ -96,6 +96,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		
 		/**
 		 * Draws the chunk
+		 * 
+		 * @param type	1=opaque, 2=transparent, 3=translucide
 		 */
 		public function renderBuffer(type:int):void {
 			var buffer:Vector.<Vector.<Number>> = type == 0? _data._buffersOpaque : type == 1? _data._buffersTransparent : _data._buffersTranslucide;

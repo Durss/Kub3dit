@@ -449,23 +449,27 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			}
 			drawArray.sortOn("sort", Array.NUMERIC | Array.DESCENDING);
 			
-			//Draw the chunks
+			//Draw opaque cubes
 			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			var i:int, len:int;
 			len = drawArray.length;
 			for (i = 0; i < len; ++i) {
 				Chunk(drawArray[i]["chunk"]).renderBuffer(0);
 			}
+			
+			//Draw transparent cubes over opaque
 			for (i = 0; i < len; ++i) {
 				Chunk(drawArray[i]["chunk"]).renderBuffer(1);
 			}
 			
+			//Draw translucides (first pass)
 			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			_context3D.setBlendFactors(Context3DBlendFactor.ZERO, Context3DBlendFactor.ONE);
 			for (i = 0; i < len; ++i) {
 				Chunk(drawArray[i]["chunk"]).renderBuffer(2);
 			}
 			
+			//Draw translucides (second pass)
 			_context3D.setDepthTest(true, Context3DCompareMode.EQUAL);
 			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			for (i = 0; i < len; ++i) {
