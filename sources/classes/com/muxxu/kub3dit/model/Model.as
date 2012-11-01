@@ -417,7 +417,6 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function loadMapCompleteHandler(event:CommandEvent):void {
 			unlock();
-			
 			Textures.getInstance().removeCustomKubes();
 			_map = MapDataParser.parse(event.data as ByteArray, true, true, _map);
 			
@@ -498,7 +497,8 @@ package com.muxxu.kub3dit.model {
 			ba.writeShort(Camera3D.locX);
 			ba.writeShort(Camera3D.locY);
 			ba.writeShort(Camera3D.locZ);
-			ba.writeUnsignedInt(Camera3D.rotationX);
+			var rx:Number = Camera3D.rotationX;
+			ba.writeUnsignedInt(rx < 0? 360+(rx%360) : rx%360);
 			ba.writeInt(Camera3D.rotationY);
 			
 			//============CAMERA PATHS============

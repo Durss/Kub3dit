@@ -1,5 +1,4 @@
 package com.muxxu.kub3dit {
-	import com.asual.swfaddress.SWFAddress;
 	import gs.plugins.BezierThroughPlugin;
 	import com.nurun.structure.environnement.label.Label;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;

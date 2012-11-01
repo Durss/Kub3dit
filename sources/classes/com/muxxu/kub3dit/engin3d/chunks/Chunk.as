@@ -26,8 +26,12 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		private var _updating:Boolean;
 		private var _originX:int;
 		private var _originY:int;
-		private var _vertexBuffers:Vector.<VertexBuffer3D>;
-		private var _indexBuffers:Vector.<IndexBuffer3D>;
+		private var _vertexBuffersOpaque:Vector.<VertexBuffer3D>;
+		private var _indexBuffersOpaque:Vector.<IndexBuffer3D>;
+		private var _vertexBuffersTransparent:Vector.<VertexBuffer3D>;
+		private var _indexBuffersTransparent:Vector.<IndexBuffer3D>;
+		private var _vertexBuffersTranslucide:Vector.<VertexBuffer3D>;
+		private var _indexBuffersTranslucide:Vector.<IndexBuffer3D>;
 		
 		
 		
@@ -58,7 +62,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 * Gets if the chunk is ready to be used
 		 */
 		public function get isReady():Boolean {
-			return _data != null && _data._buffers != null && _data._buffers.length > 0;
+			return _data != null && ( (_data._buffersOpaque != null && _data._buffersOpaque.length > 0) || (_data._buffersTransparent != null && _data._buffersTransparent.length > 0) );
 		}
 		
 		/**
@@ -93,48 +97,66 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		/**
 		 * Draws the chunk
 		 */
-		public function renderBuffer():void {
-			if (_data._indexes.length > 0 && _data._buffers.length > 0) {
+		public function renderBuffer(type:int):void {
+			var buffer:Vector.<Vector.<Number>> = type == 0? _data._buffersOpaque : type == 1? _data._buffersTransparent : _data._buffersTranslucide;
+			var indexes:Vector.<Vector.<uint>> = type == 0? _data._indexesOpaque : type == 1? _data._indexesTransparent : _data._indexesTranslucide;
+			var vBuffer:Vector.<VertexBuffer3D> = type==0? _vertexBuffersOpaque : type == 1? _vertexBuffersTransparent : _vertexBuffersTranslucide;
+			var iBuffer:Vector.<IndexBuffer3D> = type==0? _indexBuffersOpaque : type == 1? _indexBuffersTransparent : _indexBuffersTranslucide;
+			
+			if (indexes.length > 0 && buffer.length > 0) {
 				var i:int, len:int;
-				len = _vertexBuffers.length;
+				len = vBuffer.length;
 				for(i = 0; i < len; ++i) {
-					if(_vertexBuffers[i] == null) continue;
+					if(vBuffer[i] == null) continue;
 					
-					_context3D.setVertexBufferAt(0, _vertexBuffers[i], 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
-					_context3D.setVertexBufferAt(1, _vertexBuffers[i], 3, Context3DVertexBufferFormat.FLOAT_2); //uv
-					_context3D.setVertexBufferAt(2, _vertexBuffers[i], 5, Context3DVertexBufferFormat.FLOAT_1); //alpha
-					_context3D.setVertexBufferAt(3, _vertexBuffers[i], 6, Context3DVertexBufferFormat.FLOAT_1); //brightness
+					_context3D.setVertexBufferAt(0, vBuffer[i], 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
+					_context3D.setVertexBufferAt(1, vBuffer[i], 3, Context3DVertexBufferFormat.FLOAT_2); //uv
+					_context3D.setVertexBufferAt(2, vBuffer[i], 5, Context3DVertexBufferFormat.FLOAT_1); //brightness
 					
-					_context3D.drawTriangles(_indexBuffers[i]);
+					_context3D.drawTriangles(iBuffer[i]);
 					
 					_context3D.setVertexBufferAt(0, null); //clean the buffers
 					_context3D.setVertexBufferAt(1, null); //clean the buffers
 					_context3D.setVertexBufferAt(2, null); //clean the buffers
-					_context3D.setVertexBufferAt(3, null); //clean the buffers
 				}
 			}
 		}
 		
 		/**
 		 * Creates the chunk's vertex buffer
+		 * 
+		 * @param type	1=opaque, 2=transparent, 3=translucide
 		 */
-		public function createBuffers():void {
+		public function createBuffers(type:int):void {
 			_data = _map.copyData(_chunkSize, _xloc, _yloc);
 			_data.createArrays();
-			if(_data._buffers.length > 0) {
+			var buffer:Vector.<Vector.<Number>> = type == 0? _data._buffersOpaque : type == 1? _data._buffersTransparent : _data._buffersTranslucide;
+			var indexes:Vector.<Vector.<uint>> = type == 0? _data._indexesOpaque : type == 1? _data._indexesTransparent : _data._indexesTranslucide;
+			if(buffer.length > 0) {
 				var i:int, len:int, vertex:VertexBuffer3D, index:IndexBuffer3D;
-				len = _data._indexes.length;
-				_vertexBuffers = new Vector.<VertexBuffer3D>(len, true);
-				_indexBuffers = new Vector.<IndexBuffer3D>(len, true);
+				len = indexes.length;
+				var vBuffer:Vector.<VertexBuffer3D> = new Vector.<VertexBuffer3D>(len, true);
+				var iBuffer:Vector.<IndexBuffer3D> = new Vector.<IndexBuffer3D>(len, true);
 				for(i = 0; i < len; ++i) {
-					if(_data._buffers[i].length == 0) continue;
+					if(buffer[i].length == 0) continue;
 					
-					vertex = _context3D.createVertexBuffer(_data._buffers[i].length / 7, 7);
-					index = _context3D.createIndexBuffer(_data._indexes[i].length);
-					vertex.uploadFromVector(_data._buffers[i], 0, _data._buffers[i].length / 7);
-					index.uploadFromVector(_data._indexes[i], 0, _data._indexes[i].length);
-					_vertexBuffers[i] = vertex;
-					_indexBuffers[i] = index;
+					vertex = _context3D.createVertexBuffer(buffer[i].length / 6, 6);
+					index = _context3D.createIndexBuffer(indexes[i].length);
+					vertex.uploadFromVector(buffer[i], 0, buffer[i].length / 6);
+					index.uploadFromVector(indexes[i], 0, indexes[i].length);
+					vBuffer[i] = vertex;
+					iBuffer[i] = index;
+				}
+				
+				if(type == 0) {
+					_vertexBuffersOpaque = vBuffer;
+					_indexBuffersOpaque = iBuffer;
+				}else if(type == 1) {
+					_vertexBuffersTransparent = vBuffer;
+					_indexBuffersTransparent= iBuffer;
+				}else{
+					_vertexBuffersTranslucide = vBuffer;
+					_indexBuffersTranslucide = iBuffer;
 				}
 			}
 			_updating = false;
@@ -148,8 +170,12 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_map = null;
 			_data = null;
 			_context3D = null;
-			_vertexBuffers = null;
-			_indexBuffers = null;
+			_vertexBuffersOpaque = null;
+			_indexBuffersOpaque = null;
+			_vertexBuffersTransparent = null;
+			_indexBuffersTransparent = null;
+			_vertexBuffersTranslucide= null;
+			_indexBuffersTranslucide= null;
 			_texture = null;
 		}
 		

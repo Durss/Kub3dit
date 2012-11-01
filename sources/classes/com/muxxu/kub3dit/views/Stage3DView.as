@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.views {
+	import flash.system.Capabilities;
 	import com.muxxu.kub3dit.engin3d.campath.CameraPath;
 	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
@@ -131,7 +132,7 @@ package com.muxxu.kub3dit.views {
 		private function context3DReadyHandler(event:Event):void {
 			_chunksManager = new ChunksManager(_map);
 			_context3D = _stage3D.context3D;
-			_context3D.enableErrorChecking = true;
+			_context3D.enableErrorChecking = Capabilities.playerType.toLowerCase() == "standalone";//Enable debug in standalone mode
 			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
 			_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			_accelerated = _context3D.driverInfo.toLowerCase().indexOf("software") == -1;
@@ -242,6 +243,9 @@ package com.muxxu.kub3dit.views {
 			_ground.render();
 			_preview.render();
 			_chunksManager.render(m, W, H);
+			//The chunk manager plays with blend modes. We reset them.
+			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
+			_context3D.setBlendFactors(Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
 			
 			_context3D.setCulling(Context3DTriangleFace.NONE);
 			_camPath.render();

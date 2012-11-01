@@ -234,7 +234,7 @@ package com.muxxu.kub3dit.engin3d.map {
 					lenJ = chunks.length;
 					for(j = 0; j < lenJ; ++j) {
 						_translucide[parseInt(chunks[j])] = true;
-						_transparent[parseInt(chunks[j])] = true;
+//						_transparent[parseInt(chunks[j])] = true;
 					}
 					
 				}else if(chunks[0] == "transparents") {

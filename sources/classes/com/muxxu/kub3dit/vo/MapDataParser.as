@@ -76,6 +76,9 @@ package com.muxxu.kub3dit.vo {
 				throw new Kub3ditException(Label.getLabel("unkownSaveFileType"), Kub3ditExceptionSeverity.MINOR);
 				return null;
 			}
+			
+			//new FileReference().save(data, "test.bin");//export uncompressed map for debug purpose
+			
 			var fileVersion:int = data.readByte();
 			var parsePaths:Boolean;
 			switch(fileVersion){
@@ -86,6 +89,7 @@ package com.muxxu.kub3dit.vo {
 				
 				case Constants.MAP_FILE_TYPE_3:
 					parsePaths = true;
+					
 				case Constants.MAP_FILE_TYPE_2:
 					var customs:uint = data.readUnsignedByte();
 					var i:int, len:int, cube:CubeData;

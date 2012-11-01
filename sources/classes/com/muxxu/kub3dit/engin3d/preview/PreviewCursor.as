@@ -1,9 +1,9 @@
 package com.muxxu.kub3dit.engin3d.preview {
-	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeVertexShader;
+	import com.muxxu.kub3dit.events.TextureEvent;
 	import com.muxxu.kub3dit.views.EditorView;
 	import com.muxxu.kub3dit.views.KubeSelectorView;
 	import com.nurun.structure.mvc.views.ViewLocator;
@@ -69,7 +69,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			if(pz == -1 * cubeSizeRatio) return;//mouse out of grid in this case
 			
 			var bmd:BitmapData			= Textures.getInstance().spriteSheet;
-			var translucide:Array		= Textures.getInstance().translucide;
 			var cubesFrameCoos:Array	= Textures.getInstance().cubesFrames;
 			
 			var textureStepRatioX:Number	= 1 / bmd.width;
@@ -91,7 +90,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			var tileBottomX:Number = tileBottom.x * textureStepRatioX;
 			var tileBottomY:Number = tileBottom.y * textureStepRatioY;
 	
-			var alpha:Number = translucide[tile]===true? .4 : 1;
 			var brightness:Number = 1.1;
 			var verticesBuffer:Vector.<Number> = new Vector.<Number>();
 			var indexesBuffer:Vector.<uint> = new Vector.<uint>();
@@ -113,7 +111,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz; //Z
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX; //U
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY; //V
-			verticesBuffer[index++] = alpha;//Alpha
 			verticesBuffer[index++] = brightness;//Brightness
 			
 			verticesBuffer[index++] = -vertexOffset + px;
@@ -121,7 +118,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = vertexOffset + px;
@@ -129,7 +125,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 		
 			verticesBuffer[index++] = vertexOffset + px;
@@ -137,7 +132,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			
@@ -156,7 +150,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX  + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = -vertexOffset + px;
@@ -164,7 +157,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 
 			verticesBuffer[index++] = vertexOffset + px;
@@ -172,7 +164,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = vertexOffset + px;
@@ -180,7 +171,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			
@@ -200,7 +190,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = vertexOffset + px;
@@ -208,7 +197,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = vertexOffset + px;
@@ -216,7 +204,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 
 			verticesBuffer[index++] = vertexOffset + px;
@@ -224,7 +211,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			
@@ -244,7 +230,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] =  tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = -vertexOffset + px;
@@ -252,7 +237,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureSizeRatio - textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = -vertexOffset + px;
@@ -260,7 +244,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureSizeRatio - textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			verticesBuffer[index++] = -vertexOffset + px;
@@ -268,7 +251,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 			verticesBuffer[index++] = -vertexOffset - pz;
 			verticesBuffer[index++] = tileSideX + textureStretchX;
 			verticesBuffer[index++] = tileSideY + textureStretchY;
-			verticesBuffer[index++] = alpha;
 			verticesBuffer[index++] = brightness;
 			
 			
@@ -289,7 +271,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = -vertexOffset - pz;
 				verticesBuffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
 				verticesBuffer[index++] =  tileTopY + textureSizeRatio - textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 				
 				verticesBuffer[index++] = -vertexOffset + px;
@@ -297,7 +278,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = -vertexOffset - pz;
 				verticesBuffer[index++] = tileTopX + textureStretchX;
 				verticesBuffer[index++] = tileTopY + textureSizeRatio - textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 				
 				verticesBuffer[index++] = vertexOffset + px;
@@ -305,7 +285,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = -vertexOffset - pz;
 				verticesBuffer[index++] = tileTopX + textureStretchX;
 				verticesBuffer[index++] = tileTopY + textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 				
 				verticesBuffer[index++] = vertexOffset + px;
@@ -313,7 +292,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = -vertexOffset - pz;
 				verticesBuffer[index++] = tileTopX + textureSizeRatio - textureStretchX;
 				verticesBuffer[index++] = tileTopY + textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 			}
 			
@@ -336,7 +314,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = vertexOffset - pz; //Z
 				verticesBuffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
 				verticesBuffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 				
 				//back left
@@ -345,7 +322,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = vertexOffset - pz;
 				verticesBuffer[index++] = tileBottomX + textureSizeRatio - textureStretchX;
 				verticesBuffer[index++] = tileBottomY + textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 				
 				//Front left
@@ -354,7 +330,6 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = vertexOffset - pz;
 				verticesBuffer[index++] = tileBottomX + textureStretchX;
 				verticesBuffer[index++] = tileBottomY + textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 				
 				//Front right
@@ -363,28 +338,25 @@ package com.muxxu.kub3dit.engin3d.preview {
 				verticesBuffer[index++] = vertexOffset - pz;
 				verticesBuffer[index++] = tileBottomX + textureStretchX;
 				verticesBuffer[index++] = tileBottomY + textureSizeRatio - textureStretchY;
-				verticesBuffer[index++] = alpha;
 				verticesBuffer[index++] = brightness;
 			}
 			
 			_context3D.setTextureAt(0, _texture);
 			_context3D.setProgram(_shaderProgram);
 			
-			var vertexBuffer:VertexBuffer3D = _context3D.createVertexBuffer(verticesBuffer.length / 7, 7);
+			var vertexBuffer:VertexBuffer3D = _context3D.createVertexBuffer(verticesBuffer.length / 6, 6);
 			var indexBuffer:IndexBuffer3D = _context3D.createIndexBuffer(indexesBuffer.length);
-			vertexBuffer.uploadFromVector(verticesBuffer, 0, verticesBuffer.length / 7);
+			vertexBuffer.uploadFromVector(verticesBuffer, 0, verticesBuffer.length / 6);
 			indexBuffer.uploadFromVector(indexesBuffer, 0, indexesBuffer.length);
 			
 			_context3D.setVertexBufferAt(0, vertexBuffer, 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
 			_context3D.setVertexBufferAt(1, vertexBuffer, 3, Context3DVertexBufferFormat.FLOAT_2); //uv
-			_context3D.setVertexBufferAt(2, vertexBuffer, 5, Context3DVertexBufferFormat.FLOAT_1); //alpha
-			_context3D.setVertexBufferAt(3, vertexBuffer, 6, Context3DVertexBufferFormat.FLOAT_1); //brightness
+			_context3D.setVertexBufferAt(2, vertexBuffer, 5, Context3DVertexBufferFormat.FLOAT_1); //brightness
 			
 			_context3D.drawTriangles(indexBuffer);
 			_context3D.setVertexBufferAt(0, null); //clean the buffers
 			_context3D.setVertexBufferAt(1, null); //clean the buffers
 			_context3D.setVertexBufferAt(2, null); //clean the buffers
-			_context3D.setVertexBufferAt(3, null); //clean the buffers
 		}
 
 
@@ -402,7 +374,7 @@ package com.muxxu.kub3dit.engin3d.preview {
 			
 			//Init shader
 			var vs:CubeVertexShader = new CubeVertexShader();
-			var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, false);
+			var fs:CubeFragmentShader = new CubeFragmentShader(_context3D, false, false);
 			_shaderProgram = _context3D.createProgram();
 			_shaderProgram.upload(vs.agalcode, fs.agalcode);
 
