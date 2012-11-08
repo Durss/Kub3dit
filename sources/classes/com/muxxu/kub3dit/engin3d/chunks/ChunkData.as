@@ -125,10 +125,12 @@ package com.muxxu.kub3dit.engin3d.chunks {
 					for(zloc = _sizeZ-1; zloc > -1; --zloc) {
 					
 						var tile:int = _data[zloc][yloc][xloc];
-						var xLoc2:int = xloc * cubeSizeRatio;
-						var yLoc2:int = yloc * cubeSizeRatio;
-						var zLoc2:int = zloc * cubeSizeRatio;
 						if (tile != 0) {
+							
+							var xLoc2:int = xloc * cubeSizeRatio;
+							var yLoc2:int = yloc * cubeSizeRatio;
+							var zLoc2:int = zloc * cubeSizeRatio;
+							
 							var tileTop:Point = cubesFrameCoos[tile][0];
 							var tileSide:Point = cubesFrameCoos[tile][1];
 							var tileBottom:Point = cubesFrameCoos[tile][2];
