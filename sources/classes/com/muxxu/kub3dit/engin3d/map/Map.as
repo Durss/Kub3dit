@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.map {
+	import apparat.memory.Memory;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
@@ -80,6 +81,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			
 			_map = new ByteArray();
 			_map.length = _mapSizeX * _mapSizeY * _mapSizeZ;
+			Memory.select(_map);
 		}
 		
 		/**
@@ -87,8 +89,9 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function updateTile(xloc:int, yloc:int, zloc:int, value:uint):void {
 //			if(xloc * yloc * zloc < _map.length) {
-				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
-				_map.writeByte(value);
+//				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
+//				_map.writeByte(value);
+				Memory.writeByte(value, xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
 //			}
 		}
 		
@@ -97,8 +100,9 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function getTile(xloc:int, yloc:int, zloc:int):uint {
 			if (zloc >= 0 && zloc < _mapSizeZ && yloc >= 0 && yloc < _mapSizeY && xloc >= 0 && xloc < _mapSizeX) {
-				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
-				return _map.readUnsignedByte();
+//				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
+//				return _map.readUnsignedByte();
+				return Memory.readUnsignedByte(xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
 			}
 			return 0;
 		}
@@ -110,8 +114,9 @@ package com.muxxu.kub3dit.engin3d.map {
 			if (yloc >= 0 && yloc < _mapSizeY && xloc >= 0 && xloc < _mapSizeX) {
 				var z:int = _mapSizeZ-1, tile:int;
 				do {
-					_map.position = xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY;
-					tile = _map.readUnsignedByte();
+//					_map.position = xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY;
+//					tile = _map.readUnsignedByte();
+					tile = Memory.readUnsignedByte(xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY);
 					z--;
 				}while(z>0 && tile == 0);
 				return tile;
@@ -139,7 +144,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			if (endY > _mapSizeY) {
 				endY=_mapSizeY;
 			}
-			chunk._data=[];
+			chunk._data = [];
 			for (zloc=0; zloc < _mapSizeZ; zloc++) {
 				if (!chunk._data[zloc]) {
 					chunk._data[zloc]=[];
@@ -169,6 +174,8 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function load(data:ByteArray):void {
 			var diffX:int, diffY:int, diffZ:int, value:int, ox:int, oy:int, oz:int;
+			var px:int, py:int, pz:int, i:int;
+			//FIXME Memory breaks the loading.
 			_mapSizeX = ox = data.readShort();
 			_mapSizeY = oy = data.readShort();
 			_mapSizeZ = oz = data.readShort();
@@ -198,22 +205,35 @@ package com.muxxu.kub3dit.engin3d.map {
 				if(diffX > 0 || diffY > 0 || diffZ > 0) {
 					_map = new ByteArray();
 					_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
+					Memory.select(_map);
 					
 					//write loaded map on the bottom center.
-					var px:int, py:int, pz:int, i:int;
 					while(data.bytesAvailable) {
 						px = diffX * .5 + i%ox;
 						py = diffY * .5 + Math.floor(i/ox)%oy;
 						pz = Math.floor(i/(ox*oy));
-						_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
-						_map.writeByte(data.readByte());
+//						_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
+//						_map.writeByte(data.readByte());
+						Memory.writeByte(data.readByte(), px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY);
 						i++;
 					}
 				}else{
-					data.readBytes(_map);
+					i=0;
+					_map.length = data.length - data.position;
+					while(data.bytesAvailable) {
+						Memory.writeByte(data.readByte(), i++);
+					}
+//					data.readBytes(_map);
+//					_map.position = 0;
 				}
 			}else{
-				data.readBytes(_map);
+				i=0;
+				_map.length = data.length - data.position;
+				while(data.bytesAvailable) {
+					Memory.writeByte(data.readByte(), i++);
+				}
+//				data.readBytes(_map);
+//				_map.position = 0;
 			}
 			
 			dispatchEvent(new MapEvent(MapEvent.LOAD));
