@@ -353,7 +353,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 		 */
 		public function drop(x:int, y:int, id:int):void {
 			var z:int = 30;
-			while (_map.getTile(x, y, z) == 0 && z > 0) z--;
+			while (_map.getTile(x, y, z) == 0 && z > -1) z--;
 			update(x, y, Math.min(30, ++z), id);
 		}
 		
@@ -462,18 +462,24 @@ package com.muxxu.kub3dit.engin3d.chunks {
 				Chunk(drawArray[i]["chunk"]).renderBuffer(1);
 			}
 			
-			//Draw translucides (first pass)
-			_context3D.setDepthTest(true, Context3DCompareMode.LESS);
-			_context3D.setBlendFactors(Context3DBlendFactor.ZERO, Context3DBlendFactor.ONE);
-			for (i = 0; i < len; ++i) {
-				Chunk(drawArray[i]["chunk"]).renderBuffer(2);
-			}
-			
-			//Draw translucides (second pass)
-			_context3D.setDepthTest(true, Context3DCompareMode.EQUAL);
-			_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
-			for (i = 0; i < len; ++i) {
-				Chunk(drawArray[i]["chunk"]).renderBuffer(2);
+			if(_accelerated) {
+				//Draw translucides (first pass)
+				_context3D.setDepthTest(true, Context3DCompareMode.LESS);
+				_context3D.setBlendFactors(Context3DBlendFactor.ZERO, Context3DBlendFactor.ONE);
+				for (i = 0; i < len; ++i) {
+					Chunk(drawArray[i]["chunk"]).renderBuffer(2);
+				}
+				
+				//Draw translucides (second pass)
+				_context3D.setDepthTest(true, Context3DCompareMode.EQUAL);
+				_context3D.setBlendFactors(Context3DBlendFactor.ONE, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA);
+				for (i = 0; i < len; ++i) {
+					Chunk(drawArray[i]["chunk"]).renderBuffer(2);
+				}
+			}else{
+				for (i = 0; i < len; ++i) {
+					Chunk(drawArray[i]["chunk"]).renderBuffer(2);
+				}
 			}
 			
 			_prevOffsetX = _offsetX;
