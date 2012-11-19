@@ -88,11 +88,11 @@ package com.muxxu.kub3dit.engin3d.map {
 		 * Updates a specific tile
 		 */
 		public function updateTile(xloc:int, yloc:int, zloc:int, value:uint):void {
-//			if(xloc * yloc * zloc < _map.length) {
-//				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
-//				_map.writeByte(value);
+			if(xloc * yloc * zloc < _map.length) {
+				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
+				_map.writeByte(value);
 				Memory.writeByte(value, xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
-//			}
+			}
 		}
 		
 		/**
@@ -174,7 +174,6 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function load(data:ByteArray):void {
 			var diffX:int, diffY:int, diffZ:int, value:int, ox:int, oy:int, oz:int;
-			var px:int, py:int, pz:int, i:int;
 			//FIXME Memory breaks the loading.
 			_mapSizeX = ox = data.readShort();
 			_mapSizeY = oy = data.readShort();
@@ -182,7 +181,7 @@ package com.muxxu.kub3dit.engin3d.map {
 			_map = new ByteArray();
 			
 			//here we round the map's size to the nearest chunk size multiple.
-			//if chunk size is 16 and map size is 14, we round the map'size to 16 and center the content on it.
+			//if chunk size is 16 and map size is 14, we round the map' size to 16 and center the content on it.
 			if(_adaptSizes) {
 				//Check if a resize is needed
 				if(_mapSizeX % ChunksManager.CHUNK_SIZE != 0) {
@@ -203,37 +202,12 @@ package com.muxxu.kub3dit.engin3d.map {
 				
 				//If a resize is needed, center the content on it.
 				if(diffX > 0 || diffY > 0 || diffZ > 0) {
-					_map = new ByteArray();
-					_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
-					Memory.select(_map);
-					
-					//write loaded map on the bottom center.
-					while(data.bytesAvailable) {
-						px = diffX * .5 + i%ox;
-						py = diffY * .5 + Math.floor(i/ox)%oy;
-						pz = Math.floor(i/(ox*oy));
-//						_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
-//						_map.writeByte(data.readByte());
-						Memory.writeByte(data.readByte(), px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY);
-						i++;
-					}
+					adaptMapSizesData(data, diffX, diffY, ox, oy);
 				}else{
-					i=0;
-					_map.length = data.length - data.position;
-					while(data.bytesAvailable) {
-						Memory.writeByte(data.readByte(), i++);
-					}
-//					data.readBytes(_map);
-//					_map.position = 0;
+					loadData(data);
 				}
 			}else{
-				i=0;
-				_map.length = data.length - data.position;
-				while(data.bytesAvailable) {
-					Memory.writeByte(data.readByte(), i++);
-				}
-//				data.readBytes(_map);
-//				_map.position = 0;
+				loadData(data);
 			}
 			
 			dispatchEvent(new MapEvent(MapEvent.LOAD));
@@ -259,7 +233,10 @@ package com.muxxu.kub3dit.engin3d.map {
 		public function setCameraPaths(value:Array):void {
 			_cameraPaths = value;
 		}
-
+		
+		/**
+		 * Starts the following of a path by its ID
+		 */
 		public function followPathById(value:int):void {
 			var i:int, len:int;
 			len = _cameraPaths.length;
@@ -278,6 +255,41 @@ package com.muxxu.kub3dit.engin3d.map {
 		/* ******* *
 		 * PRIVATE *
 		 * ******* */
+		
+		/**
+		 * Loads a map's data.
+		 */
+		private function adaptMapSizesData(data:ByteArray, diffX:int, diffY:int, ox:int, oy:int):void {
+			var px:int, py:int, pz:int, i:int;
+			_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
+			Memory.select(_map);
+			
+			//write loaded map on the bottom center.
+			while(data.bytesAvailable) {
+				px = diffX * .5 + i%ox;
+				py = diffY * .5 + Math.floor(i/ox)%oy;
+				pz = Math.floor(i/(ox*oy));
+//				_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
+//				_map.writeByte(data.readByte());
+				Memory.writeByte(data.readByte(), px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY);
+				i++;
+			}
+		}
+		
+		/**
+		 * Loads a map's data.
+		 */
+		private function loadData(data:ByteArray):void {
+			var i:int =0;
+			_map.length = data.length - data.position;
+			_map.position = 0;
+			Memory.select(_map);
+			while(data.bytesAvailable) {
+				Memory.writeByte(data.readByte(), i++);
+			}
+//			data.readBytes(_map);
+//			_map.position = 0;
+		}
 
 	}
 }

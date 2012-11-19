@@ -1,11 +1,8 @@
 package com.muxxu.kub3dit.components.editor {
-	import com.muxxu.kub3dit.components.editor.toolpanels.TerragenPanel;
-	import com.muxxu.kub3dit.components.editor.toolpanels.CamPathPanel;
-	import com.muxxu.kub3dit.graphics.CamPathIcon;
-	import com.muxxu.kub3dit.graphics.TerragenIcon;
 	import com.muxxu.kub3dit.components.buttons.ButtonEditorTool;
 	import com.muxxu.kub3dit.components.buttons.ButtonHelp;
 	import com.muxxu.kub3dit.components.editor.toolpanels.BucketPanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.CamPathPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.CirclePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.CubePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.ImageGenPanel;
@@ -16,13 +13,16 @@ package com.muxxu.kub3dit.components.editor {
 	import com.muxxu.kub3dit.components.editor.toolpanels.ReplacePanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.SelectionPanel;
 	import com.muxxu.kub3dit.components.editor.toolpanels.SpherePanel;
+	import com.muxxu.kub3dit.components.editor.toolpanels.TerragenPanel;
 	import com.muxxu.kub3dit.events.ButtonEditorToolEvent;
 	import com.muxxu.kub3dit.events.ToolsPanelEvent;
+	import com.muxxu.kub3dit.graphics.CamPathIcon;
 	import com.muxxu.kub3dit.graphics.ImageIcon;
 	import com.muxxu.kub3dit.graphics.ImportIcon;
 	import com.muxxu.kub3dit.graphics.ReplaceIcon;
 	import com.muxxu.kub3dit.graphics.RubberIcon;
 	import com.muxxu.kub3dit.graphics.SelectionIcon;
+	import com.muxxu.kub3dit.graphics.TerragenIcon;
 	import com.muxxu.kub3dit.graphics.Tool1Icon;
 	import com.muxxu.kub3dit.graphics.Tool2Icon;
 	import com.muxxu.kub3dit.graphics.Tool3Icon;

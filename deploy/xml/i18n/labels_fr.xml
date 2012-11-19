@@ -127,6 +127,7 @@
 		<label code="toolConfig-pencilShape-input"><![CDATA[Taille]]></label>
 		<label code="toolConfig-pencilShape-square"><![CDATA[Carré]]></label>
 		<label code="toolConfig-pencilShape-circle"><![CDATA[Rond]]></label>
+		<label code="toolConfig-pencilShape-dropper"><![CDATA[Mode lâcher du ciel]]></label>
 		
 		<label code="toolConfig-diskShape-inputRadius"><![CDATA[Rayon]]></label>
 		<label code="toolConfig-diskShape-fill"><![CDATA[Remplir]]></label>

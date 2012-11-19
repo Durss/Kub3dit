@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.components.editor.toolpanels {
+	import com.muxxu.kub3dit.components.form.CheckBoxKube;
 	import com.muxxu.kub3dit.components.form.RadioButtonKube;
 	import com.muxxu.kub3dit.components.form.input.InputKube;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
@@ -30,6 +31,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		private var _drawToLandmark:Boolean;
 		private var _chunksManager:ChunksManager;
 		private var _lastDrawGUID:String;
+		private var _dropMode:CheckBoxKube;
 		
 		
 		
@@ -117,6 +119,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			if(_drawToLandmark) {
 				_landmark.graphics.clear();
 			}
+			var dropMode:Boolean = _dropMode.selected;
 			if(_squareRB.selected) {
 				len = size*size;
 				for(i = 0; i < len; ++i) {
@@ -129,7 +132,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 					}else{
 						px = Math.ceil(ox - size * .5) + (i % size);
 						py = Math.ceil(oy - size * .5) + Math.floor(i/size);
-						_chunksManager.update(px, py, pz, _eraseMode? 0 : kubeID);
+						if(dropMode) {
+							_chunksManager.drop(px, py, _eraseMode? 0 : kubeID);
+						}else{
+							_chunksManager.update(px, py, pz, _eraseMode? 0 : kubeID);
+						}
 					}
 				}
 			}else{
@@ -148,7 +155,11 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 							_landmark.graphics.beginFill(c, .2);
 							_landmark.graphics.drawRect(px, py, 1, 1);
 						}else{
-							_chunksManager.update(px, py, pz, _eraseMode? 0 : kubeID);
+							if(dropMode) {
+								_chunksManager.drop(px, py, _eraseMode? 0 : kubeID);
+							}else{
+								_chunksManager.update(px, py, pz, _eraseMode? 0 : kubeID);
+							}
 						}
 					}
 				}
@@ -178,6 +189,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputSize = addChild(new InputKube("", false, true, 1, 400)) as InputKube;
 			_squareRB = addChild(new RadioButtonKube(Label.getLabel("toolConfig-pencilShape-square"), _group)) as RadioButtonKube;
 			_circleRB = addChild(new RadioButtonKube(Label.getLabel("toolConfig-pencilShape-circle"), _group)) as RadioButtonKube;
+			_dropMode = addChild(new CheckBoxKube(Label.getLabel("toolConfig-pencilShape-dropper"))) as CheckBoxKube;
 			
 			_inputSize.text = "1";
 			
@@ -199,6 +211,7 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			_inputLabel.y = Math.round((_inputSize.height - _inputLabel.height) * .5);
 			_squareRB.x = _circleRB.x = Math.round(_inputSize.x + _inputSize.width + 15);
 			_circleRB.y = Math.round(_squareRB.height + 5);
+			_dropMode.y = _circleRB.y + _circleRB.height;
 			
 			var i:int, len:int = numChildren;
 			for(i = 0; i < len; ++i) {
