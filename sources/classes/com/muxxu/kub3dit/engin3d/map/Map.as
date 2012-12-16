@@ -27,6 +27,7 @@ package com.muxxu.kub3dit.engin3d.map {
 		private var _map:ByteArray;
 		private var _adaptSizes:Boolean;
 		private var _cameraPaths:Array;
+		private var _optimizeAccesses:Boolean;
 		
 		
 		
@@ -37,7 +38,9 @@ package com.muxxu.kub3dit.engin3d.map {
 		/**
 		 * Creates an instance of <code>Map</code>.
 		 */
-		public function Map(adaptSizes:Boolean = true) {
+
+		public function Map(adaptSizes:Boolean = true, optimizeAccesses:Boolean = false) {
+			_optimizeAccesses = optimizeAccesses;
 			_adaptSizes = adaptSizes;
 			super();
 		}
@@ -81,7 +84,9 @@ package com.muxxu.kub3dit.engin3d.map {
 			
 			_map = new ByteArray();
 			_map.length = _mapSizeX * _mapSizeY * _mapSizeZ;
-			Memory.select(_map);
+			if(_optimizeAccesses) {
+				Memory.select(_map);
+			}
 		}
 		
 		/**
@@ -89,9 +94,12 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function updateTile(xloc:int, yloc:int, zloc:int, value:uint):void {
 			if(xloc * yloc * zloc < _map.length) {
-				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
-				_map.writeByte(value);
-				Memory.writeByte(value, xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
+				if(_optimizeAccesses) {
+					Memory.writeByte(value, xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
+				}else{
+					_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
+					_map.writeByte(value);
+				}
 			}
 		}
 		
@@ -100,9 +108,12 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function getTile(xloc:int, yloc:int, zloc:int):uint {
 			if (zloc >= 0 && zloc < _mapSizeZ && yloc >= 0 && yloc < _mapSizeY && xloc >= 0 && xloc < _mapSizeX) {
-//				_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
-//				return _map.readUnsignedByte();
-				return Memory.readUnsignedByte(xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
+				if(_optimizeAccesses) {
+					return Memory.readUnsignedByte(xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY);
+				}else{
+					_map.position = xloc + yloc * _mapSizeX + zloc * _mapSizeX * _mapSizeY;
+					return _map.readUnsignedByte();
+				}
 			}
 			return 0;
 		}
@@ -114,9 +125,12 @@ package com.muxxu.kub3dit.engin3d.map {
 			if (yloc >= 0 && yloc < _mapSizeY && xloc >= 0 && xloc < _mapSizeX) {
 				var z:int = _mapSizeZ-1, tile:int;
 				do {
-//					_map.position = xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY;
-//					tile = _map.readUnsignedByte();
-					tile = Memory.readUnsignedByte(xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY);
+					if(_optimizeAccesses) {
+						tile = Memory.readUnsignedByte(xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY);
+					}else{
+						_map.position = xloc + yloc * _mapSizeX + z * _mapSizeX * _mapSizeY;
+						tile = _map.readUnsignedByte();
+					}
 					z--;
 				}while(z>0 && tile == 0);
 				return tile;
@@ -174,12 +188,11 @@ package com.muxxu.kub3dit.engin3d.map {
 		 */
 		public function load(data:ByteArray):void {
 			var diffX:int, diffY:int, diffZ:int, value:int, ox:int, oy:int, oz:int;
-			//FIXME Memory breaks the loading.
+			
 			_mapSizeX = ox = data.readShort();
 			_mapSizeY = oy = data.readShort();
 			_mapSizeZ = oz = data.readShort();
 			_map = new ByteArray();
-			
 			//here we round the map's size to the nearest chunk size multiple.
 			//if chunk size is 16 and map size is 14, we round the map' size to 16 and center the content on it.
 			if(_adaptSizes) {
@@ -262,16 +275,21 @@ package com.muxxu.kub3dit.engin3d.map {
 		private function adaptMapSizesData(data:ByteArray, diffX:int, diffY:int, ox:int, oy:int):void {
 			var px:int, py:int, pz:int, i:int;
 			_map.length = _mapSizeX*_mapSizeY*_mapSizeZ;
-			Memory.select(_map);
+			if(_optimizeAccesses) {
+				Memory.select(_map);
+			}
 			
 			//write loaded map on the bottom center.
 			while(data.bytesAvailable) {
 				px = diffX * .5 + i%ox;
 				py = diffY * .5 + Math.floor(i/ox)%oy;
 				pz = Math.floor(i/(ox*oy));
-//				_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
-//				_map.writeByte(data.readByte());
-				Memory.writeByte(data.readByte(), px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY);
+				if(_optimizeAccesses) {
+					Memory.writeByte(data.readByte(), px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY);
+				}else{
+					_map.position = px + py * _mapSizeX + pz * _mapSizeX * _mapSizeY;
+					_map.writeByte(data.readByte());
+				}
 				i++;
 			}
 		}
@@ -282,13 +300,17 @@ package com.muxxu.kub3dit.engin3d.map {
 		private function loadData(data:ByteArray):void {
 			var i:int =0;
 			_map.length = data.length - data.position;
+			data.readBytes(_map);
 			_map.position = 0;
-			Memory.select(_map);
-			while(data.bytesAvailable) {
-				Memory.writeByte(data.readByte(), i++);
+			if(_optimizeAccesses) {
+				Memory.select(_map);
+				while(data.bytesAvailable) {
+					Memory.writeByte(data.readByte(), i++);
+				}
+//			}else{
+//				data.readBytes(_map);
+//				_map.position = 0;
 			}
-//			data.readBytes(_map);
-//			_map.position = 0;
 		}
 
 	}

@@ -157,6 +157,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 //							brightness += (_x+_y)%16 == 0? 1 : 0;
 							var isTransparent:Boolean = transparent[tile]===true;
 							var isTranslucide:Boolean = translucide[tile]===true;
+							var backfaceTile:Boolean = backfaceTest[tile];
 							countTmp	= isTranslucide? countTransl :		isTransparent? countTransp :	countOpaque;
 							i_indexTmp	= isTranslucide? i_indexTransl :	isTransparent? i_indexTransp :	i_indexOpaque;
 							b_indexTmp	= isTranslucide? b_indexTransl :	isTransparent? b_indexTransp :	b_indexOpaque;
@@ -164,8 +165,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							indexesTmp	= isTranslucide? indexesTransl :	isTransparent? indexesTransp :	indexesOpaque;
 							
 							//BACK
-							if((backCube == 0 || backfaceTest[tile] === true || backfaceTest[backCube] === true)
-							&& tileSide.x > -1) {
+							if((backCube == 0 || backfaceTile === true || backfaceTest[backCube] === true)
+							&& tileSide.x > -1
+							&& !(isTranslucide && translucide[backCube])) {
 								indexesTmp[i_indexTmp++] = 0 + countTmp;
 								indexesTmp[i_indexTmp++] = 1 + countTmp;
 								indexesTmp[i_indexTmp++] = 2 + countTmp;
@@ -213,8 +215,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							
 							
 							//FRONT
-							if ((frontCube == 0 || backfaceTest[tile] === true || backfaceTest[frontCube] === true)
-							&& tileSide.x > -1) {
+							if ((frontCube == 0 || backfaceTile === true || backfaceTest[frontCube] === true)
+							&& tileSide.x > -1
+							&& !(isTranslucide && translucide[frontCube])) {
 								indexesTmp[i_indexTmp++] = 0 + countTmp;
 								indexesTmp[i_indexTmp++] = 1 + countTmp;
 								indexesTmp[i_indexTmp++] = 2 + countTmp;
@@ -262,8 +265,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							
 							
 							//LEFT
-							if ((leftCube == 0 || backfaceTest[tile] === true || backfaceTest[leftCube] === true)
-							&& tileSide.x > -1) {
+							if ((leftCube == 0 || backfaceTile === true || backfaceTest[leftCube] === true)
+							&& tileSide.x > -1
+							&& !(isTranslucide && translucide[leftCube])) {
 								indexesTmp[i_indexTmp++] = 0 + countTmp;
 								indexesTmp[i_indexTmp++] = 1 + countTmp;
 								indexesTmp[i_indexTmp++] = 2 + countTmp;
@@ -311,8 +315,9 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							
 							
 							//RIGHT
-							if ((rightCube == 0 || backfaceTest[tile] === true || backfaceTest[rightCube] === true)
-							&& tileSide.x > -1) {
+							if ((rightCube == 0 || backfaceTile === true || backfaceTest[rightCube] === true)
+							&& tileSide.x > -1
+							&& !(isTranslucide && translucide[rightCube])) {
 								indexesTmp[i_indexTmp++] = 0 + countTmp;
 								indexesTmp[i_indexTmp++] = 1 + countTmp;
 								indexesTmp[i_indexTmp++] = 2 + countTmp;
@@ -362,7 +367,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							
 							// TOP
 							if(tileTop.x > -1
-							&& (overCube == 0 || backfaceTest[tile] === true || backfaceTest[overCube] === true)) {
+							&& (overCube == 0 || backfaceTile === true || backfaceTest[overCube] === true)
+							&& !(isTranslucide && translucide[overCube])) {
 								indexesTmp[i_indexTmp++] = 0 + countTmp;
 								indexesTmp[i_indexTmp++] = 1 + countTmp;
 								indexesTmp[i_indexTmp++] = 2 + countTmp;
@@ -412,7 +418,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 							
 							// BOTTOM
 							if (zLoc2 > 0 && tileBottom.x > -1
-							&& (underCube == 0 || backfaceTest[tile] === true || backfaceTest[underCube] === true) ) {
+							&& (underCube == 0 || backfaceTile === true || backfaceTest[underCube] === true) 
+							&& !(isTranslucide && translucide[underCube])) {
 								indexesTmp[i_indexTmp++] = 0 + countTmp;
 								indexesTmp[i_indexTmp++] = 1 + countTmp;
 								indexesTmp[i_indexTmp++] = 2 + countTmp;

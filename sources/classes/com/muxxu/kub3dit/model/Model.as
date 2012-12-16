@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.model {
+	import com.muxxu.kub3dit.graphics.RadarIcon;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;
@@ -25,6 +26,7 @@ package com.muxxu.kub3dit.model {
 	import com.nurun.core.commands.ProgressiveCommand;
 	import com.nurun.core.commands.events.CommandEvent;
 	import com.nurun.core.commands.events.ProgressiveCommandEvent;
+	import com.nurun.core.lang.isEmpty;
 	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.IModel;
 	import com.nurun.structure.mvc.model.events.ModelEvent;
@@ -149,7 +151,7 @@ package com.muxxu.kub3dit.model {
 		 * Creates a map
 		 */
 		public function createMap(sizeX:int, sizeY:int, sizeZ:int):void {
-			if(_map == null) _map = new Map();
+			if(_map == null) _map = new Map(true);
 			_map.generateEmptyMap(sizeX * 32, sizeY * 32, sizeZ);
 			update();
 		}
@@ -302,6 +304,8 @@ package com.muxxu.kub3dit.model {
 		 * Loads the next map
 		 */
 		public function nextMap():void {
+			if(isEmpty(_currentMapID)) return;
+			
 			var next:int = Base62.decode(_currentMapID) + 1;
 			SWFAddress.setValue(Base62.encode(next));
 		}
@@ -310,6 +314,8 @@ package com.muxxu.kub3dit.model {
 		 * Loads the prev map
 		 */
 		public function prevMap():void {
+			if(isEmpty(_currentMapID)) return;
+			
 			var prev:int = Base62.decode(_currentMapID) - 1;
 			SWFAddress.setValue(Base62.encode(prev));
 		}
@@ -325,7 +331,6 @@ package com.muxxu.kub3dit.model {
 		 */
 		private function initialize():void {
 			_currentKubeId = "3";//Defaulty selected kube
-//			if(!ExternalInterface.available) _currentMapID = "kj";//TODO remove!
 			_replaceCmd = new ReplaceKubeCmd();
 //			_replaceCmd.addEventListener(CommandEvent.COMPLETE, replaceCompleteHandler);
 //			_replaceCmd.addEventListener(CommandEvent.ERROR, replaceErrorHandler);
@@ -352,6 +357,7 @@ package com.muxxu.kub3dit.model {
 			while(value.charAt(0) == "/") value = value.slice(1);
 
 			var chunks:Array = value.split("/");
+//			chunks[0] = Base62.encode(Math.round(Math.random()*1000));//TODO remove
 //			chunks[0] = "z";
 //			chunks[0] = "e8";
 //			chunks[1] = "4";
