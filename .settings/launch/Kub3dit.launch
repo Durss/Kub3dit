@@ -22,6 +22,7 @@
 <stringAttribute key="PRE_COMPILE_ANT" value=""/>
 <stringAttribute key="PROJECT_NAME" value="Kub3dit"/>
 <stringAttribute key="PUBLISHER_ID" value=""/>
+<booleanAttribute key="START_DEBUGGER" value="true"/>
 <booleanAttribute key="START_SWF_ENABLED" value="true"/>
 <stringAttribute key="START_SWF_LOCATION" value="deploy/swf/application.swf"/>
 <stringAttribute key="START_SWF_WITH" value="Adobe Flash Player"/>

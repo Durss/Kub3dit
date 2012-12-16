@@ -50,7 +50,7 @@ package com.muxxu.kub3dit.vo {
 		 * @throws Kub3ditException if the file type is unknown
 		 */
 		public static function parse(data:ByteArray, configureCamera:Boolean = true, adaptSizes:Boolean = true, map:Map = null):Map {
-			if(map == null) map = new Map(adaptSizes);
+			if(map == null) map = new Map(adaptSizes, true);
 			
 			data.position = 0;
 			//Search for PNG signature

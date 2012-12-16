@@ -114,10 +114,10 @@ package com.muxxu.kub3dit.views {
 			addChild(_menu);
 			
 			stage.addEventListener(Event.RESIZE, computePositions);
-			_tools.addEventListener(ToolsPanelEvent.OPEN_PANEL, openConfigPanelHandler);
-			_tools.addEventListener(ToolsPanelEvent.SELECT_TOOL, selectToolHandler);
-			_tools.addEventListener(ToolsPanelEvent.ERASE_MODE_CHANGE, eraseModeChangeHandler);
 			stage.addEventListener(MouseEvent.MOUSE_DOWN, mouseDownhandler);
+			_tools.addEventListener(ToolsPanelEvent.SELECT_TOOL, selectToolHandler);
+			_tools.addEventListener(ToolsPanelEvent.OPEN_PANEL, openConfigPanelHandler);
+			_tools.addEventListener(ToolsPanelEvent.ERASE_MODE_CHANGE, eraseModeChangeHandler);
 			
 			_tools.init();//kind of dirty... this is used to be sure to listen for the event before they are fired.
 			

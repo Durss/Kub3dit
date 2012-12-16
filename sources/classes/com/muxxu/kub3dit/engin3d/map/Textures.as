@@ -397,7 +397,7 @@ package com.muxxu.kub3dit.engin3d.map {
 					pixels = bmd.getPixels(bmd.rect);
 					pixels.position = 0;
 					while(pixels.bytesAvailable) {
-						//generated kubes alpha channels seems to be 254 instead of 254 :/. So we check with #fa instead of #ff
+						//generated kubes alpha channels seems to be 250 instead of 254 :/. So we check with #fa instead of #ff
 						if(((pixels.readUnsignedInt() >> 24) & 0xff) < 0xfa) {
 							_transparent[id] = true;
 							break;
