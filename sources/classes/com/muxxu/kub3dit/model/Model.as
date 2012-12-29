@@ -1,5 +1,4 @@
 package com.muxxu.kub3dit.model {
-	import com.muxxu.kub3dit.graphics.RadarIcon;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;

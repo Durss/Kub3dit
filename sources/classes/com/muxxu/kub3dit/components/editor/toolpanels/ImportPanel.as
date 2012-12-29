@@ -300,7 +300,8 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			var ba:ByteArray = event.data as ByteArray;
 			_data = new ByteArray();
 			try {
-				var map:Map = MapDataParser.parse(ba, false, false);
+				var map:Map = new Map(false, false);
+				MapDataParser.parse(ba, false, false, map);
 			}catch(error:Error) {
 				//not a Kub3dit map. Parse it as a Sandkube image
 				sandkubeType = true;
