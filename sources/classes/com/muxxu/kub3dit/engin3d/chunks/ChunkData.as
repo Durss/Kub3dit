@@ -8,7 +8,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 
 	
 	public class ChunkData {
-		public static const CUBE_SIZE_RATIO:Number = 100;
+		public static const CUBE_SIZE:Number = 100;
 		
 		public var _x:int;
 		public var _y:int;
@@ -100,7 +100,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			var b_indexTransl:int;
 			var i_indexTransl:int;
 			
-			var cubeSizeRatio:Number = CUBE_SIZE_RATIO;
+			var cubeSizeRatio:Number = CUBE_SIZE;
 			var vertexOffset:Number = .5 * cubeSizeRatio;
 			var px:int = _x * cubeSizeRatio;
 			var py:int = _y * cubeSizeRatio;

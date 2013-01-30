@@ -26,20 +26,23 @@ com.muxxu.kub3dit.engin3d.camera {
 	{
 		public static var rotationX:Number = 0;
 		public static var rotationY:Number = 0;
+		public static var position:Vector3D = new Vector3D();;
 		public static var path:Array;
-		public static var px:Number = 0;
-		public static var py:Number = 0;
-		public static var pz:Number = 1;
+		private static var _isDragging:Boolean;
+//		public static var px:Number = 0;
+//		public static var py:Number = 0;
+//		public static var pz:Number = 1;
 		private static var _mapWidth:Number;
 		private static var _mapDepth:Number;
 		private static var _mapHeight:int;
 		private static var _map:Map;
 		private static var _configured:Boolean;
 		private static var _following:Boolean;
+		private static var _lookOffset:Point = new Point();
+		private static var _tempPoint:Point = new Point();
+		private static var _dragOffset:Point = new Point();
+		private static var _stage:Stage;
 		
-		private var _stage:Stage;
-		private var _lookOffset:Point = new Point();
-		private var _mouseView:Boolean = false;
 		private var _forward:int;
 		private var _strafe:int;
 		private var _spc:Boolean;
@@ -61,9 +64,9 @@ com.muxxu.kub3dit.engin3d.camera {
 		 * Configures the camera from a byteArray
 		 */
 		public static function configure(data:ByteArray, isCamPaths:Boolean):void {
-			px = data.readShort();//X is negative, don't read it as an unsigned short
-			py = data.readShort();
-			pz = data.readShort();
+			position.x = data.readShort();//X is negative, don't read it as an unsigned short
+			position.y = data.readShort();
+			position.z = data.readShort();
 			
 			rotationX = data.readInt();
 			rotationY = data.readInt();
@@ -82,7 +85,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		private function enterFrameHandler(e:Event):void {
 			var coeff:int = _shift && _spc? 40 : _shift? 1 : _spc? 20 : 5;
 			var offx:Number = _strafe * 15 * coeff;
-			if(!_mouseView) {
+			if(!_isDragging) {
 				offx = 0;
 				rotationX -= _strafe * 4;
 			}
@@ -93,7 +96,7 @@ com.muxxu.kub3dit.engin3d.camera {
 				if (rotationX>360)	rotationX-=360;
 			}
 			
-			var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
+			var ratio:Number = ChunkData.CUBE_SIZE;
 			var moveZ:Number = Math.cos((rotationY+90)*Math.PI/180) * 15 * _forward * coeff;
 			dist -= Math.abs(moveZ);
 			moveZ *= .01;
@@ -101,12 +104,12 @@ com.muxxu.kub3dit.engin3d.camera {
 			var radians2:Number = Math.atan2(offy, offx);
 			var moveX:Number = Math.cos(radians2+radians1)*dist *.01;
 			var moveY:Number = Math.sin(radians2+radians1)*dist *.01;
-			px -= moveX * ratio;
-			py += moveY * ratio;
-			pz += moveZ * ratio;
-			px = Math.min((1+16)*ratio, Math.max(px,-(_mapWidth+16)*ratio));
-			py = Math.max((-1-16)*ratio, Math.min(py,(_mapDepth+16)*ratio));
-			pz = Math.max(Math.min(pz,_mapHeight*ratio), -ratio*.3);
+			position.x -= moveX * ratio;
+			position.y += moveY * ratio;
+			position.z += moveZ * ratio;
+			position.x = Math.min((1+16)*ratio, Math.max(position.x,-(_mapWidth+16)*ratio));
+			position.y = Math.max((-1-16)*ratio, Math.min(position.y,(_mapDepth+16)*ratio));
+			position.z = Math.max(Math.min(position.z,_mapHeight*ratio), -ratio*.3);
 			
 			//dirty collision detection attempt
 //			var px:Number, py:Number, pz:Number;
@@ -158,9 +161,9 @@ com.muxxu.kub3dit.engin3d.camera {
 		
 		private function mouseWheel(e:MouseEvent):void {
 			if(e.target is Stage) {
-				var ratio:Number = ChunkData.CUBE_SIZE_RATIO;
-				pz += (e.delta > 0)? ratio : -ratio;
-				pz = Math.round(pz/ratio) * ratio;
+				var ratio:Number = ChunkData.CUBE_SIZE;
+				position.z += (e.delta > 0)? ratio : -ratio;
+				position.z = Math.round(position.z/ratio) * ratio;
 			}
 		}
 		
@@ -171,8 +174,10 @@ com.muxxu.kub3dit.engin3d.camera {
 				
 				_lookOffset.x = _stage.mouseX;
 				_lookOffset.y = _stage.mouseY;
+				_dragOffset.x = _stage.mouseX;
+				_dragOffset.y = _stage.mouseY;
 				
-				_mouseView = true;
+				_isDragging = true;
 				if(_stage.displayState != StageDisplayState.NORMAL && _stage.hasOwnProperty("mouseLock")) {
 					_stage["mouseLock"] = true;
 					_lookOffset.x -= _stage.stageWidth*.5;
@@ -181,20 +186,8 @@ com.muxxu.kub3dit.engin3d.camera {
 			}
 		}
 		
-		public static function get locX():Number {
-			return px;// / 1 + dy / .5
-		}
-		
-		public static function get locY():Number {
-			return py;// -dx / 1 + dy / .5
-		}
-		
-		public static function get locZ():Number {
-			return pz;// -dx / 1 + dy / .5
-		}
-		
 		private function mouseMove(e:MouseEvent):void {
-			if (_mouseView) {
+			if (_isDragging) {
 				if(_stage.hasOwnProperty("mouseLock") && _stage["mouseLock"]) {
 					rotationX += (e["movementX"]-_lookOffset.x) * .25;
 					rotationY += (e["movementY"]-_lookOffset.y) * .25;
@@ -213,16 +206,16 @@ com.muxxu.kub3dit.engin3d.camera {
 		private function mouseUp(e:MouseEvent):void {
 			_stage.removeEventListener(MouseEvent.MOUSE_UP, mouseUp);
 			_stage.removeEventListener(MouseEvent.MOUSE_MOVE, mouseMove);
-			_mouseView = false;
+			_isDragging = false;
 			if(_stage.displayState != StageDisplayState.NORMAL && _stage.hasOwnProperty("mouseLock")) {
 				_stage["mouseLock"] = false;
 			}
 		}
 
 		public static function setPosition(vector3D:Vector3D):void {
-			px = vector3D.x;
-			py = vector3D.y;
-			pz = vector3D.z;
+			position.x = vector3D.x;
+			position.y = vector3D.y;
+			position.z = vector3D.z;
 		}
 
 		public static function setMap(map:Map):void {
@@ -232,13 +225,13 @@ com.muxxu.kub3dit.engin3d.camera {
 			_mapHeight = _map.mapSizeZ;
 			
 			if(!_configured) {
-				setPosition(new Vector3D(-_map.mapSizeX*.5 * ChunkData.CUBE_SIZE_RATIO,_map.mapSizeY*.5 * ChunkData.CUBE_SIZE_RATIO, 2 * ChunkData.CUBE_SIZE_RATIO));
+				setPosition(new Vector3D(-_map.mapSizeX*.5 * ChunkData.CUBE_SIZE,_map.mapSizeY*.5 * ChunkData.CUBE_SIZE, 2 * ChunkData.CUBE_SIZE));
 				rotationX = 0;
 			}
 		}
 
 		public static function moveZTo(level:Number):void {
-			pz = level * ChunkData.CUBE_SIZE_RATIO;
+			position.z = level * ChunkData.CUBE_SIZE;
 			rotationY = 0;
 		}
 		
@@ -246,7 +239,7 @@ com.muxxu.kub3dit.engin3d.camera {
 		 * Gets the current state of the camera (pos/rotation) as an anonymous object.
 		 */
 		public static function getCurrentStateAsObject():Object {
-			return {px:px, py:py, pz:pz, rotationX:rotationX, rotationY:rotationY};
+			return {px:position.x, py:position.y, pz:position.z, rotationX:rotationX, rotationY:rotationY};
 		}
 		
 		/**
@@ -263,9 +256,9 @@ com.muxxu.kub3dit.engin3d.camera {
 		 */
 		public static function followCurrentPath():void {
 			if(path != null && path.length > 0) {
-				px = path[0]['px'];
-				py = path[0]['py'];
-				pz = path[0]['pz'];
+				position.x = path[0]['px'];
+				position.y = path[0]['py'];
+				position.z = path[0]['pz'];
 				rotationX = path[0]['rotationX'];
 				rotationY = path[0]['rotationY'];
 				var i:int, len:int, distance:Number, dx:Number, dy:Number, dz:Number;
@@ -285,6 +278,13 @@ com.muxxu.kub3dit.engin3d.camera {
 
 		private static function onFollowComplete():void {
 			_following = false;
+		}
+		
+		public static function get isDragging():Boolean {
+			if(!_isDragging) return false;
+			_tempPoint.x = _stage.mouseX;
+			_tempPoint.y = _stage.mouseY;
+			return Point.distance(_dragOffset, _tempPoint) > 10;
 		}
 		
 	}

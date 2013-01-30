@@ -1,27 +1,26 @@
 package com.muxxu.kub3dit.views {
-	import flash.system.Capabilities;
-	import com.muxxu.kub3dit.engin3d.campath.CameraPath;
-	import flash.filters.DropShadowFilter;
 	import gs.TweenLite;
-	import com.nurun.structure.environnement.label.Label;
-	import com.muxxu.kub3dit.engin3d.preview.PreviewCursor;
 	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.background.Background;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.campath.CameraPath;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunksManager;
 	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.ground.Ground;
 	import com.muxxu.kub3dit.engin3d.map.Map;
+	import com.muxxu.kub3dit.engin3d.preview.PreviewCursor;
+	import com.muxxu.kub3dit.engin3d.raycast.RayCaster;
 	import com.muxxu.kub3dit.exceptions.Kub3ditException;
 	import com.muxxu.kub3dit.exceptions.Kub3ditExceptionSeverity;
 	import com.muxxu.kub3dit.model.Model;
 	import com.muxxu.kub3dit.vo.KeyboardConfigs;
 	import com.nurun.components.text.CssTextField;
+	import com.nurun.structure.environnement.label.Label;
 	import com.nurun.structure.mvc.model.events.IModelEvent;
 	import com.nurun.structure.mvc.views.AbstractView;
+	import com.nurun.structure.mvc.views.ViewLocator;
 	import com.nurun.utils.pos.PosUtils;
-
 	import flash.display.Stage;
 	import flash.display.Stage3D;
 	import flash.display3D.Context3D;
@@ -33,8 +32,12 @@ package com.muxxu.kub3dit.views {
 	import flash.events.ErrorEvent;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.events.MouseEvent;
+	import flash.filters.DropShadowFilter;
 	import flash.geom.Matrix3D;
+	import flash.geom.Point;
 	import flash.geom.Vector3D;
+	import flash.system.Capabilities;
 	import flash.ui.Keyboard;
 
 	/**
@@ -56,6 +59,12 @@ package com.muxxu.kub3dit.views {
 		private var _map:Map;
 		private var _preview:PreviewCursor;
 		private var _camPath:CameraPath;
+		private var _rayCaster:RayCaster;
+		private var _rayStart:Point;
+		private var _lastMouse3DPos:Vector3D;
+		private var _selectorView:KubeSelectorView;
+		private var _selectedKubePos:Vector3D;
+		private var _rightButtonPressed:Boolean;
 		
 		
 		
@@ -130,6 +139,7 @@ package com.muxxu.kub3dit.views {
 		 * Called when context 3D is ready
 		 */
 		private function context3DReadyHandler(event:Event):void {
+			_rayCaster = new RayCaster(_map);
 			_chunksManager = new ChunksManager(_map);
 			_context3D = _stage3D.context3D;
 			_context3D.enableErrorChecking = Capabilities.playerType.toLowerCase() == "standalone";//Enable debug in standalone mode
@@ -141,6 +151,8 @@ package com.muxxu.kub3dit.views {
 			_ground		= new Ground(_context3D, _accelerated, _chunksManager);
 			_preview	= new PreviewCursor(_context3D, _accelerated);
 			_camPath	= new CameraPath(_context3D);
+			_rayStart	= new Point();
+			_selectorView = ViewLocator.getInstance().locateViewByType(KubeSelectorView) as KubeSelectorView;
 			
 			FrontControler.getInstance().view3DReady();
 			stage.addEventListener(Event.RESIZE, resizeHandler);
@@ -185,8 +197,37 @@ package com.muxxu.kub3dit.views {
 			_chunksManager.initialize(_context3D, _accelerated);
 			
 			stage.addEventListener(KeyboardEvent.KEY_UP, keyUpHandler);
+			stage.addEventListener(MouseEvent.MOUSE_UP, clickHandler, false, 0xffffff);
+			stage.addEventListener(MouseEvent.RIGHT_CLICK, rightClickHandler);
+			stage.addEventListener(MouseEvent.RIGHT_MOUSE_DOWN, rightPressHandler);
 		}
 
+		private function rightPressHandler(event:MouseEvent):void {
+			_rightButtonPressed = true;
+		}
+
+		private function rightClickHandler(event:MouseEvent):void {
+			_rightButtonPressed = false;
+			if(Camera3D.isDragging || _preview.forcedPosition == null) return;
+			_chunksManager.update(_selectedKubePos.x, _selectedKubePos.y, _selectedKubePos.z, 0);
+		}
+		
+		/**
+		 * Called when the stage is clicked to put a kube.
+		 */
+		private function clickHandler(event:MouseEvent):void {
+			if(Camera3D.isDragging || _preview.forcedPosition == null) return;
+			//Reuse _rayStart var not to create new useless Point instance.
+			_rayStart.x = mouseX;
+			_rayStart.y = mouseY;
+			if(stage.getObjectsUnderPoint(_rayStart).length == 0 && _lastMouse3DPos != null) {
+				_chunksManager.update(_lastMouse3DPos.x, _lastMouse3DPos.y, _lastMouse3DPos.z, _selectorView.currentKubeId);
+			}
+		}
+		
+		/**
+		 * Called when a key is released to change the distance fog.
+		 */
 		private function keyUpHandler(event:KeyboardEvent):void {
 			if(!(event.target is Stage)) return;
 			
@@ -222,23 +263,47 @@ package com.muxxu.kub3dit.views {
 			_context3D.setCulling(Context3DTriangleFace.BACK);
 			
 			//compute transformation matrix
+			var projection:Matrix3D = getProjectionMatrix(W, H, false);
 			var m:Matrix3D = new Matrix3D();
-			m.appendTranslation(Camera3D.locX, -Camera3D.locY, Camera3D.locZ);
+			m.appendTranslation(Camera3D.position.x, -Camera3D.position.y, Camera3D.position.z);
 			m.appendRotation(90, Vector3D.X_AXIS);
 			m.appendRotation(Camera3D.rotationX, Vector3D.Y_AXIS);
 			m.appendRotation(-Camera3D.rotationY, Vector3D.X_AXIS);
-			m.append(getProjectionMatrix(W, H, false));
+			m.append(projection);
+			
+			_preview.forcedPosition = null;
+			_rayStart.x = mouseX;
+			_rayStart.y = mouseY;
+			//If no object is under the mouse, that's because it's over the stage3D scene
+			if(stage.getObjectsUnderPoint(_rayStart).length == 0) {
+				_rayStart.x = ((stage.mouseX - stage.stageWidth * .5) / stage.stageWidth) *2;
+				_rayStart.y = ((stage.mouseY - stage.stageHeight * .5) / stage.stageHeight) *2;
+				_rayCaster.cast(Camera3D.position, _rayStart, Camera3D.rotationX, Camera3D.rotationY, projection);
+				//The ray crossed a Kube
+				if(_rayCaster.lastKube != null){
+					_selectedKubePos = _rayCaster.actualKube;
+					_lastMouse3DPos = _rayCaster.lastKube;
+					if(_rightButtonPressed) {
+						if(_selectedKubePos.z > -1) {
+							_preview.forcedPosition = _selectedKubePos;
+						}
+					}else{
+						_preview.forcedPosition = _lastMouse3DPos;
+					}
+				}
+			}
 			
 			//Render background, ground, and cubes
 			_background.setSizes(W, H);
 			_background.render();
 			
 			//Set programs constants
-			var fogLength:int = Math.min(Math.max(_chunksManager.visibleChunksX, _chunksManager.visibleChunksY) * 3, 24) * ChunkData.CUBE_SIZE_RATIO;
+			var fogLength:int = Math.min(Math.max(_chunksManager.visibleChunksX, _chunksManager.visibleChunksY) * 3, 24) * ChunkData.CUBE_SIZE;
 			// Number of cubes to do the fog on
-			var farplane:int = _chunksManager.visibleCubes*.5 * ChunkData.CUBE_SIZE_RATIO - fogLength;//Number of cubes to start the fog at
-			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.locX, Camera3D.locY, fogLength, farplane ] ) );
+			var farplane:int = _chunksManager.visibleCubes*.5 * ChunkData.CUBE_SIZE - fogLength;//Number of cubes to start the fog at
+			_context3D.setProgramConstantsFromVector(Context3DProgramType.FRAGMENT, 0, Vector.<Number>( [ -Camera3D.position.x, Camera3D.position.y, fogLength, farplane ] ) );
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, m, true);
+			
 			
 			_ground.render();
 			_preview.render();
@@ -256,9 +321,9 @@ package com.muxxu.kub3dit.views {
 		}
 
 		/**
-		 * Get the project matrix.
+		 * Get the projection matrix.
 		 */
-		private static function getProjectionMatrix(w:Number, h:Number, orthogonal:Boolean = false):Matrix3D {
+		private function getProjectionMatrix(w:Number, h:Number, orthogonal:Boolean = false):Matrix3D {
 			var zNear:Number, zFar:Number;
 			if(!orthogonal) {
 				//Perspective view

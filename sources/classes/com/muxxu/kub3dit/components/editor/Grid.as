@@ -1,15 +1,15 @@
 package com.muxxu.kub3dit.components.editor {
-	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
-	import com.muxxu.kub3dit.controler.FrontControler;
-	import com.muxxu.kub3dit.events.ToolTipEvent;
-	import com.muxxu.kub3dit.engin3d.vo.Point3D;
-	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.components.buttons.ButtonKube;
 	import com.muxxu.kub3dit.components.editor.toolpanels.IToolPanel;
+	import com.muxxu.kub3dit.controler.FrontControler;
 	import com.muxxu.kub3dit.engin3d.camera.Camera3D;
+	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
+	import com.muxxu.kub3dit.engin3d.events.ManagerEvent;
 	import com.muxxu.kub3dit.engin3d.map.Map;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
+	import com.muxxu.kub3dit.engin3d.vo.Point3D;
 	import com.muxxu.kub3dit.events.LightModelEvent;
+	import com.muxxu.kub3dit.events.ToolTipEvent;
 	import com.muxxu.kub3dit.graphics.GridPattern;
 	import com.muxxu.kub3dit.graphics.LookAtgraphic;
 	import com.muxxu.kub3dit.graphics.RadarIcon;
@@ -234,8 +234,8 @@ package com.muxxu.kub3dit.components.editor {
 				_offset.x = Math.round((_offsetDrag.x - _gridHolder.mouseX)/_cellSize) + _offsetOffDrag.x;
 				_offset.y = Math.round((_offsetDrag.y - _gridHolder.mouseY)/_cellSize) + _offsetOffDrag.y;
 			}
-			_ox = Math.round(-Camera3D.locX / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.x;
-			_oy = Math.round(Camera3D.locY / ChunkData.CUBE_SIZE_RATIO - _size * .5) + _offset.y;
+			_ox = Math.round(-Camera3D.position.x / ChunkData.CUBE_SIZE - _size * .5) + _offset.x;
+			_oy = Math.round(Camera3D.position.y / ChunkData.CUBE_SIZE - _size * .5) + _offset.y;
 			//Limit drag
 			if(_ox < -_size*.5) _offset.x -= _ox+_size*.5;
 			if(_oy < -_size*.5) _offset.y -= _oy+_size*.5;
@@ -255,8 +255,8 @@ package com.muxxu.kub3dit.components.editor {
 			_gridHolder.graphics.endFill();
 			
 			//Sub levels drawing management
-			_tmpPoint.x = Camera3D.locX / ChunkData.CUBE_SIZE_RATIO;
-			_tmpPoint.y = Camera3D.locY / ChunkData.CUBE_SIZE_RATIO;
+			_tmpPoint.x = Camera3D.position.x / ChunkData.CUBE_SIZE;
+			_tmpPoint.y = Camera3D.position.y / ChunkData.CUBE_SIZE;
 			if(!_tmpPoint.equals(_oldCamPos) || _dragMode) {
 				_oldCamPos = _tmpPoint.clone();
 				_radarMode = false;

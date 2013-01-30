@@ -412,8 +412,8 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			//Compute scroll offsets
 			var viewXShift:int = Camera3D.rotationX>180 && Camera3D.rotationX<360? 1 : 0;
 			var viewYShift:int = Camera3D.rotationX>90 && Camera3D.rotationX<270? 0 : 1;
-			_offsetX = Math.floor((-Camera3D.locX/ChunkData.CUBE_SIZE_RATIO-(_chunkSize*_chunksW*.5))/_chunkSize)+viewXShift;
-			_offsetY = Math.floor((Camera3D.locY/ChunkData.CUBE_SIZE_RATIO-(_chunkSize*_chunksH*.5))/_chunkSize)+viewYShift;
+			_offsetX = Math.floor((-Camera3D.position.x/ChunkData.CUBE_SIZE-(_chunkSize*_chunksW*.5))/_chunkSize)+viewXShift;
+			_offsetY = Math.floor((Camera3D.position.y/ChunkData.CUBE_SIZE-(_chunkSize*_chunksH*.5))/_chunkSize)+viewYShift;
 			//max limit
 			_offsetX = Math.min(Math.floor(_mapSizeW/_chunkSize - _chunksW), _offsetX);
 			_offsetY = Math.min(Math.floor(_mapSizeH/_chunkSize - _chunksH), _offsetY);
@@ -536,7 +536,7 @@ package com.muxxu.kub3dit.engin3d.chunks {
 			_toUpdate.sortOn("pz", Array.NUMERIC);
 			//place all the chunks that are Z negative to the end
 			len = _toUpdate.length;
-			while(_toUpdate[0]["pz"] < -ChunkData.CUBE_SIZE_RATIO*3 && i < len) {
+			while(_toUpdate[0]["pz"] < -ChunkData.CUBE_SIZE*3 && i < len) {
 				_toUpdate.push(_toUpdate.shift()); // Put it at the end
 				i++; 
 			}
