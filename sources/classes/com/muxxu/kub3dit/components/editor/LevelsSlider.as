@@ -173,7 +173,7 @@ package com.muxxu.kub3dit.components.editor {
 		 */
 		private function enterFrameHandler(event:Event):void {
 			if(_syncCb.selected) {
-				updateLevel(Math.round(Camera3D.locZ/ChunkData.CUBE_SIZE_RATIO));
+				updateLevel(Math.round(Camera3D.position.z/ChunkData.CUBE_SIZE));
 				updateButtonState(level);
 			}
 			if(_pressed) {

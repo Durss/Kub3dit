@@ -294,9 +294,9 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 		 * Called on ENTER_FRAME event to capture the camera's displacement
 		 */
 		private function enterFrameHandler(event:Event = null):void {
-			var newPos:Point3D = new Point3D(Camera3D.px, Camera3D.py, Camera3D.pz);
+			var newPos:Point3D = new Point3D(Camera3D.position.x, Camera3D.position.y, Camera3D.position.z);
 			if(_prevPos != null) {
-				if(_prevPos.distance(newPos) > ChunkData.CUBE_SIZE_RATIO * 3) {
+				if(_prevPos.distance(newPos) > ChunkData.CUBE_SIZE * 3) {
 					_path.push( Camera3D.getCurrentStateAsObject() );
 					_prevPos = newPos;
 					_clearButton.enabled = true;

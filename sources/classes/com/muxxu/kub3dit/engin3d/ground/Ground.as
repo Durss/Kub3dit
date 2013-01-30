@@ -72,7 +72,7 @@ package com.muxxu.kub3dit.engin3d.ground {
 		public function render():void {
 			if(_manager.bounds == null) return;
 			
-			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE_RATIO;
+			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE;
 			
 			if(_timer == 0)_inc += 1/16;
 			_timer = (_timer+1)%(16/2);

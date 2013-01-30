@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.engin3d.preview {
+	import flash.geom.Vector3D;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.map.Textures;
 	import com.muxxu.kub3dit.engin3d.molehill.CubeFragmentShader;
@@ -30,6 +31,7 @@ package com.muxxu.kub3dit.engin3d.preview {
 		private var _texture:Texture;
 		private var _editorView:EditorView;
 		private var _selectorView:KubeSelectorView;
+		private var _forcedPosition:Vector3D;
 		
 		
 		
@@ -51,6 +53,20 @@ package com.muxxu.kub3dit.engin3d.preview {
 		/* ***************** *
 		 * GETTERS / SETTERS *
 		 * ***************** */
+		/**
+		 * Forces the position to a specific point.
+		 * Used when the mouse is over a kube in the 3D scene.
+		 */
+		public function set forcedPosition(forcedPosition:Vector3D):void {
+			_forcedPosition = forcedPosition;
+		}
+		
+		/**
+		 * Gets if the forced position.
+		 */
+		public function get forcedPosition():Vector3D {
+			return _forcedPosition;
+		}
 
 
 
@@ -59,14 +75,14 @@ package com.muxxu.kub3dit.engin3d.preview {
 		 * ****** */
 
 		public function render():void {
-			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE_RATIO;
+			var cubeSizeRatio:Number = ChunkData.CUBE_SIZE;
 			var tile:int = _selectorView.currentKubeId;
 			
-			var px:int = _editorView.mousePos.x * cubeSizeRatio;//Camera3D.locX;
-			var py:int = _editorView.mousePos.y * cubeSizeRatio;//Camera3D.locY;
-			var pz:int = _editorView.mousePos.z * cubeSizeRatio;//Camera3D.locZ;
+			var px:int = _forcedPosition==null? _editorView.mousePos.x * cubeSizeRatio : _forcedPosition.x * cubeSizeRatio;
+			var py:int = _forcedPosition==null? _editorView.mousePos.y * cubeSizeRatio : _forcedPosition.y * cubeSizeRatio;
+			var pz:int = _forcedPosition==null? _editorView.mousePos.z * cubeSizeRatio : _forcedPosition.z * cubeSizeRatio;
 			
-			if(pz == -1 * cubeSizeRatio) return;//mouse out of grid in this case
+			if(_forcedPosition==null && pz == -1 * cubeSizeRatio) return;//mouse out of grid in this case
 			
 			var bmd:BitmapData			= Textures.getInstance().spriteSheet;
 			var cubesFrameCoos:Array	= Textures.getInstance().cubesFrames;

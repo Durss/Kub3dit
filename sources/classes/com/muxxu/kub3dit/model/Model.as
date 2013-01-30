@@ -499,9 +499,9 @@ package com.muxxu.kub3dit.model {
 			}
 			
 			//============CAMERA CONF============
-			ba.writeShort(Camera3D.locX);
-			ba.writeShort(Camera3D.locY);
-			ba.writeShort(Camera3D.locZ);
+			ba.writeShort(Camera3D.position.x);
+			ba.writeShort(Camera3D.position.y);
+			ba.writeShort(Camera3D.position.z);
 			var rx:Number = Camera3D.rotationX;
 			ba.writeUnsignedInt(rx < 0? 360+(rx%360) : rx%360);
 			ba.writeInt(Camera3D.rotationY);
