@@ -11,8 +11,7 @@ com.muxxu.kub3dit.engin3d.molehill{
 			
 			var src:String =
 			"mov ft0, v0 \n" +
-			"tex ft1, ft0, fs0 <2d,repeat,nearest> \n" +
-			"mov oc, ft1 \n";
+			"mov oc, ft0 \n";
 			
 			assemble(Context3DProgramType.FRAGMENT, src);
 		}

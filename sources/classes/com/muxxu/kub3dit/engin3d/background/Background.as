@@ -3,6 +3,7 @@ package com.muxxu.kub3dit.engin3d.background {
 	import com.muxxu.kub3dit.engin3d.molehill.BackgroundFragmentShader;
 	import com.muxxu.kub3dit.engin3d.molehill.BackgroundVertexShader;
 	import com.muxxu.kub3dit.graphics.BackgroundGraphic;
+
 	import flash.display.BitmapData;
 	import flash.display3D.Context3D;
 	import flash.display3D.Context3DProgramType;
@@ -12,9 +13,7 @@ package com.muxxu.kub3dit.engin3d.background {
 	import flash.display3D.Program3D;
 	import flash.display3D.VertexBuffer3D;
 	import flash.display3D.textures.Texture;
-	import flash.filters.ColorMatrixFilter;
 	import flash.geom.Matrix3D;
-	import flash.geom.Point;
 
 
 
@@ -67,7 +66,7 @@ package com.muxxu.kub3dit.engin3d.background {
 		 * Creates the background's buffers
 		 */
 		public function setSizes(width:int, height:int):void {
-			var z:int = 100000;//Put the background FAR behind. Probably dirty way to do it but that's only way I found... :/
+			var z:int = 10000000;//Put the background FAR behind. Probably dirty way to do it but that's only way I found... :/
 			var ratio:Number = 2;
 			var ry:Number = Camera3D.rotationY<-90? -90 : Camera3D.rotationY>90? 90 : Camera3D.rotationY;
 			var offsetY:int = (ry + 90)/180 * (height*ratio - height);
@@ -84,24 +83,20 @@ package com.muxxu.kub3dit.engin3d.background {
 		 * Renders the background's buffer
 		 */
 		public function render():void {
-		    var m:Array = [(Math.cos(_red)+1)*.5, 1.25, 0, 0, 0,
-				            1.25, (Math.sin(_green)+1)*.5, 0, 0, 0,
-				            0, 1.25, (Math.cos(_blue)+1)*.5, 0, 0,
-							0, 0, 0, 1, 0];
-			var bmd:BitmapData = _bitmapData.clone();
-			bmd.applyFilter(_bitmapData, _bitmapData.rect, new Point(0,0), new ColorMatrixFilter(m));
-			_texture.uploadFromBitmapData(bmd, 0);
+			_vertexBuffer[3] = _vertexBuffer[9]  = (Math.cos(_red)+1)*.5;
+			_vertexBuffer[4] = _vertexBuffer[10] = (Math.sin(_green)+1)*.5;
+			_vertexBuffer[5] = _vertexBuffer[11] = (Math.cos(_blue)+1)*.5;
 			
-			_context3D.setTextureAt(0, _texture);
+			_context3D.setTextureAt(0, null);
 			_context3D.setProgram(_shaderProgram);
 			
-			var buffer:VertexBuffer3D = _context3D.createVertexBuffer(_vertexBuffer.length / 5, 5);
+			var buffer:VertexBuffer3D = _context3D.createVertexBuffer(_vertexBuffer.length / 6, 6);
 			var indexBuffer:IndexBuffer3D = _context3D.createIndexBuffer(_indexBuffer.length);
-			buffer.uploadFromVector(_vertexBuffer, 0, _vertexBuffer.length / 5);
+			buffer.uploadFromVector(_vertexBuffer, 0, _vertexBuffer.length / 6);
 			indexBuffer.uploadFromVector(_indexBuffer, 0, _indexBuffer.length);
 			
 			_context3D.setVertexBufferAt(0, buffer, 0, Context3DVertexBufferFormat.FLOAT_3); //xyz
-			_context3D.setVertexBufferAt(1, buffer, 3, Context3DVertexBufferFormat.FLOAT_2); //uv
+			_context3D.setVertexBufferAt(1, buffer, 3, Context3DVertexBufferFormat.FLOAT_3); //color
 			_context3D.setProgramConstantsFromMatrix(Context3DProgramType.VERTEX, 0, _projection, true);
 			_context3D.drawTriangles(indexBuffer);
 			_context3D.setVertexBufferAt(0, null); //clean the buffers
@@ -146,26 +141,30 @@ package com.muxxu.kub3dit.engin3d.background {
 			_vertexBuffer[index++] = 0;//X
 			_vertexBuffer[index++] = 0;//Y
 			_vertexBuffer[index++] = 0;//Z
-			_vertexBuffer[index++] = 0;//U
-			_vertexBuffer[index++] = 0;//V
+			_vertexBuffer[index++] = 0;//R
+			_vertexBuffer[index++] = 0;//G
+			_vertexBuffer[index++] = 0;//B
 			
 			_vertexBuffer[index++] = 1;
 			_vertexBuffer[index++] = 0;
 			_vertexBuffer[index++] = 0;
-			_vertexBuffer[index++] = 1;
+			_vertexBuffer[index++] = 0;
+			_vertexBuffer[index++] = 0;
 			_vertexBuffer[index++] = 0;
 			
 			_vertexBuffer[index++] = 1;
 			_vertexBuffer[index++] = 1;
 			_vertexBuffer[index++] = 0;
-			_vertexBuffer[index++] = 1;
-			_vertexBuffer[index++] = 1;
+			_vertexBuffer[index++] = 1.75;
+			_vertexBuffer[index++] = 1.75;
+			_vertexBuffer[index++] = 1.75;
 			
 			_vertexBuffer[index++] = 0;
 			_vertexBuffer[index++] = 1;
 			_vertexBuffer[index++] = 0;
-			_vertexBuffer[index++] = 0;
-			_vertexBuffer[index++] = 1;
+			_vertexBuffer[index++] = 1.75;
+			_vertexBuffer[index++] = 1.75;
+			_vertexBuffer[index++] = 1.75;
 			
 			index = 0;
 			_indexBuffer = new Vector.<uint>();
