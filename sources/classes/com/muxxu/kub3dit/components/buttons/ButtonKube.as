@@ -20,6 +20,7 @@ package com.muxxu.kub3dit.components.buttons {
 	 * @author Francois
 	 */
 	public class ButtonKube extends BaseButton {
+		
 		private var _visitedIcons:Dictionary;
 		
 		
