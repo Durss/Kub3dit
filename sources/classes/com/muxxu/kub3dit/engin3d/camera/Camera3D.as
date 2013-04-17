@@ -26,7 +26,7 @@ com.muxxu.kub3dit.engin3d.camera {
 	{
 		public static var rotationX:Number = 0;
 		public static var rotationY:Number = 0;
-		public static var position:Vector3D = new Vector3D();;
+		public static var position:Vector3D = new Vector3D();
 		public static var path:Array;
 		private static var _isDragging:Boolean;
 //		public static var px:Number = 0;
@@ -59,6 +59,13 @@ com.muxxu.kub3dit.engin3d.camera {
 			
 			_stage.addEventListener(MouseEvent.MOUSE_WHEEL, mouseWheel);
 		}
+		
+		public static function get px():Number { return position.x; }
+		public static function get py():Number { return position.y; }
+		public static function get pz():Number { return position.z; }
+		public static function set px(value:Number):void { position.x = value; }
+		public static function set py(value:Number):void { position.y = value; }
+		public static function set pz(value:Number):void { position.z = value; }
 		
 		/**
 		 * Configures the camera from a byteArray
@@ -285,6 +292,10 @@ com.muxxu.kub3dit.engin3d.camera {
 			_tempPoint.x = _stage.mouseX;
 			_tempPoint.y = _stage.mouseY;
 			return Point.distance(_dragOffset, _tempPoint) > 10;
+		}
+		
+		public static function get isFollowing():Boolean {
+			return _following;
 		}
 		
 	}
