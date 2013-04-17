@@ -275,7 +275,7 @@ package com.muxxu.kub3dit.views {
 			_rayStart.x = mouseX;
 			_rayStart.y = mouseY;
 			//If no object is under the mouse, that's because it's over the stage3D scene
-			if(!Camera3D.isDragging && stage.getObjectsUnderPoint(_rayStart).length == 0) {
+			if(!Camera3D.isDragging && !Camera3D.isFollowing && stage.getObjectsUnderPoint(_rayStart).length == 0) {
 				_rayStart.x = ((stage.mouseX - stage.stageWidth * .5) / stage.stageWidth) *2;
 				_rayStart.y = ((stage.mouseY - stage.stageHeight * .5) / stage.stageHeight) *2;
 				_rayCaster.cast(Camera3D.position, _rayStart, Camera3D.rotationX, Camera3D.rotationY, projection);
