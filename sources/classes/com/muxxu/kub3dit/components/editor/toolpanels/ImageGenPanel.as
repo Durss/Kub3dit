@@ -344,6 +344,17 @@ package com.muxxu.kub3dit.components.editor.toolpanels {
 			
 			if(!_pixels.bytesAvailable) {
 				_chunksManager.invalidate();
+				
+				//Generates an array of the base to create pixel arts on this :
+				//https://dl.dropboxusercontent.com/u/20758492/mt/kube/writer/writer.html
+//				var res:Array = [];
+//				for(var x:int = 0; x < _chunksManager.map.mapSizeX; ++x) {
+//					for (var y:int = 0; y < _chunksManager.map.mapSizeY; ++y) {
+//						res.push(_chunksManager.map.getTile(y, x, 0));
+//					}
+//				}
+//				trace('['+res+']');
+				
 				removeEventListener(Event.ENTER_FRAME, enterFrameHandler);
 				removeChild(_processPercent);
 				dispatchEvent(new Event(Event.RESIZE));

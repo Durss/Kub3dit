@@ -95,6 +95,7 @@ package com.muxxu.kub3dit.commands {
 		 */
 		public override function execute():void {
 			_request.data["id"] = _id;
+			_request.data["ck"] = new Date().getTime();
 			if(_password != null && _password.length > 0) {
 				_request.data["pass"] = _password;
 			}
