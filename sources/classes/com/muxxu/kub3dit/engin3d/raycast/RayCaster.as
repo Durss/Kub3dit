@@ -2,53 +2,66 @@ package com.muxxu.kub3dit.engin3d.raycast {
 	import flash.geom.Point;
 	import com.muxxu.kub3dit.engin3d.chunks.ChunkData;
 	import com.muxxu.kub3dit.engin3d.map.Map;
-
+	
 	import flash.events.EventDispatcher;
 	import flash.geom.Matrix3D;
-	import flash.geom.Vector3D;
-	
+	import flash.geom.Vector3D;	
+
 	/**
 	 * ...
 	 * @author Colapsydo
+	 * optimized with DDA
 	 */
 	public class RayCaster extends EventDispatcher 
 	{
 		private var _map:Map;
 		
+		private var _mapPosX:int;
+		private var _mapPosY:int;
+		private var _mapPosZ:int;
+		private var _mapStepX:int;
+		private var _mapStepY:int;
+		private var _mapStepZ:int;
+		private var _cellEdgeX:Number;
+		private var _cellEdgeY:Number;
+		private var _cellEdgeZ:Number;
+		private var _cellOffsetX:Number;
+		private var _cellOffsetY:Number;
+		private var _cellOffsetZ:Number;
+		
 		private var _distanceMax:int;
-		private var _testedPoint:Vector3D;	
 		private var _lastTestedKube:Vector3D;
 		private var _actualTestedKube:Vector3D;
 		private var _collision:Boolean;
 		private var _cubeSize:Number;
 		
-		public function RayCaster(map:Map):void {
+		public function RayCaster(map:Map):void {			
 			_map = map;
 			init();
 		}
 		
 		private function init():void {
 			_cubeSize = ChunkData.CUBE_SIZE;
-			_testedPoint = new Vector3D();
 			_lastTestedKube = new Vector3D();
 			_actualTestedKube = new Vector3D();
-			_distanceMax = 15; //15 is quite high value (6 which is the Kube normal value is a bit short)
+			_distanceMax = 2s5; //15 is quite high value (6 which is the Kube normal value is a bit short)
 		}
 		
 		//PRIVATE FUNCTIONS
 		
 		private function identifyKube(position:Vector3D, kubeTested:Vector3D):void {
 			//TEST TO DETERMINE WHICH TILE IS TESTED
-			var loc:Vector3D = new Vector3D();
-			loc.x = ( -(position.x - _cubeSize * 0.5) / _cubeSize) >> 0;
-			loc.y = ((position.y +_cubeSize * 0.5) / _cubeSize) >> 0;
-			loc.z = ((position.z + _cubeSize * 0.5) / _cubeSize) >> 0;
-			if (position.z < -_cubeSize * 0.5) { loc.z = -1; }
+			var locX:int = 0;
+			var locY:int = 0;
+			var locZ:int = 0;
+			locX = ( -(position.x - _cubeSize * 0.5) / _cubeSize) >> 0;
+			locY = ((position.y +_cubeSize * 0.5) / _cubeSize) >> 0;
+			locZ = position.z < -_cubeSize * 0.5 ? -1 : ((position.z + _cubeSize * 0.5) / _cubeSize) >> 0;
 			
 			//Writing value of tile coordinates
-			kubeTested.x = loc.x;
-			kubeTested.y = loc.y;
-			kubeTested.z = loc.z;
+			kubeTested.x = locX;
+			kubeTested.y = locY;
+			kubeTested.z = locZ;
 		}
 		
 		private function isAkube(position:Vector3D):Boolean {
@@ -68,10 +81,8 @@ package com.muxxu.kub3dit.engin3d.raycast {
 			
 			//INVERSION FROM SCREEN TO WORLD
 			var normalizedVect:Vector3D = new Vector3D(rayPoint.x, rayPoint.y, 0,0); //POINT ON SCREEN axeX[-1,1] , axeY[-1,1]
-//			var normalizedVect:Vector3D = new Vector3D(((_stage.mouseX - _stage.stageWidth * 0.5) / _stage.stageWidth) *2, ((_stage.mouseY - _stage.stageHeight * 0.5) / _stage.stageHeight) *2, 0,0); //POINT ON SCREEN axeX[-1,1] , axeY[-1,1]
 	
-//			var projectionMatrix:Matrix3D = Stage3DView.getProjectionMatrix(_stage.stageWidth & ~1, _stage.stageHeight & ~1); // CLIP TO VIEW : Applying inverted projection (screen == clip assumed)
-			projectionMatrix.invert();
+			projectionMatrix.invert(); // CLIP TO VIEW : Applying inverted projection (screen == clip assumed)
 			normalizedVect = projectionMatrix.transformVector(normalizedVect);
 			
 			var matrixCamera:Matrix3D = new Matrix3D(Vector.<Number>([1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0])); //VIEW TO WORLD
@@ -81,14 +92,13 @@ package com.muxxu.kub3dit.engin3d.raycast {
 			matrixCamera.transpose();
 			
 			normalizedVect = matrixCamera.transformVector(normalizedVect);
-			normalizedVect.x = - normalizedVect.x; //correciton due to inversion in 3Dengine
 			normalizedVect.normalize();
+		//sign inversion not needed anymore
+			//normalizedVect.x = - normalizedVect.x; //correciton due to inversion in 3Dengine
+			
 			
 			//INITIALIZATION WITH TEST OF THE INIT POSITION
-			_testedPoint.x = cameraPosition.x;
-			_testedPoint.y = cameraPosition.y;
-			_testedPoint.z = cameraPosition.z;
-			identifyKube(_testedPoint, _actualTestedKube);
+			identifyKube(cameraPosition, _actualTestedKube);
 			
 			if (isAkube(_actualTestedKube)) { //COLLISION TEST (not sure of the validity of the test)
 				_collision = true;
@@ -100,17 +110,87 @@ package com.muxxu.kub3dit.engin3d.raycast {
 			_lastTestedKube.y = _actualTestedKube.y;
 			_lastTestedKube.z = _actualTestedKube.z;
 			
-			//CASTING RAY FORM CAMERA
-			var i:int = _distanceMax *  _cubeSize; //The highest _ratio the better the precision but also the highest the iteration num
-			while (--i) {
-				_testedPoint.incrementBy(normalizedVect); //updating the ray
-				identifyKube(_testedPoint, _actualTestedKube); // identifying the tile
+			//INITIALIZATION OF THE DDA VARS
+			_mapPosX = _actualTestedKube.x >> 0;
+			_mapPosY = _actualTestedKube.y >> 0;
+			_mapPosZ = _actualTestedKube.z >> 0;
+			
+			_cellOffsetX = 1 / normalizedVect.x; //1 is the cell size along X, here we take a unit cell
+			_cellOffsetY = 1 / normalizedVect.y; //resp. Y
+			_cellOffsetZ = 1 / normalizedVect.z; //resp. Z
+			
+			if (normalizedVect.x > 0) {
+				_mapStepX = 1;
+				_cellOffsetX = 1 / normalizedVect.x;
+				_cellEdgeX = (1+_mapPosX - ((_cubeSize * 0.5 - cameraPosition.x) / _cubeSize))/normalizedVect.x;
+			}else {
+				_mapStepX = -1;
+				_cellOffsetX = -1 / normalizedVect.x;
+				_cellEdgeX = (_mapPosX - ((_cubeSize * 0.5 - cameraPosition.x) / _cubeSize))/normalizedVect.x;
+			}
+			if (normalizedVect.y > 0) {
+				_mapStepY = 1;
+				_cellOffsetY = 1 / normalizedVect.y;
+				_cellEdgeY = (1 + _mapPosY - ((cameraPosition.y +_cubeSize * 0.5) / _cubeSize))/normalizedVect.y;
+			}else {
+				_mapStepY = -1;
+				_cellOffsetY = -1 / normalizedVect.y;
+				_cellEdgeY = (_mapPosY - ((cameraPosition.y + _cubeSize * 0.5) / _cubeSize))/normalizedVect.y;
+			}
+			if (normalizedVect.z > 0) {
+				_mapStepZ = 1;
+				_cellOffsetZ = 1 / normalizedVect.z;
+				_cellEdgeZ = (1 + _mapPosZ - ((cameraPosition.z + _cubeSize * 0.5) / _cubeSize))/normalizedVect.z;
+			}else {
+				_mapStepZ = -1;
+				_cellOffsetZ = -1 / normalizedVect.z;
+				_cellEdgeZ = (_mapPosZ - ((cameraPosition.z + _cubeSize * 0.5) / _cubeSize))/normalizedVect.z;
+			}
+			
+			//DDA
+			var dist:Number = 0;
+			var lastEdge:Number = 0;
+			
+			while (dist <= _distanceMax) {
+				_lastTestedKube.x = _mapPosX;
+				_lastTestedKube.y = _mapPosY;
+				_lastTestedKube.z = _mapPosZ;
 				
-				if (_lastTestedKube != _actualTestedKube) { //if tile is different
-					identifyKube(_testedPoint.subtract(normalizedVect),_lastTestedKube); //Last kube is the last empty kube crossed by the ray
-					if (isAkube(_actualTestedKube)) { return(true);} //testing the actual tile
+				if (_cellEdgeX < _cellEdgeY) {
+					if (_cellEdgeX < _cellEdgeZ) {
+						dist += _cellEdgeX - lastEdge;
+						lastEdge = _cellEdgeX;
+						_mapPosX += _mapStepX;
+						_cellEdgeX += _cellOffsetX;
+					}else {
+						dist += _cellEdgeZ - lastEdge;
+						lastEdge = _cellEdgeZ;
+						_mapPosZ += _mapStepZ;
+						_cellEdgeZ += _cellOffsetZ;
+					}
+				}else {
+					if (_cellEdgeY < _cellEdgeZ) {
+						dist += _cellEdgeY - lastEdge;
+						lastEdge = _cellEdgeY;
+						_mapPosY += _mapStepY;
+						_cellEdgeY += _cellOffsetY;
+					}else {
+						dist += _cellEdgeZ - lastEdge;
+						lastEdge = _cellEdgeZ;
+						_mapPosZ += _mapStepZ;
+						_cellEdgeZ += _cellOffsetZ;
+					}
+				}
+				
+				_actualTestedKube.x = _mapPosX;
+				_actualTestedKube.y = _mapPosY;
+				_actualTestedKube.z = _mapPosZ;
+				
+				if (isAkube(_actualTestedKube)) { 
+					return(true);
 				}
 			}
+			
 			_lastTestedKube = null; // if no solid kube encountered last kube should be put to null
 			return(false);
 		}
