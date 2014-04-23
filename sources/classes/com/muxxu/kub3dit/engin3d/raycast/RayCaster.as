@@ -44,7 +44,7 @@ package com.muxxu.kub3dit.engin3d.raycast {
 			_cubeSize = ChunkData.CUBE_SIZE;
 			_lastTestedKube = new Vector3D();
 			_actualTestedKube = new Vector3D();
-			_distanceMax = 2s5; //15 is quite high value (6 which is the Kube normal value is a bit short)
+			_distanceMax = 30; //15 is quite high value (6 which is the Kube normal value is a bit short)
 		}
 		
 		//PRIVATE FUNCTIONS
