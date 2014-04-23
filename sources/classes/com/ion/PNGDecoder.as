@@ -4,6 +4,10 @@ package com.ion {
  
 	public class PNGDecoder {
 		private var fileIn:ByteArray = null;
+		
+		public function PNGDecoder() {
+			
+		}
  
 		/*******************************
 		imageInfo values (index: value)
