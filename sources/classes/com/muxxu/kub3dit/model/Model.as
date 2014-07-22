@@ -1,4 +1,5 @@
 package com.muxxu.kub3dit.model {
+	import flash.external.ExternalInterface;
 	import by.blooddy.crypto.image.PNGEncoder;
 
 	import com.asual.swfaddress.SWFAddress;
@@ -153,6 +154,9 @@ package com.muxxu.kub3dit.model {
 			if(_map == null) _map = new Map(true);
 			_map.generateEmptyMap(sizeX * 32, sizeY * 32, sizeZ);
 			update();
+			if(ExternalInterface.available) {
+				ExternalInterface.call('enableExitAlert');
+			}
 		}
 		
 		/**
@@ -437,7 +441,10 @@ package com.muxxu.kub3dit.model {
 			}
 			
 			update();
-			dispatchEvent(new LightModelEvent(LightModelEvent.NEW_MAP_LOADED));
+			dispatchEvent(new LightModelEvent(LightModelEvent.NEW_MAP_LOADED));;
+			if(ExternalInterface.available) {
+				ExternalInterface.call('enableExitAlert');
+			}
 		}
 		
 		/**
