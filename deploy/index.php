@@ -205,7 +205,7 @@
 		
 		<script type="text/javascript">
 <?php
-	$version= "16.8.9";
+	$version= "16.8.10";
 ?>
 			var flashvars = {};
 			flashvars["version"] = "<?php echo $version; ?>";
