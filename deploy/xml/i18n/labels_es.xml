@@ -100,7 +100,7 @@
 		<label code="kubesList"><![CDATA[Lista de Kubos]]></label>
 		<label code="addKubeButton"><![CDATA[Añadir kubo]]></label>
 		<label code="submitKube"><![CDATA[Añadir kubo]]></label>
-		<label code="addKubeDescription"><![CDATA[Puedes agregar cubos personalizados a la lista. Para hacerlo, usa <a href="http://muxxu.com/a/kube-builder">KubeBuilder</a>  para crear algun cubo especifico y copia el ID debajo.<br />El ID se encuentra en la ventana de detalles.]]></label>
+		<label code="addKubeDescription"><![CDATA[Puedes agregar cubos personalizados a la lista. Para hacerlo, usa <a href="http://muxxu.com/a/kube-builder" target="_blank"><b>KubeBuilder</b></a>  para crear algun cubo especifico y copia el ID debajo.<br />El ID se encuentra en la ventana de detalles.]]></label>
 		<label code="invalidKubeId"><![CDATA[ID Invalido]]></label>
 		<label code="helpTools"><![CDATA[• Manten la barra apretada para mover la grilla.<br />• Pulsa la tecla Ctrl para mostrar las coordenadas de una celda.<br />• Shift+Ruleta para ampliar la red.<br />• CTRL+Z/CTR+Y cancelar/repetir<br />• + - para cambiar la distancia de representación]]></label>
 		<label code="helpToolsRubber"><![CDATA[Cambia la herramienta actual a borrador (E)]]></label>

@@ -160,7 +160,7 @@ package com.muxxu.kub3dit.views {
 			
 			_holder = addChild(new Sprite()) as Sprite;
 			_title = addChild(new CssTextField("kubesListTitle")) as CssTextField;
-			_addKube = addChild(new ButtonKube("Ajouter", false, new AddIcon())) as ButtonKube;
+			_addKube = addChild(new ButtonKube(Label.getLabel("addKubeButton"), false, new AddIcon())) as ButtonKube;
 			_addKubeForm = addChild(new AddKubeForm(_addKube)) as AddKubeForm;
 			
 			_width = 200;
