@@ -1,4 +1,7 @@
-h1. Voxel editor
+h1. Kub3dit - Voxel editor
 
 Tool made for a old "web game":http://kube.muxxu.com to create structures off the game (which was quite expensive)
 http://fevermap.org/kub3dit/
+  
+More infos here :  
+https://www.durss.ninja/#project-kub3dit
